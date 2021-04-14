@@ -1,7 +1,5 @@
 const {SECRET} =require('../config');
-
 const {User} = require('../models');
-
 const {verify} = require('jsonwebtoken');
 
 

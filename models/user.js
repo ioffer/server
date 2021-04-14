@@ -23,11 +23,6 @@ const userSchema = new Schema({
         type: String,
         default: "http://localhost:4000/user.png"
     },
-    address: String,
-    balance: {
-        type: String,
-        default: ""
-    },
     location: String,
     twoFactorEnabled: {
         type: Boolean,
@@ -53,7 +48,7 @@ const userSchema = new Schema({
         birthDate: {
             type: String,
             default: ""
-        },// !
+        },
         nationality: {
             type: String,
             default: ""
@@ -73,7 +68,7 @@ const userSchema = new Schema({
         street: {
             type: String,
             default: ""
-        },// !
+        },
         building: {
             type: String,
             default: ""
@@ -83,16 +78,13 @@ const userSchema = new Schema({
             default: "NOT_SUBMITTED"
         }
     },
-    smartContracts: [{
+    shops: [{
         type: Schema.Types.ObjectId,
-        ref: 'smartcontracts',
+        ref: 'shops',
     }],
 }, {
     timestamps: true
 });
-
-
-// const User = mongoose.model('users', userSchema);
 
 const User = mongoose.model('users', userSchema);
 export default User;

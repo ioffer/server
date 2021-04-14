@@ -32,23 +32,12 @@ const userTypeDefs = gql`
         twoFactorSecret:String!,
         twoFactorCode: String,
         avatar: String,
-        address: String!,
-        balance: String!,
         location: String,
         type(type:Type): String,
         createdAt: String
         updatedAt: String
         kyc: Kyc,
-        testAddress:[TestAddress],
-        wallet:Wallet,
-        smartContracts:[SmartContract],
-        dApps:[DApp],
-        orders:[Order],
-        testOrders:[TestOrder],
-        customOrders:[CustomOrder],
-        purchasedContracts:[PurchasedContract],
-        testPurchasedContracts:[TestPurchasedContract],
-        purchasedDApps:[PurchasedDApp],
+#        shops:[Shops],
     }
     
     
@@ -64,14 +53,6 @@ const userTypeDefs = gql`
         kycStatus(status: Status): String! 
     }
     
-
-    type TestAddress{
-        id:ID,
-        address: String,
-        balance: String,
-        wallet:Wallet,
-    }
-
     type AuthUser {
         user: User!
         token:String!

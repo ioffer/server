@@ -18,7 +18,7 @@ const resolvers = {
         unBlockRequests:async(_)=>{
             return await fetchData();
         },
-
+        //TODO UnBlockById
     },
     Mutation: {
         unBlockUser: async (_, {id}, {UnBlockRequest, user}) => {
@@ -34,7 +34,6 @@ const resolvers = {
             return false
 
         },
-
         createUnBlockRequest: async (_, {description},{user, UnBlockRequest}) => {
             if(!user){
                 return new AuthenticationError("Authentication Must Be Provided")
@@ -49,7 +48,6 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         }
-
     }
 }
 

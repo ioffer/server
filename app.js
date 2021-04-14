@@ -1,4 +1,3 @@
-import {Master} from "./models";
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -13,11 +12,8 @@ const mongoose = require('mongoose');
 import * as AppModels from './models';
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const {MNEMONIC} =require('./config');
-const {checkMaster}= require('./helpers/Walletfunctions.js');
 import AuthMiddleware from './middleware/auth.js';
 import {join} from "path";
-import './helpers/Web3Wrapper'
 let cors=require('cors');
 
 var app = express();
@@ -37,7 +33,6 @@ app.use(cors());
 
 // view engine setup
 app.use(express.static(join(__dirname, './uploads')));
-app.use(express.static(join(__dirname, './dapps')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -75,22 +70,22 @@ const server = new ApolloServer({
         };
     },
     formatError:(err)=> {
-        if (err.message.startsWith("Authentication Must Be Provided")) {
-            return new Error('Authentication Must Be Provided');
-        }else if (err.message.startsWith("Database Error")) {
-            return new Error('Database Error');
-        }else if (err.extensions.exception.name === 'ValidationError') {
-            console.log("validation Error",err.extensions.exception.errors)
-            return new Error(err.extensions.exception.errors);
-        }else if (err.originalError instanceof ApolloError) {
-            return err;
-        } else{
-            const errId = v4();
-            console.log("errId: ", errId);
+        // if (err.message.startsWith("Authentication Must Be Provided")) {
+        //     return new Error('Authentication Must Be Provided');
+        // }else if (err.message.startsWith("Database Error")) {
+        //     return new Error('Database Error');
+        // }else if (err.extensions.exception.name === 'ValidationError') {
+        //     console.log("validation Error",err.extensions.exception.errors)
+        //     return new Error(err.extensions.exception.errors);
+        // }else if (err.originalError instanceof ApolloError) {
+        //     return err;
+        // } else{
+        //     const errId = v4();
+        //     console.log("errId: ", errId);
             console.log(err);
-            return new Error('Internal Server Error: '+errId);
+            // return new Error('Internal Server Error: '+errId);
             // return err
-        }
+        // }
     },
 });
 server.applyMiddleware({app});

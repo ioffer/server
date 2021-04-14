@@ -36,26 +36,13 @@ const enumsTypeDefs = gql`
         HIGH_TO_LOW
         TOP_SOLD
     }
-
-    enum ProductType {
-        SMARTCONTRACT
-        DAPP
-    }
-
-    enum LicenseType{
-        SINGLELICENSE,
-        UNLIMITEDLICENSE
-    }
+    
     
     type MessageResponse {
         message: String!
         success: Boolean
     },
-
-    type Wallet{
-        privateKey:String,
-        publicKey:String,
-    },
+    
     
 `;
 

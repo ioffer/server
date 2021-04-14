@@ -25,140 +25,70 @@ let fetchData = () => {
 }
 
 const resolvers = {
-    User: {
+    Shop: {
         // shops: async (parent) => {
         //     return await Shop.find({"publisher": parent.id})
         // },
     },
     Query: {
-        users: () => {
+        shops: () => {
             return fetchData()
         },
-        me: async (_, {}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            try {
-                return await User.findById(user.id)
-            } catch (err) {
-                throw new ApolloError(err)
-            }
+        shopById: async (_, args) => {
+            return await Shop.findById(args.id);
         },
-        userById: async (_, args) => {
-            return await User.findById(args.id);
-        },
-        loginUser: async (_, {userName, password}, {User}) => {
-            // Validate Incoming User Credentials
-            await PasswordRules.validate({password}, {abortEarly: false});
-            // Find the user from the database
-            let user = await User.findOne(
-            { $or: [ {"userName":userName}, { "email":userName} ] }
-            );
-            // If User is not found
-            if (!user) {
-                throw new ApolloError("User Not Found", '404');
-            } else if (!user.confirmed) {
-                /// Sending Email to user
-                let emailData = {
-                    id: user.id,
-                    email: user.email
-                }
-                let userEmail = await serializeEmail(emailData);
-                let emailLink = await emailConfirmationUrl(userEmail);
-                let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                await sendEmail(user.email, emailLink, emailHtml)
-                throw new ApolloError("Email Not Confirmed", '403');
-            } else {
-
-            }
-            // If user is found then compare the password
-            let isMatch = await compare(password, user.password);
-            // If Password don't match
-            if (!isMatch) {
-                throw new ApolloError("Username or Password Is Invalid", '403');
-            }
-
-            user = await serializeUser(user);
-            // Issue Token
-            let token = await issueAuthToken(user);
-            return {
-                user,
-                token,
-            }
-        },
-        verify2FA: async (_, {token}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            try {
-                return await speakeasy.totp.verify({
-                    secret: user.twoFactorSecret,
-                    encoding: 'base32',
-                    token: token
-                })
-            } catch (err) {
-                throw new ApolloError("Verification Failed")
-            }
-        },
-        searchPendingKyc: async (_, {}, {user}) => {
+        searchPendingShops: async (_, {}, {user, Shop}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "ADMIN") {
-                return await User.find({"kyc.kycStatus": "PENDING"});
+                return await Shop.find({'verified': "PENDING"});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchUnBlockedUsers: async (_, {}, {user, User}) => {
+        searchUnBlockedShops: async (_, {}, {user, Shop}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "ADMIN") {
-                return await User.find({"isBlocked": false, "confirmed": true});
+                return await Shop.find({"isBlocked": false, "confirmed": true});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        authUser: async (_, __, {
-            req: {
-                user
-            }
-        }) => user,
+        searchShops: async (_, {query}, {Shop}) => {
 
+        }
 
     },
     Mutation: {
-        blockUser: async (_, {id}, {user, User}) => {
+        blockShop: async (_, {id}, {user, User}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
                 if (user.type === 'ADMIN') {
-                    let blockingUser = await User.findById(id);
-                    if (blockingUser.type !== 'ADMIN') {
-                        let response = await User.findByIdAndUpdate(id, {isBlocked: true});
-                        if (!response) {
-                            return new ApolloError("User Not Found", '404')
-                        }
-                        return true;
+                    let blockingShop = await Shop.findById(id);
+                    let response = await Shop.findByIdAndUpdate(id, {isBlocked: true});
+                    if (!response) {
+                        return new ApolloError("Shop Not Found", '404')
                     }
-                    return new ApolloError("Admin Cannot be Blocked", 403)
+                    return true;
                 }
             } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        verifyKyc: async (_, {id}, {user}) => {
+        verifyShop: async (_, {id}, {user, Shop}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-
             if (user.type === "ADMIN") {
                 try {
-                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": "VERIFIED"}});
+                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": "VERIFIED"}});
                     if (!response) {
-                        return new ApolloError("User not found", '404');
+                        return new ApolloError("Shop not found", '404');
                     }
                     return true
                 } catch (err) {
@@ -248,7 +178,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                let emailHtml = await forgetPasswordBody(user.userName ,emailLink);
+                let emailHtml = await forgetPasswordBody(user.userName, emailLink);
                 return await sendEmail(email, emailLink, emailHtml);
             }
 
@@ -344,19 +274,28 @@ const resolvers = {
             }
             return false
         },
-        editUser: async (_, {newUser}, {User, user}) => {
+        editUser: async (_, {id, newShop}, {Shop, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await User.findOneAndUpdate({_id: user.id}, newUser, {new: true});
+                return await Shop.findOneAndUpdate({_id: id}, newShop, {new: true});
             } catch (err) {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        deleteUser: async (_, args) => {
+        deleteShop: async (_, {id}, {Shop, user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                return await User.findByIdAndRemove(args.id);
+                if (user.type === "ADMIN") {
+                    await Shop.findByIdAndRemove(id);
+                    return true
+                } else {
+                    await Shop.findOneAndRemove({id: id, owner: user.id});
+                    return true
+                }
             } catch (e) {
                 throw new ApolloError("Internal Server Error", '500');
             }
