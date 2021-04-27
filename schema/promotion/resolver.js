@@ -1,8 +1,5 @@
-import {User} from "../../models";
-import {find} from "lodash"
-
-const {SECRET} = require("../../config")
-const {hash, compare} = require('bcryptjs')
+import {User, Shop, Promotion} from "../../models";
+import _ from 'lodash'
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
 const {
     UserRegisterationRules,
@@ -11,83 +8,117 @@ const {
     PasswordRules,
     UserRules
 } = require('../../validations');
-const {verify} = require('jsonwebtoken');
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
-import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
-import speakeasy from "speakeasy";
-import qrcode from "qrcode";
-
 
 let fetchData = () => {
-    return User.find();
+    return Promotion.find();
 }
 
 const resolvers = {
-    Shop: {
-        // shops: async (parent) => {
-        //     return await Shop.find({"publisher": parent.id})
-        // },
+    Promotion: {
+        shops: async (parent) => {
+            return await Shop.find({"id": parent.shop})
+        },
+        publisher: async (parent)=>{
+            return await User.find({'id':parent.publisher})
+        },
+        verifiedBy: async (parent)=>{
+            return await User.find({'id':parent.verifiedBy})
+        }
     },
     Query: {
-        shops: () => {
+        promotions: () => {
             return fetchData()
         },
-        shopById: async (_, args) => {
-            return await Shop.findById(args.id);
+        promotionById: async (_, args) => {
+            return await Promotion.findById(args.id);
         },
-        searchPendingShops: async (_, {}, {user, Shop}) => {
+        promotionByShop: async (_, {shopID},{Promotion, user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try{
+                let shop = await Shop.findById(shopID);
+                if(shop.owner===user.id||shop.moderators.includes(user.id)){
+                    return await Promotion.find({shop:shopID});
+                }
+            }catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
+        searchPendingPromotions: async (_, {}, {user, Promotion}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "ADMIN") {
-                return await Shop.find({'verified': "PENDING"});
+                return await Promotion.find({'verified': "PENDING"});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchBlockedShops: async (_, {}, {user, Shop}) => {
+        searchHiddenPromotions: async (_, {shopID}, {user, Promotion}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
-                return await Shop.find({"isBlocked": true, "confirmed": true});
-            } else {
-                throw new AuthenticationError("Unauthorised User", '401');
+            try{
+                let shop = await Shop.findById(shopID);
+                if(shop.owner===user.id||shop.moderators.includes(user.id)){
+                    return await Promotion.find({shop:shopID,hidden:true});
+                }else{
+                    return new AuthenticationError("Unauthorised User", '401');
+                }
+            }catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
             }
         },
-        searchShops: async (_, {query}, {Shop}) => {
+        searchArchivedPromotions: async (_, {shopID}, {user, Promotion}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try{
+                let shop = await Shop.findById(shopID);
+                if(shop.owner===user.id||shop.moderators.includes(user.id)){
+                    return await Promotion.find({shop:shopID,hidden:true});
+                } else {
+                    return new new AuthenticationError("Unauthorised User", 401);
+                }
+            }catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
+        searchPromotions: async (_, {query}, {Shop}) => {
 
         }
 
     },
     Mutation: {
-        registerShop: async (_, {newShop}, {Shop, user}) => {
+        createPromotion: async (_, {shopID,newPromotion}, {Promotion, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            try {
-                let shop = Shop({
-                    ...newShop,
-                    owner: user.id,
-                    publishingDateTime: dateTime()
-                })
-                let result = await shop.save();
-                let response = await User.findById(user.id);
-                response.shop.push(result._id);
-                response.save();
-                result = {
-                    ...result.toObject(),
-                    id: result._id.toString()
+            try{
+                let shop = await Shop.findById(shopID);
+                if(shop.owner===user.id||shop.moderators.includes(user.id)){
+                    let promotion = Promotion({
+                        ...newPromotion,
+                        publisher:user.id,
+                        publishingDateTime:Date(),
+                        shop:shopID,
+                    })
+                    shop.promotions.push(promotion)
+                    await shop.save()
+                    return await promotion.save();
+                } else {
+                    return new AuthenticationError("Unauthorised User", 401);
                 }
-                return result;
-            } catch (e) {
+            }catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        editShop: async (_, {id, newShop}, {Shop, user}) => {
+        editPromotion: async (_, {id}, {Promotion, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }

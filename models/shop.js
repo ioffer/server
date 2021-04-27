@@ -12,7 +12,10 @@ const shopSchema = new Schema({
     location: String,
     address: String,
     publishingDateTime:String,
-    isBlocked: Boolean,
+    isBlocked: {
+        type: Boolean,
+        default:false
+    },
     verified: {
         type: String,
         default:"PENDING"
@@ -33,6 +36,7 @@ const shopSchema = new Schema({
         ref: 'users',
         type: Schema.Types.ObjectId
     }],
+    moderatorsInvites:[String],
     verifiedBy: {
         ref: 'users',
         type: Schema.Types.ObjectId

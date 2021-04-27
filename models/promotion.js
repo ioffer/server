@@ -7,7 +7,7 @@ const promotionSchema = new Schema({
     tags:[String],
     category: [String],
     description: String,
-    price: Number,
+    price: String,
     publishingDateTime:String,
     verified: {
         type: String,
@@ -21,8 +21,14 @@ const promotionSchema = new Schema({
         type: Number,
         default:0
     },
-    hidden:Boolean,
-    archived:Boolean,
+    hidden:{
+        type:Boolean,
+        default:false
+    },
+    archived:{
+        type:Boolean,
+        default:false
+    },
     publisher: {
         ref: 'users',
         type: Schema.Types.ObjectId
@@ -35,8 +41,8 @@ const promotionSchema = new Schema({
         ref: 'shops',
         type: Schema.Types.ObjectId
     },
-    startDate: Date,
-    endDate: Date,
+    startDate: String,
+    endDate: String,
 }, {
     timestamps: true
 });
