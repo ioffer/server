@@ -118,115 +118,106 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        editPromotion: async (_, {id}, {Promotion, user}) => {
+        editPromotion: async (_, {id, newPromotion}, {Promotion, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            try {
-                return await Shop.findOneAndUpdate({_id: id}, newShop, {new: true});
-            } catch (err) {
-                throw new ApolloError("Internal Server Error", '500');
+            try{
+                let promotion = await Promotion.findById(id);
+                let shop = await Shop.findById(promotion.shop);
+                if(shop.owner===user.id||shop.moderators.includes(user.id)){
+                    return await Promotion.findByIdAndUpdate(id,newPromotion)
+                } else {
+                    return new AuthenticationError("Unauthorised User", 401);
+                }
+            }catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
             }
         },
-        deleteShop: async (_, {id}, {Shop, user}) => {
+        deleteShop: async (_, {id}, {Promotion, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            try {
-                if (user.type === "ADMIN") {
-                    await Shop.findByIdAndRemove(id);
+            try{
+                let promotion = await Promotion.findById(id);
+                let shop = await Shop.findById(promotion.shop);
+                if(shop.owner === user.id||shop.moderators.includes(user.id)){
+                    await Promotion.findByIdAndRemove(id)
                     return true
                 } else {
-                    await Shop.findOneAndRemove({id: id, owner: user.id});
-                    return true
+                    return new AuthenticationError("Unauthorised User", 401);
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            }catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
             }
         },
-        verifyShop: async (_, {id}, {user, Shop}) => {
+        verifyPromotion: async (_, {id}, {user, Promotion}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "ADMIN") {
                 try {
-                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": "VERIFIED"}});
+                    let response = await Promotion.findByIdAndUpdate(id, {$set: {"verified": "VERIFIED"}});
                     if (!response) {
-                        return new ApolloError("Shop not found", '404');
+                        return new ApolloError("Promotion not found", 404);
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", '500')
+                    throw new ApolloError("Internal Server Error", 500)
                 }
             } else {
-                throw new AuthenticationError("Unauthorised User", '401');
+                throw new AuthenticationError("Unauthorised User", 401);
             }
         },
-        blockShop: async (_, {id}, {user, Shop}) => {
+        hidePromotion: async (_, {id}, {user, Promotion}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            try {
-                if (user.type === 'ADMIN') {
-                    let blockingShop = await Shop.findById(id);
-                    let response = await Shop.findByIdAndUpdate(id, {isBlocked: true});
-                    if (!response) {
-                        return new ApolloError("Shop Not Found", '404')
-                    }
-                    return true;
+            try{
+                let promotion = await Promotion.findById(id);
+                let shop = await Shop.findById(promotion.shop);
+                if(shop.owner === user.id||shop.moderators.includes(user.id)){
+                    await Promotion.findByIdAndUpdate(id,{hidden: true})
+                    return true
+                } else {
+                    return new AuthenticationError("Unauthorised User", 401);
                 }
-            } catch (e) {
+            }catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        InviteModerator: async (_, {id,emails}, {Shop, user}) => {
+        archivePromotion: async (_, {id}, {user, Promotion}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            try {
-                let shop = await Shop.findOne({_id: id, owner:user.id});
-                if (shop){
-                    for(email of emails){
-                        await EmailRules.validate({email}, {abortEarly: false});
-                        let emailLink = await emailConfirmationUrl(email);
-                        //TODO change emailConfirmBody()
-                        let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                        try{
-                            await sendEmail(email, emailLink, emailHtml)
-                        }catch (e) {
-                            return new ApolloError(`Email Sending Failed to ${email}`, 500);
-                        }
-                    }
-                }
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
-            }
-        },
-        addModerator: async (_, {id,userID}, {Shop, user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            try {
-                return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators:userID}}, {new: true});
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
-            }
-        },
-        clickShop:async (_, {id}, {Shop})=>{
             try{
-                let shop = Shop.findById(id)
-                shop.clickCounts++
-                shop.save()
+                let promotion = await Promotion.findById(id);
+                let shop = await Shop.findById(promotion.shop);
+                if(shop.owner === user.id||shop.moderators.includes(user.id)){
+                    await Promotion.findByIdAndUpdate(id,{archived: true})
+                    return true
+                } else {
+                    return new AuthenticationError("Unauthorised User", 401);
+                }
+            }catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
+        clickShop:async (_, {id}, {Promotion})=>{
+            try{
+                let promotion = Promotion.findById(id)
+                promotion.clickCounts++
+                promotion.save()
                 return true
             }catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        viewShop:async (_, {id}, {Shop})=>{
+        viewShop:async (_, {id}, {Promotion})=>{
             try{
-                let shop = Shop.findById(id)
-                shop.viewCounts++
-                shop.save()
+                let promotion = Promotion.findById(id)
+                promotion.viewCounts++
+                promotion.save()
                 return true
             }catch (e) {
                 return new ApolloError("Internal Server Error", 500)

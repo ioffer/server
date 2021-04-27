@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/schema/promotion/query.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/promotion/type.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/promotion.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/promotion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+    <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,8 +104,16 @@
       <workItem from="1619371169425" duration="92000" />
       <workItem from="1619377674630" duration="2007000" />
       <workItem from="1619427245088" duration="705000" />
-      <workItem from="1619526332473" duration="6831000" />
+      <workItem from="1619526332473" duration="7855000" />
     </task>
+    <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
+      <created>1619551603689</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1619551603689</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -130,5 +130,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added promotion queries, working on resolvers" />
+    <option name="LAST_COMMIT_MESSAGE" value="added promotion queries, working on resolvers" />
   </component>
 </project>
