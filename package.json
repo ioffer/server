@@ -34,5 +34,9 @@
     "nodemailer": "^6.5.0",
     "speakeasy": "^2.0.0",
     "yup": "^0.32.9"
+  },
+  "resolutions": {
+    "**/**/fs-capacitor": "^6.2.0",
+    "**/graphql-upload": "^11.0.0"
   }
 }

@@ -28,7 +28,8 @@ const serializeUser = user => pick(user, [
     'userName',
     'fullName',
     'avatar',
-    'type'
+    'type',
+    'kyc',
 ]);
 
 const serializeEmail = user => pick(user, [
