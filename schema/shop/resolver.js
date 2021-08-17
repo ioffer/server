@@ -58,9 +58,9 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchShops: async (_, {query}, {Shop}) => {
-
-        }
+        // searchShops: async (_, {query}, {Shop}) => {
+        //
+        // }
 
     },
     Mutation: {
@@ -148,7 +148,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        InviteModerator: async (_, {id,emails}, {Shop, user}) => {
+        inviteModerators: async (_, {id,emails}, {Shop, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }

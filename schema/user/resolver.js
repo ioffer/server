@@ -383,7 +383,11 @@ const resolvers = {
                 let newKyc = {...oldKyc, ...kyc};
                 delete newKyc.id;
                 delete newKyc["$init"];
-                return await User.findByIdAndUpdate({_id: args.id}, {$set: {kyc: newKyc}}, {new: true});
+                return await User.findByIdAndUpdate(
+                    {_id: args.id},
+                    {$set: {kyc: newKyc}},
+                    {new: true}
+                );
             } catch (e) {
                 throw new ApolloError("Internal Server Error", '500');
             }

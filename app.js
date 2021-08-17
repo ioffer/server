@@ -18,7 +18,7 @@ let cors=require('cors');
 
 var app = express();
 
-const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappslablocally?retryWrites=true&w=majority";
+const uri = "mongodb://qasim:qasim1234@abdulla-shard-00-00.eftvp.mongodb.net:27017,abdulla-shard-00-01.eftvp.mongodb.net:27017,abdulla-shard-00-02.eftvp.mongodb.net:27017/ioffer?ssl=true&replicaSet=abdulla-shard-0&authSource=admin&retryWrites=true&w=majority";
 mongoose.connect(uri);
 mongoose.Promise = global.Promise;
 mongoose.connection.once('open', () => {
@@ -69,22 +69,24 @@ const server = new ApolloServer({
         };
     },
     formatError:(err)=> {
-        // if (err.message.startsWith("Authentication Must Be Provided")) {
-        //     return new Error('Authentication Must Be Provided');
-        // }else if (err.message.startsWith("Database Error")) {
-        //     return new Error('Database Error');
-        // }else if (err.extensions.exception.name === 'ValidationError') {
-        //     console.log("validation Error",err.extensions.exception.errors)
-        //     return new Error(err.extensions.exception.errors);
-        // }else if (err.originalError instanceof ApolloError) {
-        //     return err;
-        // } else{
-        //     const errId = v4();
-        //     console.log("errId: ", errId);
-            console.log(err);
-            // return new Error('Internal Server Error: '+errId);
+        if (err.message.startsWith("Authentication Must Be Provided")) {
+            return new Error('Authentication Must Be Provided');
+        }else if (err.message.startsWith("Database Error")) {
+            return new Error('Database Error');
+        }else if (err.extensions.exception.name === 'ValidationError') {
+            console.log("validation Error",err.extensions.exception.errors)
+            return new Error(err.extensions.exception.errors);
+        }else if (err.originalError instanceof ApolloError) {
+            return err;
+        } else{
+            const errId = v4();
+            console.log("errId: ", errId);
+            // console.log(err);
+            // console.log(err.extensions.exception.errors);
+            // return new Error(err);
+            return new Error('Internal Server Error: '+errId);
             // return err
-        // }
+        }
     },
 });
 server.applyMiddleware({app});

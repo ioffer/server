@@ -10,7 +10,6 @@ const promotionTypeDefs = gql`
         category: [String],
         description: String,
         price: String,
-        verifiedBy:User,
         startDate: String,
         endDate: String,
         hidden: Boolean

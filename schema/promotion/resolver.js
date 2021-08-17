@@ -19,7 +19,7 @@ let fetchData = () => {
 
 const resolvers = {
     Promotion: {
-        shops: async (parent) => {
+        shop: async (parent) => {
             return await Shop.find({"id": parent.shop})
         },
         publisher: async (parent)=>{
@@ -89,9 +89,9 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        searchPromotions: async (_, {query}, {Shop}) => {
-
-        }
+        // searchPromotions: async (_, {query}, {Shop}) => {
+        //
+        // }
 
     },
     Mutation: {

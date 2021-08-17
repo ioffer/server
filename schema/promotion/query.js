@@ -6,9 +6,9 @@ const userQuery = gql`
         promotionById(id:ID!):Promotion @isAuth,
         promotionByShop(shopID:ID!):Promotion @isAuth,
         searchPendingPromotions:[Promotion] @isAuth,
-        showArchivedPromotions(shopId:ID!):[Promotion] @isAuth,
-        showHiddenPromotions(shopId:ID!):[Promotion] @isAuth,
-        searchPromotions(query:Query):[Promotion]
+        searchArchivedPromotions(shopId:ID!):[Promotion] @isAuth,
+        searchHiddenPromotions(shopId:ID!):[Promotion] @isAuth,
+#        searchPromotions(query:Query):[Promotion]
     },
     
     extend type Mutation {

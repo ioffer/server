@@ -36,7 +36,7 @@ const shopTypeDefs = gql`
         owner: User,
         verifiedBy: User,
         promotions: [Promotion],
-        offers: [Offer]
+#        offers: [Offer]
     }
     
 `;

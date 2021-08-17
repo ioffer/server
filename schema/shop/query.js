@@ -6,7 +6,7 @@ const userQuery = gql`
         shopById(id:ID!):Shop @isAuth,
         searchPendingShops:[Shop] @isAuth,
         searchBlockedShops: [Shop] @isAuth
-        searchShops(query:Query):[Shop]
+#        searchShops(query:Query):[Shop]
     },
     
     extend type Mutation {
