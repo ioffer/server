@@ -1,4 +1,4 @@
-import {User} from "../../models";
+import {User, Shop} from "../../models";
 import {find} from "lodash"
 
 const {SECRET} = require("../../config")
@@ -26,9 +26,11 @@ let fetchData = () => {
 
 const resolvers = {
     User: {
-        // shops: async (parent) => {
-        //     return await Shop.find({"publisher": parent.id})
-        // },
+        shops: async (parent) => {
+            let data = await Shop.find({"owner": parent.id})
+            console.log(data)
+            return data;
+        },
     },
     Query: {
         users: () => {

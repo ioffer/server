@@ -34,10 +34,10 @@ const userTypeDefs = gql`
         avatar: String,
         location: String,
         type(type:Type): String,
-        createdAt: String
-        updatedAt: String
+        createdAt: String,
+        updatedAt: String,
         kyc: Kyc,
-#        shops:[Shops],
+        shops:[Shop],
     }
     
     

@@ -76,7 +76,7 @@ const resolvers = {
                 })
                 let result = null;
                 try{
-                    result = shop.save();
+                    result = await shop.save();
                     let response = await User.findById(user.id);
                     console.log('response:', response)
                     response.shops.push(result._id);
