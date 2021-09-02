@@ -74,13 +74,16 @@ const resolvers = {
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
-                let result = await shop.save();
-                let response = await User.findById(user.id);
-                response.shop.push(result._id);
-                response.save();
-                result = {
-                    ...result.toObject(),
-                    id: result._id.toString()
+                let result = null;
+                try{
+                    result = shop.save();
+                    let response = await User.findById(user.id);
+                    console.log('response:', response)
+                    response.shops.push(result._id);
+                    console.log('response2:', response)
+                    await response.save();
+                }catch (e) {
+                    return  new ApolloError("Unable to save Shop", 500)
                 }
                 return result;
             } catch (e) {

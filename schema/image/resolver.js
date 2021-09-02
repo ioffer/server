@@ -15,12 +15,12 @@ const resolvers = {
                     filename,
                     createReadStream
                 } = await file;
-                let stream = createReadStream();
+                let stream = createReadStream;
                 let {
                     ext,
                     name
                 } = parse(filename);
-
+                console.log(name,ext)
                 name = name.replace(/([^a-z0-9 ]+)/gi, '-').replace(' ', '_');
                 let serverFile = join(
                     __dirname, `../../uploads/${name}-${Date.now()}${ext}`
@@ -41,6 +41,7 @@ const resolvers = {
 
                 return serverFile;
             } catch (err) {
+                console.error(err)
                 throw new ApolloError("Internal Server Error", 500);
             }
         }
