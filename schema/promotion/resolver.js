@@ -101,14 +101,15 @@ const resolvers = {
             }
             try{
                 let shop = await Shop.findById(shopID);
-                if(shop.owner===user.id||shop.moderators.includes(user.id)){
+                if(shop.owner == user.id|| shop.moderators.includes(user.id)){
+                    console.log("helo", shop.owner, '=', user.id);
                     let promotion = Promotion({
                         ...newPromotion,
                         publisher:user.id,
                         publishingDateTime:Date(),
                         shop:shopID,
                     })
-                    shop.promotions.push(promotion)
+                    shop.promotions.push(promotion.id)
                     await shop.save()
                     return await promotion.save();
                 } else {

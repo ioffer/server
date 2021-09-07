@@ -1,4 +1,4 @@
-import {User} from "../../models";
+import {User, Promotion, Shop} from "../../models";
 import {find} from "lodash"
 
 const {SECRET} = require("../../config")
@@ -27,9 +27,9 @@ let fetchData = () => {
 
 const resolvers = {
     Shop: {
-        // shops: async (parent) => {
-        //     return await Shop.find({"publisher": parent.id})
-        // },
+        promotions: async (parent) => {
+            return await Promotion.find({"shop": parent.id})
+        },
     },
     Query: {
         shops: () => {
@@ -79,7 +79,7 @@ const resolvers = {
                     result = await shop.save();
                     let response = await User.findById(user.id);
                     console.log('response:', response)
-                    response.shops.push(result._id);
+                    response.shops.push(result.id);
                     console.log('response2:', response)
                     await response.save();
                 }catch (e) {
