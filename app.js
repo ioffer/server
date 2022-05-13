@@ -17,7 +17,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandi
 
 
 // import { v4 } from "uuid";
-// const AppModels from './models);
+import AppModels from './models';
 
 let app = express();
 
@@ -126,10 +126,10 @@ const server = new ApolloServer({
 })()
 
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
-});
+// // catch 404 and forward to error handler
+// app.use(function (req, res, next) {
+//     next(createError(404));
+// });
 // error handler
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
