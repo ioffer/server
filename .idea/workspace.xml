@@ -6,8 +6,24 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/image/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/image/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/image/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/image/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/134643032-1606074866243949-2547574454428856906-n-1629878545528.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/134643032-1606074866243949-2547574454428856906-n-1629878719954.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/134643032-1606074866243949-2547574454428856906-n-1629878781137.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/CIMG7180-1629981669492.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/CIMG7180-1629981868795.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/install-nix-2.3.8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/pp-1629116815258.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/pp-1629883062479.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/pp-1629887472118.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/pp-1629892695379.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/pp-1629893472659.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +34,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -36,6 +53,9 @@
   <component name="GitToolBoxStore">
     <option name="projectConfigVersion" value="2" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="1pDUn19IXJc1FxmdKoJeLcmo6ge" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -44,27 +64,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="NEW_TOOLWINDOW_STRIPE_DEFAULTS" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="go.formatter.settings.were.checked" value="true" />
-    <property name="go.import.settings.migrated" value="true" />
-    <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
-    <property name="go.sdk.automatically.set" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="14.17.5" />
-    <property name="javascript.nodejs.core.library.typings.version" value="14.17.5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer-server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5080.193/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/schema" />
@@ -140,7 +154,12 @@
       <workItem from="1630421004576" duration="15000" />
       <workItem from="1630493079435" duration="527000" />
       <workItem from="1630579903537" duration="4412000" />
-      <workItem from="1631004712399" duration="2279000" />
+      <workItem from="1631004712399" duration="3464000" />
+      <workItem from="1633515380341" duration="5956000" />
+      <workItem from="1633601672515" duration="1069000" />
+      <workItem from="1635264213746" duration="619000" />
+      <workItem from="1635450265978" duration="945000" />
+      <workItem from="1652348952707" duration="11068000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>
@@ -165,7 +184,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added promotion queries, working on resolvers" />

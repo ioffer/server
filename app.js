@@ -1,32 +1,29 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const sassMiddleware = require('node-sass-middleware');
-const {ApolloServer, ApolloError} = require('apollo-server-express');
-import { v4 } from "uuid";
-const typeDefs = require('./schema/typeDefs.js')
-const resolvers = require('./schema/resolver.js')
-const mongoose = require('mongoose');
-import * as AppModels from './models';
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+import createError from 'http-errors'
+import express from 'express'
+import path from 'path'
+import cookieParser from 'cookie-parser'
+import logger from 'morgan'
+import sassMiddleware from 'node-sass-middleware'
+import {ApolloServer, ApolloError} from 'apollo-server-express'
+import typeDefs from './schema/typeDefs.js'
+import resolvers from './schema/resolver.js'
+import mongoose from 'mongoose'
+import indexRouter from './routes/index'
+import usersRouter from './routes/users'
 import AuthMiddleware from './middleware/auth.js';
 import {join} from "path";
 let cors=require('cors');
+import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
 
-var app = express();
+
+// import { v4 } from "uuid";
+// const AppModels from './models);
+
+let app = express();
 
 const uri = "mongodb://qasim:qasim1234@abdulla-shard-00-00.eftvp.mongodb.net:27017,abdulla-shard-00-01.eftvp.mongodb.net:27017,abdulla-shard-00-02.eftvp.mongodb.net:27017/ioffer?ssl=true&replicaSet=abdulla-shard-0&authSource=admin&retryWrites=true&w=majority";
 mongoose.connect(uri);
 mongoose.Promise = global.Promise;
-mongoose.connection.once('open', () => {
-    console.log(' 🍃 connected to mongoDB mLab');
-    app.listen(4000, () => {
-        console.log('🚀 now listening for requests on port 4000');
-    });
-})
 
 app.use(cors());
 
@@ -55,7 +52,34 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     introspection: true,
-    playground: true,
+    playground: {
+        settings: {
+            'editor.theme': 'light',
+        },
+        tabs: [
+            {
+                endpoint:"/graphql",
+            },
+        ],
+    },
+    plugins: [
+        ApolloServerPluginLandingPageGraphQLPlayground(
+            {
+                settings: {
+                    // 'some.setting': true,
+                    'general.betaUpdates': false,
+                    'editor.theme': 'dark',
+                    'editor.cursorShape': 'line',
+                    'editor.reuseHeaders': true,
+                    'tracing.hideTracingResponse': true,
+                    'queryPlan.hideQueryPlanResponse': true,
+                    'editor.fontSize': 14,
+                    'editor.fontFamily': `'Source Code Pro', 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace`,
+                    'request.credentials': 'omit',
+                },
+            }
+        ),
+    ],
     context: ({req}) => {
         let {
             user,
@@ -89,7 +113,17 @@ const server = new ApolloServer({
         // }
     },
 });
-server.applyMiddleware({app});
+
+(async ()=>{
+    await server.start();
+    server.applyMiddleware({app});
+    mongoose.connection.once('open', () => {
+        console.log(' 🍃 connected to mongoDB mLab');
+        app.listen(4000, () => {
+            console.log('🚀 now listening for requests on port 4000');
+        });
+    })
+})()
 
 
 // catch 404 and forward to error handler

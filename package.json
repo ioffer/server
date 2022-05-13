@@ -3,37 +3,38 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "yarn nodemon",
-    "nodemon": "nodemon --exec babel-node app.js"
+    "start": "nodemon --exec babel-node app.js"
   },
   "dependencies": {
-    "@babel/node": "^7.13.10",
-    "apollo-server": "^2.21.1",
+    "@babel/node": "^7.17.10",
+    "apollo-server": "^3.7.0",
+    "apollo-server-core": "^3.7.0",
     "bcryptjs": "^2.4.3",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
     "express-graphql": "^0.12.0",
+    "graphql-upload": "^13.0.0",
     "lodash": "^4.17.21",
-    "mongoose": "^5.12.0",
+    "mongoose": "^6.3.3",
     "morgan": "^1.10.0",
-    "node-sass-middleware": "^0.11.0",
-    "qrcode": "^1.4.4"
+    "node-sass-middleware": "^1.0.1",
+    "qrcode": "^1.5.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.10",
-    "@babel/core": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
-    "@graphql-tools/merge": "^6.2.10",
-    "apollo-server-express": "^2.21.1",
-    "cookie-parser": "^1.4.5",
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@graphql-tools/merge": "^8.2.11",
+    "apollo-server-express": "^3.7.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "graphql": "^15.5.0",
-    "http-errors": "^1.8.0",
+    "dotenv": "^16.0.1",
+    "graphql": "^16.5.0",
+    "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
-    "nodemailer": "^6.5.0",
+    "nodemailer": "^6.7.5",
     "speakeasy": "^2.0.0",
-    "yup": "^0.32.9"
+    "yup": "^0.32.11"
   },
   "resolutions": {
     "**/**/fs-capacitor": "^6.2.0",

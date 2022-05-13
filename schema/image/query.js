@@ -8,7 +8,7 @@ const imageQuery = gql `
     }
      
     extend type Mutation {
-        imageUploader(file: Upload!): String! @isAuth
+        imageUploader(file: Float!): String! @isAuth
     }
 
 `

@@ -15,7 +15,7 @@ const resolvers = {
                     filename,
                     createReadStream
                 } = await file;
-                let stream = createReadStream;
+                let stream = createReadStream();
                 let {
                     ext,
                     name

@@ -1,2 +1,2 @@
 Server
-this is a server side code.
+this is a app side code.
