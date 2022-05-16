@@ -65,8 +65,8 @@ app.use(function (err, req, res, next) {
     server.applyMiddleware({ app });
     mongoose.connection.once('open', () => {
         console.log(' 🍃 connected to mongoDB mLab');
-        app.listen(4000, () => {
-            console.log('🚀 now listening for requests on port 4000');
+        app.listen(process.env.port ||4000, () => {
+            console.log('🚀 now listening for requests on port', process.env.port ||4000);
         });
     })
 })()
