@@ -6,24 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/image/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/image/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/image/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/image/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/134643032-1606074866243949-2547574454428856906-n-1629878545528.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/134643032-1606074866243949-2547574454428856906-n-1629878719954.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/134643032-1606074866243949-2547574454428856906-n-1629878781137.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/CIMG7180-1629981669492.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/CIMG7180-1629981868795.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/install-nix-2.3.8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/pp-1629116815258.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/pp-1629883062479.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/pp-1629887472118.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/pp-1629892695379.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/pp-1629893472659.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,21 +48,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer-server",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5080.193/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer-server&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5080.193/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/schema" />
@@ -160,6 +144,7 @@
       <workItem from="1635264213746" duration="619000" />
       <workItem from="1635450265978" duration="945000" />
       <workItem from="1652348952707" duration="11068000" />
+      <workItem from="1652684759214" duration="2588000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

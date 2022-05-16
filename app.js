@@ -17,7 +17,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandi
 
 
 // import { v4 } from "uuid";
-import AppModels from './models';
+import AppModels, {User} from './models';
 
 let app = express();
 
@@ -121,6 +121,7 @@ const server = new ApolloServer({
         console.log(' 🍃 connected to mongoDB mLab');
         app.listen(4000, () => {
             console.log('🚀 now listening for requests on port 4000');
+             // console.log(User.find())
         });
     })
 })()

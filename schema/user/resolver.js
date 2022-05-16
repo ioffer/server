@@ -20,8 +20,8 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 
 
-let fetchData = () => {
-    return User.find();
+let fetchData = async () => {
+    return await User.find({});
 }
 
 const resolvers = {
