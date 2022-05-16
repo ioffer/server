@@ -19,9 +19,7 @@
     "morgan": "^1.10.0",
     "node-sass-middleware": "^1.0.1",
     "nodemon": "^2.0.16",
-    "qrcode": "^1.5.0"
-  },
-  "devDependencies": {
+    "qrcode": "^1.5.0",
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.17.10",
     "@babel/preset-env": "^7.17.10",

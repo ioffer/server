@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers" />
+    <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -140,7 +142,7 @@
       <workItem from="1635264213746" duration="619000" />
       <workItem from="1635450265978" duration="945000" />
       <workItem from="1652348952707" duration="11068000" />
-      <workItem from="1652684759214" duration="3640000" />
+      <workItem from="1652684759214" duration="4294000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>
