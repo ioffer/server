@@ -73,6 +73,7 @@ const userSchema = new Schema({
             type: String,
             default: ""
         },
+        //TODO use enums
         kycStatus: {
             type: String,
             default: "NOT_SUBMITTED"
@@ -82,6 +83,26 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'shops',
     }],
+    brands: [{
+        type: Schema.Types.ObjectId,
+        ref: 'brands',
+    }],
+    favourites:{
+        type: Schema.Types.ObjectId,
+        ref: 'user_favourites',
+    },
+    pins:{
+        type: Schema.Types.ObjectId,
+        ref: 'user_pins',
+    },
+    subscriptions:{
+        type: Schema.Types.ObjectId,
+        ref: 'user_subscriptions',
+    },
+    roleBasedAccess:{
+        type: Schema.Types.ObjectId,
+        ref: 'user_subscriptions',
+    }
 }, {
     timestamps: true
 });

@@ -19,6 +19,6 @@ const unBlockRequestSchema = new Schema({
 });
 
 
-const UnBlockRequest = mongoose.model('unblockrequests', unBlockRequestSchema);
+const UnBlockRequest = mongoose.model('unblock_requests', unBlockRequestSchema);
 
 export default UnBlockRequest;

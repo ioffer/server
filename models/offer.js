@@ -4,9 +4,21 @@ const Schema = mongoose.Schema;
 
 let offerSchema = new Schema({
     name: String,
-    image: String,
+    media: {
+        ref: 'media',
+        type: Schema.Types.ObjectId
+    },
     tags:[String],
-    category: [String],
+    Category:[{
+        ref:'categories',
+        type:Schema.Types.ObjectId,
+    }],
+    subCategories:[{
+        ref:'categories',
+        type:Schema.Types.ObjectId,
+    }],
+    description: String,
+    price: String,
     publishingDateTime:String,
     verified: {
         type: String,
@@ -20,8 +32,15 @@ let offerSchema = new Schema({
         type: Number,
         default:0
     },
-    hidden:Boolean,
-    archived:Boolean,
+    //hidden replaced by upcoming
+    isUpcoming:{
+        type:Boolean,
+        default:false
+    },
+    status:{
+        type:Boolean,
+        default:false
+    },
     publisher: {
         ref: 'users',
         type: Schema.Types.ObjectId
@@ -34,8 +53,12 @@ let offerSchema = new Schema({
         ref: 'shops',
         type: Schema.Types.ObjectId
     },
-    startDate: Date,
-    endDate: Date,
+    brand:{
+        ref: 'brands',
+        type: Schema.Types.ObjectId
+    },
+    startDate: String,
+    endDate: String,
 }, {
     timestamps: true
 });

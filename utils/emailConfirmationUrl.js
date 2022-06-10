@@ -22,18 +22,18 @@ const emailConfirmationBody = async(name, link)=> {
 \t\tmargin: 0 auto"
 \t\t>
 \t\t\t<h4 style="text-align: center;
-\t\t\tbackground-color: #1D1B45;
+\t\t\tbackground-color: #1b4527;
 \t\t\tcolor: #fff;
 \t\t\tpadding: 20px;"
 \t\t\t>Welcome to DappsLab</h4>
 \t\t\t<h2 style="margin:3em 0 0 0 ">Hey ${name},</h2>
-\t\t\t<h5 style="margin:10px 0 30px 0">Wowwee! Thanks for registering an account with DappsLab! You're the coolest person in all the\tland and I've met alot of really cool people.Before we get started, we'll need to verify\tyour email.</h5>
-\t\t\t<a  href="${mainLink}" style="border: 2px solid #5754AB;
+\t\t\t<h5 style="margin:10px 0 30px 0">Wowwee! Thanks for registering an account with IOffer! You're the coolest person in all the\tland and I've met alot of really cool people.Before we get started, we'll need to verify\tyour email.</h5>
+\t\t\t<a  href="${mainLink}" style="border: 2px solid #308b0b;
 \t\t\tmargin:0 auto;
 \t\t\tdisplay:block;
 \t\t\tpadding: 10px 20px;
 \t\t\tborder-radius:20px;
-\t\t\tbackground: #5754AB;
+\t\t\tbackground: #308b0b;
 \t\t\tcolor: #fff;
 \t\t\tcursor: pointer;
 \t\t\t">Verify Email</a>

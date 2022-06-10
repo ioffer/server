@@ -5,7 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/constants/enums.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/brand.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/brandClick.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/brandRoleBaseAccessInvite.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/brandView.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/category.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/link.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/media.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/shopClick.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/shopRoleBaseAccessInvite.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/shopView.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/userFavourite.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/userPin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/userRoleBaseAccess.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/userSubscription.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/offer.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/offer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/promotion.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/promotion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/unBlockRequest.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/unBlockRequest.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/emailConfirmationUrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/emailConfirmationUrl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/sendEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/sendEmail.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,26 +70,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer-server&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5080.193/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer-server/models",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5787.30/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/models" />
       <recent name="$PROJECT_DIR$/schema" />
       <recent name="$PROJECT_DIR$/schema/shop" />
-      <recent name="$PROJECT_DIR$/models" />
     </key>
   </component>
   <component name="RunManager">
@@ -142,7 +167,12 @@
       <workItem from="1635264213746" duration="619000" />
       <workItem from="1635450265978" duration="945000" />
       <workItem from="1652348952707" duration="11068000" />
-      <workItem from="1652684759214" duration="4598000" />
+      <workItem from="1652684759214" duration="5135000" />
+      <workItem from="1652856036592" duration="1247000" />
+      <workItem from="1652866553442" duration="1663000" />
+      <workItem from="1654505514397" duration="1207000" />
+      <workItem from="1654591556162" duration="664000" />
+      <workItem from="1654669982425" duration="33129000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

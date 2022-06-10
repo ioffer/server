@@ -1,9 +1,8 @@
-import {Status} from "../constants/enums";
-
+import {Status} from '../constants/enums'
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const shopSchema = new Schema({
+const brandSchema = new Schema({
     name: String,
     brandCategory:[{
         ref:'categories',
@@ -25,8 +24,6 @@ const shopSchema = new Schema({
     website: String,
     phoneNumbers: String,
     mobileNumber: String,
-    location: String,
-    address: String,
     publishingDateTime:String,
     facebook: String,
     tiktok: String,
@@ -34,13 +31,13 @@ const shopSchema = new Schema({
     instagram: String,
     youtube: String,
     linkedIn: String,
-    isBlocked: {
-        type: Boolean,
-        default:false
-    },
     status: {
         type:String,
         enum:Status,
+    },
+    isBlocked: {
+        type: Boolean,
+        default:false
     },
     verified: {
         type:String,
@@ -63,10 +60,10 @@ const shopSchema = new Schema({
         ref: 'users',
         type: Schema.Types.ObjectId
     },
-    brand: {
-        ref: 'brands',
+    brandShops: [{
+        ref: 'shops',
         type: Schema.Types.ObjectId
-    },
+    }],
     admins: [{
         ref: 'users',
         type: Schema.Types.ObjectId
@@ -84,7 +81,7 @@ const shopSchema = new Schema({
         type: Schema.Types.ObjectId
     }],
     roleBasedAccessInvites: [{
-        ref: 'shop_role_base_access_invites',
+        ref: 'brand_role_base_access_invites',
         type: Schema.Types.ObjectId
     }],
     verifiedBy: {
@@ -98,10 +95,10 @@ const shopSchema = new Schema({
     offers: [{
         ref: 'offers',
         type: Schema.Types.ObjectId
-    }]
+    }],
 }, {
     timestamps: true
 });
 
-const Shop = mongoose.model('shops', shopSchema);
-export default Shop;
+const Brand = mongoose.model('brands', brandSchema);
+export default Brand;

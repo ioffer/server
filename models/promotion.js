@@ -1,11 +1,23 @@
+import Category from "./category";
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const promotionSchema = new Schema({
     name: String,
-    images: [String],
+    media: {
+        ref: 'media',
+        type: Schema.Types.ObjectId
+    },
     tags:[String],
-    category: [String],
+    Category:[{
+        ref:'categories',
+        type:Schema.Types.ObjectId,
+    }],
+    subCategories:[{
+        ref:'categories',
+        type:Schema.Types.ObjectId,
+    }],
     description: String,
     price: String,
     publishingDateTime:String,
@@ -21,11 +33,12 @@ const promotionSchema = new Schema({
         type: Number,
         default:0
     },
-    hidden:{
+    //hidden replaced by upcoming
+    isUpcoming:{
         type:Boolean,
         default:false
     },
-    archived:{
+    status:{
         type:Boolean,
         default:false
     },
@@ -39,6 +52,10 @@ const promotionSchema = new Schema({
     },
     shop:{
         ref: 'shops',
+        type: Schema.Types.ObjectId
+    },
+    brand:{
+        ref: 'brands',
         type: Schema.Types.ObjectId
     },
     startDate: String,

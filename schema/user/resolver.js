@@ -49,17 +49,22 @@ const resolvers = {
         userById: async (_, args) => {
             return await User.findById(args.id);
         },
-        loginUser: async (_, {userName, password}, {User}) => {
+        loginUser: async (_, {userName, password}) => {
+            console.log("/login")
             // Validate Incoming User Credentials
             await PasswordRules.validate({password}, {abortEarly: false});
+            console.log("/password Verified")
             // Find the user from the database
             let user = await User.findOne(
             { $or: [ {"userName":userName}, { "email":userName} ] }
             );
+            console.log("finding user")
             // If User is not found
             if (!user) {
+                console.log("user not found")
                 throw new ApolloError("User Not Found", '404');
             } else if (!user.confirmed) {
+                console.log("user found and not confirmed")
                 /// Sending Email to user
                 let emailData = {
                     id: user.id,
@@ -68,9 +73,11 @@ const resolvers = {
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
                 let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                await sendEmail(user.email, emailLink, emailHtml)
+                let response = await sendEmail(user.email, emailLink, emailHtml)
+                console.log("response:",response)
                 throw new ApolloError("Email Not Confirmed", '403');
             } else {
+                console.log("user found and confirmed")
 
             }
             // If user is found then compare the password
@@ -81,6 +88,7 @@ const resolvers = {
             }
 
             user = await serializeUser(user);
+            console.log("user senitized", user)
             // Issue Token
             let token = await issueAuthToken(user);
             return {
@@ -112,7 +120,7 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchUnBlockedUsers: async (_, {}, {user, User}) => {
+        searchUnBlockedUsers: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -131,7 +139,7 @@ const resolvers = {
 
     },
     Mutation: {
-        blockUser: async (_, {id}, {user, User}) => {
+        blockUser: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -189,7 +197,7 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised", '401');
             }
         },
-        disable2FA: async (_, __, {User, user}) => {
+        disable2FA: async (_, __, { user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -210,7 +218,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500')
             }
         },
-        enable2FA: async (_, __, {User, user}) => {
+        enable2FA: async (_, __, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -346,7 +354,7 @@ const resolvers = {
             }
             return false
         },
-        editUser: async (_, {newUser}, {User, user}) => {
+        editUser: async (_, {newUser}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -394,7 +402,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        createAdmin: async (_, {email}, {User, user}) => {
+        createAdmin: async (_, {email}, {user}) => {
             await EmailRules.validate({email}, {abortEarly: false});
 
             if (!user) {
@@ -410,7 +418,7 @@ const resolvers = {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        changePassword: async (_, {password, newPassword}, {user, User}) => {
+        changePassword: async (_, {password, newPassword}, {user}) => {
             await PasswordRules.validate({password}, {abortEarly: false})
             let backup = password;
             password = newPassword;
@@ -445,25 +453,27 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500')
             }
         },
-        registerUser: async (_, {newUser}, {User}) => {
+        registerUser: async (_, {newUser}) => {
             let {
                 email,
                 userName,
             } = newUser;
-
+            console.log(User)
             await UserRegisterationRules.validate(newUser, {abortEarly: false});
 
             try {
+                console.log("error", userName)
 
                 // Validate Incoming New User Arguments
                 // Check if the Username is taken
                 let user = await User.findOne({
                     userName
                 });
+                console.log("error1", user)
                 if (user) {
                     return new ApolloError('Username Is Already Taken.', '403')
                 }
-
+                console.log("error2")
                 // Check is the Email address is already registered
                 user = await User.findOne({
                     email
@@ -471,11 +481,11 @@ const resolvers = {
                 if (user) {
                     return new ApolloError('Email is already registered.', '403')
                 }
-
+                console.log("error4")
                 user = new User(newUser);
                 // Hash the user password
                 user.password = await hash(user.password, 10);
-
+                console.log("error4")
                 // Save the user to the database
                 let result = await user.save();
                 let emailstr = {
@@ -497,6 +507,7 @@ const resolvers = {
                     user: result
                 }
             } catch (err) {
+                console.error(err)
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
