@@ -1,0 +1,710 @@
+{
+  "_id": "62a7947c06f33c812ef11fa1",
+  "title": "all",
+  "subCategories": [
+    {
+      "_id": "62a7947c06f33c812ef11fa2",
+      "title": "Electronic Devices",
+      "subCategories": [
+        {
+          "_id": "62a7947c06f33c812ef11fa3",
+          "title": "Desktops",
+          "subCategories": [
+            {
+              "_id": "62a7947c06f33c812ef11fa4",
+              "title": "HP",
+              "subCategories": [
+                {
+                  "_id": "62a7947c06f33c812ef11fa5",
+                  "title": "newHP",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7947c06f33c812ef11fa4",
+                  "createdAt": "2022-06-13T19:48:12.201Z",
+                  "updatedAt": "2022-06-13T19:48:12.201Z",
+                  "__v": 0
+                }
+              ],
+              "level": 3,
+              "parentCategory": "62a7947c06f33c812ef11fa3",
+              "createdAt": "2022-06-13T19:48:12.512Z",
+              "updatedAt": "2022-06-13T19:48:12.512Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7947c06f33c812ef11fa2",
+          "createdAt": "2022-06-13T19:48:12.762Z",
+          "updatedAt": "2022-06-13T19:48:12.762Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7947d06f33c812ef11fa9",
+          "title": "Tablets",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7947c06f33c812ef11fa2",
+          "createdAt": "2022-06-13T19:48:13.003Z",
+          "updatedAt": "2022-06-13T19:48:13.003Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7947d06f33c812ef11fab",
+          "title": "mobiles",
+          "subCategories": [
+            {
+              "_id": "62a7947d06f33c812ef11fac",
+              "title": "Nokia",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7947d06f33c812ef11fab",
+              "createdAt": "2022-06-13T19:48:13.253Z",
+              "updatedAt": "2022-06-13T19:48:13.253Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7947d06f33c812ef11fae",
+              "title": "Samsaung",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7947d06f33c812ef11fab",
+              "createdAt": "2022-06-13T19:48:13.506Z",
+              "updatedAt": "2022-06-13T19:48:13.506Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7947d06f33c812ef11fb0",
+              "title": "Itel",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7947d06f33c812ef11fab",
+              "createdAt": "2022-06-13T19:48:13.842Z",
+              "updatedAt": "2022-06-13T19:48:13.842Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7947e06f33c812ef11fb2",
+              "title": "Redmi",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7947d06f33c812ef11fab",
+              "createdAt": "2022-06-13T19:48:14.079Z",
+              "updatedAt": "2022-06-13T19:48:14.079Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7947e06f33c812ef11fb4",
+              "title": "assessories",
+              "subCategories": [
+                {
+                  "_id": "62a7947e06f33c812ef11fb5",
+                  "title": "charger",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7947e06f33c812ef11fb4",
+                  "createdAt": "2022-06-13T19:48:14.354Z",
+                  "updatedAt": "2022-06-13T19:48:14.354Z",
+                  "__v": 0
+                },
+                {
+                  "_id": "62a7947e06f33c812ef11fb7",
+                  "title": "handfrees",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7947e06f33c812ef11fb4",
+                  "createdAt": "2022-06-13T19:48:14.662Z",
+                  "updatedAt": "2022-06-13T19:48:14.662Z",
+                  "__v": 0
+                },
+                {
+                  "_id": "62a7947e06f33c812ef11fb9",
+                  "title": "Cables",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7947e06f33c812ef11fb4",
+                  "createdAt": "2022-06-13T19:48:14.968Z",
+                  "updatedAt": "2022-06-13T19:48:14.968Z",
+                  "__v": 0
+                },
+                {
+                  "_id": "62a7947f06f33c812ef11fbb",
+                  "title": "Type C",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7947e06f33c812ef11fb4",
+                  "createdAt": "2022-06-13T19:48:15.276Z",
+                  "updatedAt": "2022-06-13T19:48:15.276Z",
+                  "__v": 0
+                },
+                {
+                  "_id": "62a7947f06f33c812ef11fbd",
+                  "title": "Phone Cases",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7947e06f33c812ef11fb4",
+                  "createdAt": "2022-06-13T19:48:15.520Z",
+                  "updatedAt": "2022-06-13T19:48:15.520Z",
+                  "__v": 0
+                }
+              ],
+              "level": 3,
+              "parentCategory": "62a7947d06f33c812ef11fab",
+              "createdAt": "2022-06-13T19:48:15.758Z",
+              "updatedAt": "2022-06-13T19:48:15.758Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7947c06f33c812ef11fa2",
+          "createdAt": "2022-06-13T19:48:15.994Z",
+          "updatedAt": "2022-06-13T19:48:15.994Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948006f33c812ef11fc1",
+          "title": "Smart Watch",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7947c06f33c812ef11fa2",
+          "createdAt": "2022-06-13T19:48:16.299Z",
+          "updatedAt": "2022-06-13T19:48:16.299Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948006f33c812ef11fc3",
+          "title": "Gaming Consoles",
+          "subCategories": [
+            {
+              "_id": "62a7948006f33c812ef11fc4",
+              "title": "Play Station",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948006f33c812ef11fc3",
+              "createdAt": "2022-06-13T19:48:16.607Z",
+              "updatedAt": "2022-06-13T19:48:16.607Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948006f33c812ef11fc6",
+              "title": "Xbox Games",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948006f33c812ef11fc3",
+              "createdAt": "2022-06-13T19:48:16.848Z",
+              "updatedAt": "2022-06-13T19:48:16.848Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7947c06f33c812ef11fa2",
+          "createdAt": "2022-06-13T19:48:17.086Z",
+          "updatedAt": "2022-06-13T19:48:17.086Z",
+          "__v": 0
+        }
+      ],
+      "level": 1,
+      "parentCategory": "62a7947c06f33c812ef11fa1",
+      "createdAt": "2022-06-13T19:48:17.426Z",
+      "updatedAt": "2022-06-13T19:48:17.426Z",
+      "__v": 0
+    },
+    {
+      "_id": "62a7948106f33c812ef11fca",
+      "title": "vehicles",
+      "subCategories": [
+        {
+          "_id": "62a7948106f33c812ef11fcb",
+          "title": "Cars",
+          "subCategories": [
+            {
+              "_id": "62a7948106f33c812ef11fcc",
+              "title": "Automatic Cars",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948106f33c812ef11fcb",
+              "createdAt": "2022-06-13T19:48:17.735Z",
+              "updatedAt": "2022-06-13T19:48:17.735Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948206f33c812ef11fce",
+              "title": "Manual Cars",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948106f33c812ef11fcb",
+              "createdAt": "2022-06-13T19:48:18.039Z",
+              "updatedAt": "2022-06-13T19:48:18.039Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948106f33c812ef11fca",
+          "createdAt": "2022-06-13T19:48:18.277Z",
+          "updatedAt": "2022-06-13T19:48:18.277Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948206f33c812ef11fd1",
+          "title": "Bikes",
+          "subCategories": [
+            {
+              "_id": "62a7948206f33c812ef11fd2",
+              "title": "Electric Bike",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948206f33c812ef11fd1",
+              "createdAt": "2022-06-13T19:48:18.512Z",
+              "updatedAt": "2022-06-13T19:48:18.512Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948206f33c812ef11fd4",
+              "title": "Standard Bike",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948206f33c812ef11fd1",
+              "createdAt": "2022-06-13T19:48:18.748Z",
+              "updatedAt": "2022-06-13T19:48:18.748Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948106f33c812ef11fca",
+          "createdAt": "2022-06-13T19:48:19.066Z",
+          "updatedAt": "2022-06-13T19:48:19.066Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948306f33c812ef11fd7",
+          "title": "Loader & Rickshaw",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7948106f33c812ef11fca",
+          "createdAt": "2022-06-13T19:48:19.306Z",
+          "updatedAt": "2022-06-13T19:48:19.306Z",
+          "__v": 0
+        }
+      ],
+      "level": 1,
+      "parentCategory": "62a7947c06f33c812ef11fa1",
+      "createdAt": "2022-06-13T19:48:19.545Z",
+      "updatedAt": "2022-06-13T19:48:19.545Z",
+      "__v": 0
+    },
+    {
+      "_id": "62a7948306f33c812ef11fda",
+      "title": "electronics and home appliances",
+      "subCategories": [
+        {
+          "_id": "62a7948306f33c812ef11fdb",
+          "title": "LED TV",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7948306f33c812ef11fda",
+          "createdAt": "2022-06-13T19:48:19.780Z",
+          "updatedAt": "2022-06-13T19:48:19.780Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948406f33c812ef11fdd",
+          "title": "Refrigerators",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7948306f33c812ef11fda",
+          "createdAt": "2022-06-13T19:48:20.016Z",
+          "updatedAt": "2022-06-13T19:48:20.016Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948406f33c812ef11fdf",
+          "title": "Celling Fans",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7948306f33c812ef11fda",
+          "createdAt": "2022-06-13T19:48:20.254Z",
+          "updatedAt": "2022-06-13T19:48:20.254Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948406f33c812ef11fe1",
+          "title": "Stand Fans",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7948306f33c812ef11fda",
+          "createdAt": "2022-06-13T19:48:20.494Z",
+          "updatedAt": "2022-06-13T19:48:20.494Z",
+          "__v": 0
+        }
+      ],
+      "level": 1,
+      "parentCategory": "62a7947c06f33c812ef11fa1",
+      "createdAt": "2022-06-13T19:48:20.732Z",
+      "updatedAt": "2022-06-13T19:48:20.732Z",
+      "__v": 0
+    },
+    {
+      "_id": "62a7948406f33c812ef11fe4",
+      "title": "Groceries & Pets",
+      "subCategories": [
+        {
+          "_id": "62a7948406f33c812ef11fe5",
+          "title": "Beverages",
+          "subCategories": [
+            {
+              "_id": "62a7948406f33c812ef11fe6",
+              "title": "Coffee",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948406f33c812ef11fe5",
+              "createdAt": "2022-06-13T19:48:20.971Z",
+              "updatedAt": "2022-06-13T19:48:20.971Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948506f33c812ef11fe8",
+              "title": "Tea",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948406f33c812ef11fe5",
+              "createdAt": "2022-06-13T19:48:21.209Z",
+              "updatedAt": "2022-06-13T19:48:21.209Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948506f33c812ef11fea",
+              "title": "Soft Drink",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948406f33c812ef11fe5",
+              "createdAt": "2022-06-13T19:48:21.450Z",
+              "updatedAt": "2022-06-13T19:48:21.450Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948406f33c812ef11fe4",
+          "createdAt": "2022-06-13T19:48:21.726Z",
+          "updatedAt": "2022-06-13T19:48:21.726Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948506f33c812ef11fed",
+          "title": "Freash Product",
+          "subCategories": [
+            {
+              "_id": "62a7948506f33c812ef11fee",
+              "title": "Freash Fruit",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948506f33c812ef11fed",
+              "createdAt": "2022-06-13T19:48:21.966Z",
+              "updatedAt": "2022-06-13T19:48:21.966Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948606f33c812ef11ff0",
+              "title": "Freash Vegetables",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948506f33c812ef11fed",
+              "createdAt": "2022-06-13T19:48:22.203Z",
+              "updatedAt": "2022-06-13T19:48:22.203Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948606f33c812ef11ff2",
+              "title": "Egg",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948506f33c812ef11fed",
+              "createdAt": "2022-06-13T19:48:22.550Z",
+              "updatedAt": "2022-06-13T19:48:22.550Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948406f33c812ef11fe4",
+          "createdAt": "2022-06-13T19:48:22.856Z",
+          "updatedAt": "2022-06-13T19:48:22.856Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948706f33c812ef11ff5",
+          "title": "Food",
+          "subCategories": [
+            {
+              "_id": "62a7948706f33c812ef11ff6",
+              "title": "Canned Food",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948706f33c812ef11ff5",
+              "createdAt": "2022-06-13T19:48:23.160Z",
+              "updatedAt": "2022-06-13T19:48:23.160Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948706f33c812ef11ff8",
+              "title": "Breakfast",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948706f33c812ef11ff5",
+              "createdAt": "2022-06-13T19:48:23.478Z",
+              "updatedAt": "2022-06-13T19:48:23.478Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948706f33c812ef11ffa",
+              "title": "Dinner",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948706f33c812ef11ff5",
+              "createdAt": "2022-06-13T19:48:23.774Z",
+              "updatedAt": "2022-06-13T19:48:23.774Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948806f33c812ef11ffc",
+              "title": "Launch",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948706f33c812ef11ff5",
+              "createdAt": "2022-06-13T19:48:24.082Z",
+              "updatedAt": "2022-06-13T19:48:24.082Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948806f33c812ef11ffe",
+              "title": "Frozen Food",
+              "subCategories": [
+                {
+                  "_id": "62a7948806f33c812ef11fff",
+                  "title": "Chicken",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7948806f33c812ef11ffe",
+                  "createdAt": "2022-06-13T19:48:24.325Z",
+                  "updatedAt": "2022-06-13T19:48:24.325Z",
+                  "__v": 0
+                },
+                {
+                  "_id": "62a7948806f33c812ef12001",
+                  "title": "Beef",
+                  "subCategories": [],
+                  "level": 4,
+                  "parentCategory": "62a7948806f33c812ef11ffe",
+                  "createdAt": "2022-06-13T19:48:24.596Z",
+                  "updatedAt": "2022-06-13T19:48:24.596Z",
+                  "__v": 0
+                }
+              ],
+              "level": 3,
+              "parentCategory": "62a7948706f33c812ef11ff5",
+              "createdAt": "2022-06-13T19:48:24.901Z",
+              "updatedAt": "2022-06-13T19:48:24.901Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948406f33c812ef11fe4",
+          "createdAt": "2022-06-13T19:48:25.206Z",
+          "updatedAt": "2022-06-13T19:48:25.206Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948906f33c812ef12005",
+          "title": "Cat",
+          "subCategories": [
+            {
+              "_id": "62a7948906f33c812ef12006",
+              "title": "Bed, Mats & Houses",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948906f33c812ef12005",
+              "createdAt": "2022-06-13T19:48:25.515Z",
+              "updatedAt": "2022-06-13T19:48:25.515Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948906f33c812ef12008",
+              "title": "Cat Treats",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948906f33c812ef12005",
+              "createdAt": "2022-06-13T19:48:25.751Z",
+              "updatedAt": "2022-06-13T19:48:25.751Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948a06f33c812ef1200a",
+              "title": "Cages",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948906f33c812ef12005",
+              "createdAt": "2022-06-13T19:48:26.004Z",
+              "updatedAt": "2022-06-13T19:48:26.004Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948406f33c812ef11fe4",
+          "createdAt": "2022-06-13T19:48:26.334Z",
+          "updatedAt": "2022-06-13T19:48:26.334Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948a06f33c812ef1200d",
+          "title": "Fish",
+          "subCategories": [],
+          "level": 2,
+          "parentCategory": "62a7948406f33c812ef11fe4",
+          "createdAt": "2022-06-13T19:48:26.646Z",
+          "updatedAt": "2022-06-13T19:48:26.646Z",
+          "__v": 0
+        }
+      ],
+      "level": 1,
+      "parentCategory": "62a7947c06f33c812ef11fa1",
+      "createdAt": "2022-06-13T19:48:26.887Z",
+      "updatedAt": "2022-06-13T19:48:26.887Z",
+      "__v": 0
+    },
+    {
+      "_id": "62a7948b06f33c812ef12010",
+      "title": "Fashion",
+      "subCategories": [
+        {
+          "_id": "62a7948b06f33c812ef12011",
+          "title": "Men's Fashions",
+          "subCategories": [
+            {
+              "_id": "62a7948b06f33c812ef12012",
+              "title": "T Shirts",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948b06f33c812ef12011",
+              "createdAt": "2022-06-13T19:48:27.125Z",
+              "updatedAt": "2022-06-13T19:48:27.125Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948b06f33c812ef12014",
+              "title": "Shoes",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948b06f33c812ef12011",
+              "createdAt": "2022-06-13T19:48:27.462Z",
+              "updatedAt": "2022-06-13T19:48:27.462Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948b06f33c812ef12016",
+              "title": "Inner Wear",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948b06f33c812ef12011",
+              "createdAt": "2022-06-13T19:48:27.703Z",
+              "updatedAt": "2022-06-13T19:48:27.703Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948b06f33c812ef12018",
+              "title": "Boy's Shoes",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948b06f33c812ef12011",
+              "createdAt": "2022-06-13T19:48:27.940Z",
+              "updatedAt": "2022-06-13T19:48:27.940Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948c06f33c812ef1201a",
+              "title": "Shalwar Kameez",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948b06f33c812ef12011",
+              "createdAt": "2022-06-13T19:48:28.178Z",
+              "updatedAt": "2022-06-13T19:48:28.178Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948b06f33c812ef12010",
+          "createdAt": "2022-06-13T19:48:28.416Z",
+          "updatedAt": "2022-06-13T19:48:28.416Z",
+          "__v": 0
+        },
+        {
+          "_id": "62a7948c06f33c812ef1201d",
+          "title": "Women's Fashion",
+          "subCategories": [
+            {
+              "_id": "62a7948c06f33c812ef1201e",
+              "title": "Kurtas & Shalwar Kameez",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948c06f33c812ef1201d",
+              "createdAt": "2022-06-13T19:48:28.656Z",
+              "updatedAt": "2022-06-13T19:48:28.656Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948c06f33c812ef12020",
+              "title": "Girl's Clothing",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948c06f33c812ef1201d",
+              "createdAt": "2022-06-13T19:48:28.894Z",
+              "updatedAt": "2022-06-13T19:48:28.894Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948d06f33c812ef12022",
+              "title": "Winter Clothing",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948c06f33c812ef1201d",
+              "createdAt": "2022-06-13T19:48:29.131Z",
+              "updatedAt": "2022-06-13T19:48:29.131Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948d06f33c812ef12024",
+              "title": "Unstitched Fabrics",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948c06f33c812ef1201d",
+              "createdAt": "2022-06-13T19:48:29.369Z",
+              "updatedAt": "2022-06-13T19:48:29.369Z",
+              "__v": 0
+            },
+            {
+              "_id": "62a7948d06f33c812ef12026",
+              "title": "Tops",
+              "subCategories": [],
+              "level": 3,
+              "parentCategory": "62a7948c06f33c812ef1201d",
+              "createdAt": "2022-06-13T19:48:29.607Z",
+              "updatedAt": "2022-06-13T19:48:29.607Z",
+              "__v": 0
+            }
+          ],
+          "level": 2,
+          "parentCategory": "62a7948b06f33c812ef12010",
+          "createdAt": "2022-06-13T19:48:29.845Z",
+          "updatedAt": "2022-06-13T19:48:29.845Z",
+          "__v": 0
+        }
+      ],
+      "level": 1,
+      "parentCategory": "62a7947c06f33c812ef11fa1",
+      "createdAt": "2022-06-13T19:48:30.083Z",
+      "updatedAt": "2022-06-13T19:48:30.083Z",
+      "__v": 0
+    }
+  ],
+  "level": 0,
+  "parentCategory": null,
+  "createdAt": "2022-06-13T19:48:30.318Z",
+  "updatedAt": "2022-06-13T19:48:30.318Z",
+  "__v": 0
+}

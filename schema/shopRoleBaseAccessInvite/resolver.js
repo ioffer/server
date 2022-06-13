@@ -21,10 +21,8 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 
 
-let fetchData = async() => {
-    let shops = await Shop.find({});
-    return shops
-
+let fetchData = () => {
+    return Shop.find();
 }
 
 const resolvers = {

@@ -1,20 +1,18 @@
 const {gql} = require('apollo-server-express');
 
 
-const shopTypeDefs = gql`
+const brandTypeDefs = gql`
 
-    input ShopInput {
-        name: String!,
-        category:[String]!,
-        subCategory:[String],
+    input BrandInput {
+        name: String,
+        category:[ID],
+        subCategory:[ID],
         logo: ID,
         coverImage:ID,
         tags:[String],
         website: String,
-        phoneNumbers: String!,
+        phoneNumbers: String,
         mobileNumber: String,
-        location: String!,
-        address: String!,
         facebook: String,
         tiktok: String,
         twitter: String,
@@ -23,7 +21,7 @@ const shopTypeDefs = gql`
         linkedIn: String,
     }
 
-    type Shop {
+    type Brand {
         id: ID!,
         name: String,
         category:[String],
@@ -34,8 +32,6 @@ const shopTypeDefs = gql`
         website: String,
         phoneNumbers: String,
         mobileNumber: String,
-        location: String,
-        address: String,
         publishingDateTime:String,
         facebook: String,
         tiktok: String,
@@ -43,25 +39,27 @@ const shopTypeDefs = gql`
         instagram: String,
         youtube: String,
         linkedIn: String,
-        isBlocked: Boolean,
         status(status:Status):String,
-        verified(verified: Verified): String,
+        isBlocked: Boolean,
+        verified(verified:Verified):String,
         viewCounts: Int,
         clickCounts: Int,
         subscriberCounts: Int,
         owner: User,
-        brand: Brand,
-        admin: [User],
-        modifier: [User],
-        watcher: [User],
-        subscribers: [User],
-        roleBaseAccessInvites:ShopRoleBaseAccessInvite,
+        brandShops:[Shop],
+        admins:[User],
+        modifiers:[User],
+        watchers:[User],
+        subscribers:[User],
+        roleBaseAccessInvites:[BrandRoleBaseAccessInvite]
         verifiedBy: User,
         promotions: [Promotion],
-#        offers: [Offer]
+        createdAt: String,
+        updatedAt: String,
+        #        offers: [Offer]
     }
     
 `;
 
 
-module.exports = shopTypeDefs;
+module.exports = brandTypeDefs;

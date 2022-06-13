@@ -1,4 +1,4 @@
-import {User, Shop} from "../../models";
+import {User, Shop, Brand, UserFavourite} from "../../models";
 import {find} from "lodash"
 
 const {SECRET} = require("../../config")
@@ -18,6 +18,7 @@ import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConf
 import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
+import {Status, Roles} from "../../constants/enums";
 
 
 let fetchData = async () => {
@@ -27,10 +28,23 @@ let fetchData = async () => {
 const resolvers = {
     User: {
         shops: async (parent) => {
-            let data = await Shop.find({"owner": parent.id})
-            console.log(data)
-            return data;
+            return await Shop.find({"owner": parent.id})
         },
+        brands: async (parent) => {
+            return await Brand.find({"owner": parent.id})
+        },
+        favourites: async (parent) => {
+            return await UserFavourite.find({"user":parent.id})
+        },
+        pins: async (parent) => {
+            return await UserPin.find({"user":parent.id})
+        },
+        subscriptions: async (parent) => {
+            return await UserSubscription.find({"user":parent.id})
+        },
+        roleBasedAccess: async (parent) => {
+            return await UserRoleBaseAccess.find({"user":parent.id})
+        }
     },
     Query: {
         users: () => {
@@ -50,21 +64,16 @@ const resolvers = {
             return await User.findById(args.id);
         },
         loginUser: async (_, {userName, password}) => {
-            console.log("/login")
             // Validate Incoming User Credentials
             await PasswordRules.validate({password}, {abortEarly: false});
-            console.log("/password Verified")
             // Find the user from the database
             let user = await User.findOne(
             { $or: [ {"userName":userName}, { "email":userName} ] }
             );
-            console.log("finding user")
             // If User is not found
             if (!user) {
-                console.log("user not found")
                 throw new ApolloError("User Not Found", '404');
             } else if (!user.confirmed) {
-                console.log("user found and not confirmed")
                 /// Sending Email to user
                 let emailData = {
                     id: user.id,
@@ -74,11 +83,9 @@ const resolvers = {
                 let emailLink = await emailConfirmationUrl(userEmail);
                 let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
                 let response = await sendEmail(user.email, emailLink, emailHtml)
-                console.log("response:",response)
                 throw new ApolloError("Email Not Confirmed", '403');
             } else {
                 console.log("user found and confirmed")
-
             }
             // If user is found then compare the password
             let isMatch = await compare(password, user.password);
@@ -88,7 +95,6 @@ const resolvers = {
             }
 
             user = await serializeUser(user);
-            console.log("user senitized", user)
             // Issue Token
             let token = await issueAuthToken(user);
             return {
@@ -114,8 +120,8 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
-                return await User.find({"kyc.kycStatus": "PENDING"});
+            if (user.type === Roles.SUPER_ADMIN) {
+                return await User.find({"kyc.kycStatus": Status.PENDING});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
@@ -124,7 +130,7 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
+            if (user.type ===Roles.SUPER_ADMIN) {
                 return await User.find({"isBlocked": false, "confirmed": true});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -144,16 +150,16 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if (user.type === 'ADMIN') {
+                if (user.type === Roles.SUPER_ADMIN) {
                     let blockingUser = await User.findById(id);
-                    if (blockingUser.type !== 'ADMIN') {
+                    if (blockingUser.type !== Roles.SUPER_ADMIN) {
                         let response = await User.findByIdAndUpdate(id, {isBlocked: true});
                         if (!response) {
                             return new ApolloError("User Not Found", '404')
                         }
                         return true;
                     }
-                    return new ApolloError("Admin Cannot be Blocked", 403)
+                    return new ApolloError("Super Admin Cannot be Blocked", 403)
                 }
             } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
@@ -164,9 +170,9 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
 
-            if (user.type === "ADMIN") {
+            if (user.type === Roles.SUPER_ADMIN) {
                 try {
-                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": "VERIFIED"}});
+                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": Status.VERIFIED}});
                     if (!response) {
                         return new ApolloError("User not found", '404');
                     }
@@ -183,9 +189,9 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
 
-            if (user.type === "ADMIN") {
+            if (user.type === Roles.SUPER_ADMIN) {
                 try {
-                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": "NOT_VERIFIED"}});
+                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": Status.REJECTED}});
                     if (!response) {
                         return new ApolloError("User Not Found", '404')
                     }
@@ -225,7 +231,7 @@ const resolvers = {
 
             try {
                 let secret = speakeasy.generateSecret({
-                    name: "DappsLab"
+                    name: "IOffer"
                 })
 
                 const data = await qrcode.toDataURL(secret.otpauth_url);
@@ -409,7 +415,7 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let newUser = await User.findOneAndUpdate({email: email}, {$set: {type: "ADMIN"}});
+                let newUser = await User.findOneAndUpdate({email: email}, {$set: {type: Roles.SUPER_ADMIN}});
                 if (!newUser) {
                     return new ApolloError("User Not Found. User Must Be Registered")
                 }

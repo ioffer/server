@@ -1,4 +1,5 @@
 import Category from "./category";
+import {Status, Verified} from "../constants/enums";
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -23,7 +24,7 @@ const promotionSchema = new Schema({
     publishingDateTime:String,
     verified: {
         type: String,
-        default:"PENDING"
+        default:Verified.PENDING
     },
     viewCounts: {
         type: Number,
@@ -39,8 +40,9 @@ const promotionSchema = new Schema({
         default:false
     },
     status:{
-        type:Boolean,
-        default:false
+        type:String,
+        enum:Status,
+        default:Status.DRAFT
     },
     publisher: {
         ref: 'users',

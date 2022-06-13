@@ -14,6 +14,17 @@ const imageQuery = require('./image/query.js')
 // const unBlockRequestQuery = require('./unBlockRequest/query.js')
 const enumsTypeDefs = require('./constants/enums.js')
 
+const userSubscriptionTypeDefs = require('./userSubscription/type.js')
+const shopRoleBaseAccessInviteTypeDefs = require('./shopRoleBaseAccessInvite/type.js')
+const roleBasedAccessTypeDefs = require('./roleBasedAccess/type.js')
+const pinTypeDefs = require('./pin/type.js')
+const mediaTypeDefs = require('./media/type.js')
+const favoriteTypeDefs = require('./favorite/type.js')
+const brandRoleBaseAccessInviteTypeDefs = require('./brandRoleBaseAccessInvite/type')
+const brandTypeDefs = require('./brand/type')
+const categoryTypeDefs = require('./category/type')
+const categoryQuery = require('./category/query')
+
 const typeDefs = [
     baseTypeDefs,
     enumsTypeDefs,
@@ -27,6 +38,17 @@ const typeDefs = [
     imageQuery,
     // unBlockRequestTypeDefs,
     // unBlockRequestQuery,
+    userSubscriptionTypeDefs,
+    shopRoleBaseAccessInviteTypeDefs,
+    roleBasedAccessTypeDefs,
+    pinTypeDefs,
+    mediaTypeDefs,
+    favoriteTypeDefs,
+    brandRoleBaseAccessInviteTypeDefs,
+    brandTypeDefs,
+    categoryTypeDefs,
+    categoryQuery,
+
 ];
 
 module.exports = mergeTypeDefs(typeDefs);

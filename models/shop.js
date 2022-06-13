@@ -1,11 +1,11 @@
-import {Status} from "../constants/enums";
+import {Status, Verified} from "../constants/enums";
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const shopSchema = new Schema({
     name: String,
-    brandCategory:[{
+    category:[{
         ref:'categories',
         type:Schema.Types.ObjectId,
     }],
@@ -44,8 +44,8 @@ const shopSchema = new Schema({
     },
     verified: {
         type:String,
-        enum:Status,
-        default:Status.PENDING
+        enum:Verified,
+        default:Verified.PENDING
     },
     viewCounts: {
         type: Number,
