@@ -1,5 +1,6 @@
 import {Category} from "../../models";
 import lodash from 'lodash';
+import async from "async";
 const fs = require('fs');
 
 let fetchData = async () => {
@@ -10,7 +11,11 @@ const result = [];
 function objectToArray(obj) {
     if (!obj) return;
     const { subCategories, ...rest } = obj;
-    result.push({ ...rest });
+    const rest2 = {
+        ...rest,
+        id:rest._id,
+    }
+    result.push({ ...rest2 });
     for(let i=0; i<subCategories.length; i++) {
         objectToArray(subCategories[i]._doc);
     }
@@ -30,7 +35,14 @@ let deepPopulate = async (populate = {}, level = null) => {
 }
 
 const resolvers = {
-    Category: {},
+    Category: {
+        parentCategory: async (parent) => {
+            return await Category.findById(parent.parentCategory);
+        },
+        subCategories: async (parent) => {
+            return await Category.find({parentCategory:parent.id})
+        }
+    },
     Query: {
         categories: () => {
             return fetchData()
@@ -51,7 +63,10 @@ const resolvers = {
             populate = await deepPopulate(populate, 2)
             try {
                 let data = await Category.findById(id).populate([populate]);
+                console.log('data',data)
                 objectToArray(data._doc);
+                console.log(result);
+                return result;
                 console.log(result);
             } catch (e) {
                 console.error('error', e)

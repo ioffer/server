@@ -8,7 +8,7 @@ const categoryTypeDefs = gql`
         title: String,
         level:Float,
         subCategories: [Category],
-        parentCategory: [Category],
+        parentCategory: Category,
         createdAt: String,
         updatedAt: String,
     }

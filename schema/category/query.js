@@ -5,7 +5,7 @@ const categoryQuery = gql`
         categories:[Category],
         categoryById(id:ID!):Category,
         mainCategories:[Category],
-        subCategories(id:ID!):String,
+        subCategories(id:ID!):[Category],
     },
     
 `;

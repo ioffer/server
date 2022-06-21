@@ -1,24 +1,26 @@
   const {gql} = require('apollo-server-express');
 
-const userQuery = gql`
+const brandQuery = gql`
     extend type Query {
-        shops:[Shop],
-        shopById(id:ID!):Shop @isAuth,
-        searchPendingShops:[Shop] @isAuth,
-        searchBlockedShops: [Shop] @isAuth
+        brands:[Brand],
+        brandById(id:ID!):Brand @isAuth,
+        searchPendingBrands:[Brand] @isAuth,
+        searchBlockedBrands: [Brand] @isAuth
 #        searchShops(query:Query):[Shop]
     },
     
     extend type Mutation {
-        registerShop(newShop: ShopInput!):Shop @isAuth,
-        editShop(id:ID!, newShop: ShopInput!): Shop @isAuth,
-        deleteShop(id: ID!):Boolean @isAuth,
-        verifyShop(id:ID!):Boolean @isAuth,
-        blockShop(id:ID!):Boolean @isAuth,
-        inviteModerators(id:ID!, emails:[String]):Boolean @isAuth
-        addModerator(id:ID!,userID:ID!):Boolean @isAuth
-        clickShop(id:ID!):Boolean
-        viewShop(id:ID!):Boolean
+        createBrand(newShop: BrandInput!):Brand @isAuth,
+        editBrand(id:ID!, newShop: ShopInput!): Brand @isAuth,
+        deleteBrand(id: ID!):Boolean @isAuth,
+        verifyBrand(id:ID!):Boolean @isAuth,
+        blockBrand(id:ID!):Boolean @isAuth,
+#        inviteModerators(id:ID!, emails:[String]):Boolean @isAuth
+#        addModerator(id:ID!,userID:ID!):Boolean @isAuth
+        clickBrand(id:ID!):Boolean
+        viewBrand(id:ID!):Boolean
+        subscribeBrand(id:ID!):Boolean
+        createBrandPromotion(id:ID!):Brand
     }
     
 `;

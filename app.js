@@ -24,7 +24,7 @@ let app = express();
 const uri = "mongodb://qasim:qasim1234@abdulla-shard-00-00.eftvp.mongodb.net:27017,abdulla-shard-00-01.eftvp.mongodb.net:27017,abdulla-shard-00-02.eftvp.mongodb.net:27017/ioffer?ssl=true&replicaSet=abdulla-shard-0&authSource=admin&retryWrites=true&w=majority";
 mongoose.connect(uri);
 mongoose.Promise = global.Promise;
-const port = process.env.PORT || process.env.port || 4000
+const port = process.env.PORT || process.env.port || 4001
 app.use(cors());
 
 // view engine setup
@@ -118,7 +118,7 @@ const server = new ApolloServer({
     await server.start();
     server.applyMiddleware({app});
     mongoose.connection.once('open', () => {
-        console.log(' 🍃 connected to mongoDB mLab');
+        console.log(' 🍃 connected to mongoDB mLab1');
         app.listen( port, () => {
             console.log('🚀 now listening for requests on port',  port);
         });

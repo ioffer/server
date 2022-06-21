@@ -30,7 +30,7 @@ const shopTypeDefs = gql`
         subCategory:[String],
         logo: Media,
         coverImage: Media,
-        tags:[String],
+        tags:[Tag],
         website: String,
         phoneNumbers: String,
         mobileNumber: String,

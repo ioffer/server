@@ -20,6 +20,7 @@ export {default as ShopView} from './shopView';
 export {default as Category} from './category';
 export {default as Link} from './link';
 export {default as Media} from './media';
+export {default as Tag} from './tag';
 
 //
 // let Models = {}

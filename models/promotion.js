@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const promotionSchema = new Schema({
     name: String,
     media: {
-        ref: 'media',
+        ref: 'medias',
         type: Schema.Types.ObjectId
     },
     tags:[String],

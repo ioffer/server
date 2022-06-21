@@ -15,13 +15,16 @@ const shopSchema = new Schema({
     }],
     logo: {
         type:Schema.Types.ObjectId,
-        ref: 'media'
+        ref: 'medias'
     },
     coverImage:{
         type:Schema.Types.ObjectId,
-        ref: 'media'
+        ref: 'medias'
     },
-    tags:[String],
+    tags:[{
+        type:Schema.Types.ObjectId,
+        ref: 'tags'
+    }],
     website: String,
     phoneNumbers: String,
     mobileNumber: String,

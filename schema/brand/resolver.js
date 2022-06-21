@@ -1,35 +1,26 @@
-import {User, Promotion, Shop} from "../../models";
-import {find} from "lodash"
-
-const {SECRET} = require("../../config")
-const {hash, compare} = require('bcryptjs')
-const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
-const {
-    UserRegisterationRules,
-    UserAuthenticationRules,
-    EmailRules,
-    PasswordRules,
-    UserRules
-} = require('../../validations');
-const {verify} = require('jsonwebtoken');
-import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
+import {User, Promotion, Shop, Brand, Media} from "../../models";
+import {ApolloError, AuthenticationError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
-import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
-import speakeasy from "speakeasy";
-import qrcode from "qrcode";
 
 
-let fetchData = () => {
-    return User.find();
+let fetchData = async() => {
+    return await Brand.find();
 }
 
 const resolvers = {
-    Shop: {
+    Brand: {
+        logo: async (parent) => {
+          return await Media.findById(parent.logo);
+        },
+        coverImage: async (parent) => {
+          return await Media.findById(parent.coverImage);
+        },
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
+
     },
     Query: {
         shops: () => {

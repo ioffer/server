@@ -14,11 +14,11 @@ const brandSchema = new Schema({
     }],
     logo: {
         type:Schema.Types.ObjectId,
-        ref: 'media'
+        ref: 'medias'
     },
     coverImage:{
         type:Schema.Types.ObjectId,
-        ref: 'media'
+        ref: 'medias'
     },
     tags:[String],
     website: String,
