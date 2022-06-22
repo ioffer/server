@@ -50,13 +50,23 @@ const brandTypeDefs = gql`
         admins:[User],
         modifiers:[User],
         watchers:[User],
-        subscribers:[User],
         roleBaseAccessInvites:[BrandRoleBaseAccessInvite]
+        subscribers:[User],
         verifiedBy: User,
         promotions: [Promotion],
         createdAt: String,
         updatedAt: String,
         #        offers: [Offer]
+    }
+    
+    type BrandClick {
+        brand: Brand,
+        user:User,
+    }
+    
+    type BrandView {
+        brand: Brand,
+        user:User,
     }
     
 `;

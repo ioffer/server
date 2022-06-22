@@ -5,11 +5,12 @@ const brandRoleBaseAccessInviteTypeDefs = gql`
 
     type BrandRoleBaseAccessInvite {
         id: ID!,
-        user: User,
+        user: User!,
+        email: String!,
         invite: User,
-        brand:Brand,
-        role(role:Role):String,
-        inviteLink: String,
+        brand:Brand!,
+        role(role:Role):String!,
+        inviteLink: String!,
         isAccepted: Boolean,
         isExpired: Boolean,
         createdAt: String,

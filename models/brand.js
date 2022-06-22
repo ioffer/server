@@ -34,6 +34,7 @@ const brandSchema = new Schema({
     status: {
         type:String,
         enum:Status,
+        default:Status.DRAFT
     },
     isBlocked: {
         type: Boolean,

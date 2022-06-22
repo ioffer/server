@@ -5,27 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
-      <change afterPath="$PROJECT_DIR$/models/tag.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/tag/query.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/tag/resolver.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/tag/type.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/brand.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/brand.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/media.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/media.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/offer.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/offer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/promotion.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/promotion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/brand/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/brandRoleBaseAccessInvite.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/brandRoleBaseAccessInvite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/category/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/category/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brandRoleBaseAccessInvite/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brandRoleBaseAccessInvite/type.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/category/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/category/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/category/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/category/type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/typeDefs.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/typeDefs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,7 +192,7 @@
       <workItem from="1654591556162" duration="664000" />
       <workItem from="1654669982425" duration="44276000" />
       <workItem from="1655068466173" duration="1203000" />
-      <workItem from="1655105094244" duration="57183000" />
+      <workItem from="1655105094244" duration="69015000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

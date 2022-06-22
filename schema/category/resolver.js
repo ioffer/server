@@ -7,8 +7,8 @@ let fetchData = async () => {
     return await Category.find();
 }
 
-const result = [];
-function objectToArray(obj) {
+// const result = [];
+function objectToArray(obj, result) {
     if (!obj) return;
     const { subCategories, ...rest } = obj;
     const rest2 = {
@@ -17,7 +17,7 @@ function objectToArray(obj) {
     }
     result.push({ ...rest2 });
     for(let i=0; i<subCategories.length; i++) {
-        objectToArray(subCategories[i]._doc);
+        objectToArray(subCategories[i]._doc, result);
     }
 }
 let deepPopulate = async (populate = {}, level = null) => {
@@ -64,7 +64,8 @@ const resolvers = {
             try {
                 let data = await Category.findById(id).populate([populate]);
                 console.log('data',data)
-                objectToArray(data._doc);
+                let result = [];
+                objectToArray(data._doc, result);
                 console.log(result);
                 return result;
                 console.log(result);

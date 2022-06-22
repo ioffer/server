@@ -21,7 +21,7 @@ const brandRoleBaseAccessInviteSchema = new Schema({
     inviteLink:String,
     isAccepted:Boolean,
     isExpired:Boolean,
-    expiresAt:String,
+    email: String,
 }, {
     timestamps: true
 });

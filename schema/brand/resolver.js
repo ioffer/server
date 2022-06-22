@@ -1,21 +1,25 @@
-import {User, Promotion, Shop, Brand, Media} from "../../models";
+import {User, Promotion, Shop, Brand, Media, Tag, BrandView, BrandClick} from "../../models";
 import {ApolloError, AuthenticationError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
+import {Roles, Verified, Status} from "../../constants/enums";
+import BrandRoleBaseAccessInvite from "../../models/brandRoleBaseAccessInvite";
+import {EmailRules} from "../../validations";
+import RoleBaseAccess from "../../models/roleBaseAccess";
 
 
-let fetchData = async() => {
+let fetchData = async () => {
     return await Brand.find();
 }
 
 const resolvers = {
     Brand: {
         logo: async (parent) => {
-          return await Media.findById(parent.logo);
+            return await Media.findById(parent.logo);
         },
         coverImage: async (parent) => {
-          return await Media.findById(parent.coverImage);
+            return await Media.findById(parent.coverImage);
         },
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
@@ -23,28 +27,28 @@ const resolvers = {
 
     },
     Query: {
-        shops: () => {
+        brands: () => {
             return fetchData()
         },
-        shopById: async (_, args) => {
-            return await Shop.findById(args.id);
+        brandById: async (_, args) => {
+            return await Brand.findById(args.id);
         },
-        searchPendingShops: async (_, {}, {user, Shop}) => {
+        searchPendingBrand: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
-                return await Shop.find({'verified': "PENDING"});
+            if (user.type === Roles.SUPER_ADMIN) {
+                return await Brand.find({'verified': Verified.PENDING});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchBlockedShops: async (_, {}, {user, Shop}) => {
+        searchBlockedShops: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
-                return await Shop.find({"isBlocked": true, "confirmed": true});
+            if (user.type === Roles.SUPER_ADMIN) {
+                return await Brand.find({"isBlocked": true});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
@@ -55,67 +59,84 @@ const resolvers = {
 
     },
     Mutation: {
-        registerShop: async (_, {newShop}, {Shop, user}) => {
+        createBrand: async (_, {newBrand}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let shop = Shop({
-                    ...newShop,
+                let tags = [];
+                if (newBrand.tags) {
+                    tags = [...new Set(newBrand.tags)];
+                }
+                let brand = Brand({
+                    ...newBrand,
+                    tags,
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
+                if (tags) {
+                    for (let i = 0; i < tags.length; i++) {
+                        let tag = await Tag.findById(tags[i]);
+                        if (!tag.brands.includes(brand.id)) {
+                            tag.brands.push(brand.id);
+                            await tag.save();
+                        }
+                    }
+                }
                 let result = null;
-                try{
-                    result = await shop.save();
-                    let response = await User.findById(user.id);
-                    console.log('response:', response)
-                    response.shops.push(result.id);
-                    console.log('response2:', response)
-                    await response.save();
-                }catch (e) {
-                    return  new ApolloError("Unable to save Shop", 500)
+                try {
+                    result = await brand.save();
+                    let user = await User.findById(user.id);
+                    console.log('response:', user)
+                    user.brands.push(result.id);
+                    console.log('response2:', user)
+                    await user.save();
+                } catch (e) {
+                    return new ApolloError("Unable to save Brand", 500)
                 }
                 return result;
             } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        editShop: async (_, {id, newShop}, {Shop, user}) => {
+        editBrand: async (_, {id, newBrand}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await Shop.findOneAndUpdate({_id: id}, newShop, {new: true});
+                if (newBrand.tags) {
+                    newBrand.tags = [...new Set(newBrand.tags)];
+                }
+                return await Brand.findOneAndUpdate({_id: id}, newBrand, {new: true});
             } catch (err) {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        deleteShop: async (_, {id}, {Shop, user}) => {
+        deleteBrand: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if (user.type === "ADMIN") {
-                    await Shop.findByIdAndRemove(id);
+                if (user.type === Roles.SUPER_ADMIN) {
+                    await Brand.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
                     return true
                 } else {
-                    await Shop.findOneAndRemove({id: id, owner: user.id});
+                    await Brand.findOneAndUpdate({id: id, owner: user.id}, {status: Status.DELETED}, {new: true});
                     return true
                 }
             } catch (e) {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        verifyShop: async (_, {id}, {user, Shop}) => {
+        verifyBrand: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
+            if (user.type === Roles.SUPER_ADMIN) {
                 try {
-                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": "VERIFIED"}});
+                    let response = await Brand.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
                     if (!response) {
-                        return new ApolloError("Shop not found", '404');
+                        return new ApolloError("Brand not found", '404');
                     }
                     return true
                 } catch (err) {
@@ -125,16 +146,17 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        blockShop: async (_, {id}, {user, Shop}) => {
+        blockBrand: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if (user.type === 'ADMIN') {
-                    let blockingShop = await Shop.findById(id);
+                if (user.type === Roles.SUPER_ADMIN) {
+                    let blockingShop = await Brand.findById(id);
                     let response = await Shop.findByIdAndUpdate(id, {isBlocked: true});
+
                     if (!response) {
-                        return new ApolloError("Shop Not Found", '404')
+                        return new ApolloError("Brand Not Found", '404')
                     }
                     return true;
                 }
@@ -142,56 +164,114 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        inviteModerators: async (_, {id,emails}, {Shop, user}) => {
+        inviteModerators: async (_, {id, email, role}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let shop = await Shop.findOne({_id: id, owner:user.id});
-                if (shop){
-                    for(email of emails){
-                        await EmailRules.validate({email}, {abortEarly: false});
-                        let emailLink = await emailConfirmationUrl(email);
-                        //TODO change emailConfirmBody()
-                        let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                        try{
-                            await sendEmail(email, emailLink, emailHtml)
-                        }catch (e) {
-                            return new ApolloError(`Email Sending Failed to ${email}`, 500);
-                        }
+                let brand = await Brand.findOne({_id: id, owner: user.id});
+                if (brand) {
+                    let invite = await User.findOne({"email": email})
+                    let inviteId = null;
+                    if (user) {
+                        inviteId = invite.id;
                     }
+
+                    let code = (Math.random() + 1).toString(36).substring(2);
+                    let inviteLink = 'brand_' + code;
+                    let brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.findOne({email, "brand": brand.id});
+                    if (brandRoleBaseAccessInvite) {
+                        return new ApolloError("Already Invited", 500)
+                    }
+                    brandRoleBaseAccessInvite = new BrandRoleBaseAccessInvite({
+                        user: user.id,
+                        email,
+                        invite: inviteId,
+                        brand: brand.id,
+                        role,
+                        inviteLink,
+                    })
+                    await brandRoleBaseAccessInvite.save()
+                    // sending email
+                    await EmailRules.validate({email}, {abortEarly: false});
+                    await emailConfirmationUrl(email);
+                    //TODO change emailConfirmBody()
+                    let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
+                    try {
+                        await sendEmail(email, emailLink, emailHtml)
+                    } catch (e) {
+                        return new ApolloError(`Email Sending Failed to ${email}`, 500);
+                    }
+                    return true;
                 }
             } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        addModerator: async (_, {id,userID}, {Shop, user}) => {
+        removeModerator: async (_, {id, email, role}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators:userID}}, {new: true});
+                let brand = await Brand.findById(id);
+                if (brand.owner === id || brand.admins.include(id)) {
+                    let moderator = await User.findOne({email});
+                    await BrandRoleBaseAccessInvite.findOneAndRemove({email, "brand": brand.id});
+                    //TODO also remove from user role access
+                    if (role === 'ADMIN') {
+                        const index = brand.admins.indexOf(moderator);
+                        if (index > -1) {
+                            brand.admins.splice(index, 1);
+                        }
+                        await RoleBaseAccess.findOneAndUpdate({'_id': moderator.id},
+                            {
+                                admin: {
+                                    $pullAll: {
+                                        brands: brand.id,
+                                    },
+                                }
+                            }
+                        )
+
+                    } else if (role === 'MODIFIER') {
+                        const index = brand.modifiers.indexOf(moderator);
+                        if (index > -1) {
+                            brand.modifiers.splice(index, 1);
+                        }
+                    } else if (role === 'WATCHER') {
+                        const index = brand.watchers.indexOf(moderator);
+                        if (index > -1) {
+                            brand.watchers.splice(index, 1);
+                        }
+                    } else {
+                        return new ApolloError("Invalid Role", 404)
+                    }
+
+                }
+                return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
             } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        clickShop:async (_, {id}, {Shop})=>{
-            try{
-                let shop = Shop.findById(id)
-                shop.clickCounts++
-                shop.save()
+        clickBrand: async (_, {id},{user}) => {
+            try {
+                let brand = Brand.findById(id)
+                brand.clickCounts++
+                await brand.save();
+                await BrandClick.create({brand:brand.id, user:user?.id});
                 return true
-            }catch (e) {
+            } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        viewShop:async (_, {id}, {Shop})=>{
-            try{
-                let shop = Shop.findById(id)
-                shop.viewCounts++
-                shop.save()
+        viewBrand: async (_, {id}, {user})=> {
+            try {
+                let brand = Brand.findById(id)
+                brand.viewCounts++
+                await brand.save();
+                await BrandView.create({brand:brand.id, user:user?.id});
                 return true
-            }catch (e) {
+            } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         }
