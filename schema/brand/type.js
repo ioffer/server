@@ -2,14 +2,14 @@ const {gql} = require('apollo-server-express');
 
 
 const brandTypeDefs = gql`
-
+    
     input BrandInput {
         name: String,
         category:[ID],
         subCategory:[ID],
         logo: ID,
         coverImage:ID,
-        tags:[String],
+        tags:[ID],
         website: String,
         phoneNumbers: String,
         mobileNumber: String,
@@ -19,16 +19,17 @@ const brandTypeDefs = gql`
         instagram: String,
         youtube: String,
         linkedIn: String,
+        status:Status
     }
 
     type Brand {
         id: ID!,
         name: String,
-        category:[String],
-        subCategory:[String],
+        category:[Category],
+        subCategory:[Category],
         logo: Media,
         coverImage: Media,
-        tags:[String],
+        tags:[Tag],
         website: String,
         phoneNumbers: String,
         mobileNumber: String,

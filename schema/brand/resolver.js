@@ -7,6 +7,7 @@ import {Roles, Verified, Status} from "../../constants/enums";
 import BrandRoleBaseAccessInvite from "../../models/brandRoleBaseAccessInvite";
 import {EmailRules} from "../../validations";
 import RoleBaseAccess from "../../models/roleBaseAccess";
+import async from "async";
 
 
 let fetchData = async () => {
@@ -33,7 +34,7 @@ const resolvers = {
         brandById: async (_, args) => {
             return await Brand.findById(args.id);
         },
-        searchPendingBrand: async (_, {}, {user}) => {
+        searchPendingBrands: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -63,6 +64,7 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
+            console.log("user: " + user )
             try {
                 let tags = [];
                 if (newBrand.tags) {
@@ -74,28 +76,28 @@ const resolvers = {
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
+                console.log("brand", brand);
                 if (tags) {
                     for (let i = 0; i < tags.length; i++) {
                         let tag = await Tag.findById(tags[i]);
                         if (!tag.brands.includes(brand.id)) {
                             tag.brands.push(brand.id);
-                            await tag.save();
+                            let tagData = await tag.save();
+                            console.log("tagData", tagData);
                         }
                     }
                 }
-                let result = null;
-                try {
-                    result = await brand.save();
-                    let user = await User.findById(user.id);
-                    console.log('response:', user)
-                    user.brands.push(result.id);
-                    console.log('response2:', user)
-                    await user.save();
-                } catch (e) {
-                    return new ApolloError("Unable to save Brand", 500)
-                }
+                let result = await brand.save();
+                    console.log("result", result);
+                    console.log("user3", user);
+                    let userRes = await User.findById(user._id);
+                    console.log('response:', userRes)
+                    userRes.brands.push(result.id);
+                    console.log('response2:', userRes)
+                    await userRes.save();
                 return result;
             } catch (e) {
+                console.log("error", e)
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
@@ -164,7 +166,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        inviteModerators: async (_, {id, email, role}, {user}) => {
+        inviteBrandModerator: async (_, {id, email, role}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -208,7 +210,7 @@ const resolvers = {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        removeModerator: async (_, {id, email, role}, {user}) => {
+        removeBrandModerator: async (_, {id, email, role}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -274,7 +276,10 @@ const resolvers = {
             } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
-        }
+        },
+        // subscribeBrand: async (_,{})=>{
+        //
+        // }
     },
 }
 

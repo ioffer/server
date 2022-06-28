@@ -5,13 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change afterPath="$PROJECT_DIR$/middleware/file.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/brand.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/brand.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/brandRoleBaseAccessInvite.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/brandRoleBaseAccessInvite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/query.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/brand/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/brandRoleBaseAccessInvite/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brandRoleBaseAccessInvite/type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/category/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/category/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/media/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/media/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/media/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/media/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/typeDefs.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/typeDefs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +73,21 @@
       </RecentBranches>
     </option>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/constants/enums.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/middleware/file.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/models/media.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/brand/resolver.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/brand/type.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/constants/enums.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/image/query.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/image/resolver.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/image/type.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/media/query.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/media/resolver.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/schema/media/type.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Downloads/fileUpload.resolver.js" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -75,24 +99,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "16.13.2",
-    "javascript.nodejs.core.library.typings.version": "16.11.39",
-    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer-server/models",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5787.30/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.13.2&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.11.41&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer-server/models&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5787.30/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/models" />
@@ -192,7 +216,15 @@
       <workItem from="1654591556162" duration="664000" />
       <workItem from="1654669982425" duration="44276000" />
       <workItem from="1655068466173" duration="1203000" />
-      <workItem from="1655105094244" duration="69015000" />
+      <workItem from="1655105094244" duration="72684000" />
+      <workItem from="1655976165664" duration="5723000" />
+      <workItem from="1656068020943" duration="100000" />
+      <workItem from="1656070130039" duration="5070000" />
+      <workItem from="1656330161220" duration="8548000" />
+      <workItem from="1656406697532" duration="264000" />
+      <workItem from="1656406979692" duration="10000" />
+      <workItem from="1656407001831" duration="506000" />
+      <workItem from="1656418691746" duration="3209000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

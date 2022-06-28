@@ -136,11 +136,7 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        authUser: async (_, __, {
-            req: {
-                user
-            }
-        }) => user,
+        authUser: async (_, __, {req: {user}}) => user,
 
 
     },

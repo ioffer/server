@@ -21,6 +21,7 @@ const shopTypeDefs = gql`
         instagram: String,
         youtube: String,
         linkedIn: String,
+        status:String,
     }
 
     type Shop {

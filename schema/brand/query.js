@@ -10,21 +10,21 @@ const brandQuery = gql`
     },
     
     extend type Mutation {
-        createBrand(newShop: BrandInput!):Brand @isAuth,
-        editBrand(id:ID!, newShop: ShopInput!): Brand @isAuth,
+        createBrand(newBrand: BrandInput!):Brand @isAuth,
+        editBrand(id:ID!, newBrand: ShopInput!): Brand @isAuth,
         deleteBrand(id: ID!):Boolean @isAuth,
         verifyBrand(id:ID!):Boolean @isAuth,
         blockBrand(id:ID!):Boolean @isAuth,
-#        inviteModerators(id:ID!, emails:[String]):Boolean @isAuth
-#        addModerator(id:ID!,userID:ID!):Boolean @isAuth
+        inviteBrandModerator(id:ID!, email:String!, role:String!):Boolean @isAuth
+        removeBrandModerator(id:ID!,email:String!, role:String!):Boolean @isAuth
         clickBrand(id:ID!):Boolean
         viewBrand(id:ID!):Boolean
-        subscribeBrand(id:ID!):Boolean
-        createBrandPromotion(id:ID!):Brand
+        subscribeBrand(id:ID!):Boolean @isAuth
+        createBrandPromotion(id:ID!):Promotion
     }
     
 `;
 
 
 
-module.exports = userQuery;
+module.exports = brandQuery;

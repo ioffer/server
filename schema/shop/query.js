@@ -15,10 +15,12 @@ const userQuery = gql`
         deleteShop(id: ID!):Boolean @isAuth,
         verifyShop(id:ID!):Boolean @isAuth,
         blockShop(id:ID!):Boolean @isAuth,
-        inviteModerators(id:ID!, emails:[String]):Boolean @isAuth
-        addModerator(id:ID!,userID:ID!):Boolean @isAuth
+        inviteShopModerator(id:ID!, email:String!, role:String!):Boolean @isAuth
+        removeShopModerator(id:ID!,email:String!, role:String!):Boolean @isAuth
         clickShop(id:ID!):Boolean
         viewShop(id:ID!):Boolean
+        subscribeShop(id:ID!):Boolean @isAuth
+        createShopPromotion(id:ID!):Promotion
     }
     
 `;
