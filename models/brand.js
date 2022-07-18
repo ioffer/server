@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const brandSchema = new Schema({
     name: String,
+    email: String,
     category:[{
         ref:'categories',
         type:Schema.Types.ObjectId,
@@ -22,7 +23,7 @@ const brandSchema = new Schema({
     },
     tags:[String],
     website: String,
-    phoneNumbers: String,
+    phoneNumber: String,
     mobileNumber: String,
     publishingDateTime:String,
     facebook: String,

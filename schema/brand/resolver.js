@@ -79,11 +79,13 @@ const resolvers = {
                 console.log("brand", brand);
                 if (tags) {
                     for (let i = 0; i < tags.length; i++) {
-                        let tag = await Tag.findById(tags[i]);
-                        if (!tag.brands.includes(brand.id)) {
-                            tag.brands.push(brand.id);
-                            let tagData = await tag.save();
-                            console.log("tagData", tagData);
+                        if(tags[i]!==""){
+                            let tag = await Tag.findById(tags[i]);
+                            if (!tag.brands.includes(brand.id)) {
+                                tag.brands.push(brand.id);
+                                let tagData = await tag.save();
+                                console.log("tagData", tagData);
+                            }
                         }
                     }
                 }
