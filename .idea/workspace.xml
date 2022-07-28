@@ -5,10 +5,85 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change afterPath="$PROJECT_DIR$/utils/paginator.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/brand.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/brand.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/query.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/brand/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1003-1656576765479.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1456-1656573982628.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1566-1656595326477.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single16-1656415590646.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1601-1656570088712.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1634-1656574142348.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1921-1656576760627.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single1939-1656401734993.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2114-1656065596537.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2321-1656505586149.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2324-1656572187550.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2479-1656570919191.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2511-1656570095043.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2691-1656505577893.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2902-1656572416238.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2943-1656595440245.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2962-1656516637652.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single2980-1656577380687.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3300-1656065596537.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3302-1656570073904.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3319-1656420756680.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3455-1656573812233.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3567-1656573787078.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3693-1656071655937.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single3751-1656073243733.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4026-1656073185168.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4201-1656574310324.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4224-1656415799842.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4514-1656415598712.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4591-1656575836047.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4886-1656659587023.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single4954-1656421853645.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single5224-1656659583590.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single528-1656659714351.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single5418-1656572408618.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single5514-1656423454687.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single553-1656595331444.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single5995-1656516639012.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single6-1656065386604.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single6077-1656065596537.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single6568-1656420750580.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single6810-1656571704821.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7029-1656423561912.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7386-1656401801155.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7386-1656674522650.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7718-1656659707489.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7793-1656573496891.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7843-1656571953640.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single7970-1656069446903.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8084-1656572182031.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8118-1656573198168.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8208-1656069639875.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8265-1656595434324.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8309-1656423463370.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single845-1656569793446.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8579-1656575835497.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8839-1656577375759.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single8840-1656415782547.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9027-1656577155640.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9039-1656571234858.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9090-1656506265941.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9210-1656570608666.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9326-1656570783084.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9392-1656423557222.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9404-1656570102487.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9437-1656674735881.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9478-1656571459147.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9607-1656421847660.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9621-1656573630786.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9877-1656577176062.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/single9934-1656071884823.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,17 +165,19 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Project.color&quot;: &quot;590449&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.13.2&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.11.41&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer-server/models&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.11.45&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer/ioffer-server&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5787.30/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -213,6 +290,14 @@
       <workItem from="1656406979692" duration="10000" />
       <workItem from="1656407001831" duration="506000" />
       <workItem from="1656418691746" duration="7017000" />
+      <workItem from="1658145984727" duration="5997000" />
+      <workItem from="1658346557207" duration="10000" />
+      <workItem from="1658482548604" duration="1306000" />
+      <workItem from="1658922375908" duration="25000" />
+      <workItem from="1658922413373" duration="8000" />
+      <workItem from="1658922437044" duration="54000" />
+      <workItem from="1658922503949" duration="121000" />
+      <workItem from="1658922824628" duration="5316000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

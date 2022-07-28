@@ -2,7 +2,7 @@
 
 const brandQuery = gql`
     extend type Query {
-        brands:[Brand],
+        brands(offset: Int, limit: Int):[Brand],
         brandById(id:ID!):Brand @isAuth,
         searchPendingBrands:[Brand] @isAuth,
         searchBlockedBrands: [Brand] @isAuth
@@ -11,7 +11,7 @@ const brandQuery = gql`
     
     extend type Mutation {
         createBrand(newBrand: BrandInput!):Brand @isAuth,
-        editBrand(id:ID!, newBrand: ShopInput!): Brand @isAuth,
+        editBrand(id:ID!, newBrand: BrandInput!): Brand @isAuth,
         deleteBrand(id: ID!):Boolean @isAuth,
         verifyBrand(id:ID!):Boolean @isAuth,
         blockBrand(id:ID!):Boolean @isAuth,

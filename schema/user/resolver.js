@@ -31,7 +31,7 @@ const resolvers = {
             return await Shop.find({"owner": parent.id})
         },
         brands: async (parent) => {
-            return await Brand.find({"owner": parent.id})
+            return await Brand.find({"id": parent.brands})
         },
         favourites: async (parent) => {
             return await UserFavourite.find({"user":parent.id})

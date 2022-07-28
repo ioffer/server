@@ -22,11 +22,13 @@ const shopTypeDefs = gql`
         youtube: String,
         linkedIn: String,
         status:String,
+        email:String,
     }
 
     type Shop {
         id: ID!,
         name: String,
+        email: String,
         category:[String],
         subCategory:[String],
         logo: Media,

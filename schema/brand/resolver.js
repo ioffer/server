@@ -1,4 +1,4 @@
-import {User, Promotion, Shop, Brand, Media, Tag, BrandView, BrandClick} from "../../models";
+import {User, Promotion, Shop, Brand, Media, Tag, BrandView, BrandClick, Category} from "../../models";
 import {ApolloError, AuthenticationError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
@@ -7,7 +7,6 @@ import {Roles, Verified, Status} from "../../constants/enums";
 import BrandRoleBaseAccessInvite from "../../models/brandRoleBaseAccessInvite";
 import {EmailRules} from "../../validations";
 import RoleBaseAccess from "../../models/roleBaseAccess";
-import async from "async";
 
 
 let fetchData = async () => {
@@ -25,10 +24,20 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
+        category: async(parent) => {
+            return await Category.find({_id: {$in:parent.category}});
+        },
+        subCategory: async(parent) => {
+            return await Category.find({_id: {$in:parent.subCategory}});
+        },
+        tags: async(parent) => {
+            console.log(parent._id,'parent.tags->', parent.tags)
+            return await Tag.find({_id: {$in:parent.tags}});
+        }
 
     },
     Query: {
-        brands: () => {
+        brands: (offset) => {
             return fetchData()
         },
         brandById: async (_, args) => {
@@ -109,8 +118,11 @@ const resolvers = {
             }
             try {
                 if (newBrand.tags) {
-                    newBrand.tags = [...new Set(newBrand.tags)];
+                    let tagsSet = new Set(newBrand.tags);
+                    tagsSet.delete('')
+                    newBrand.tags = [...tagsSet];
                 }
+                console.log("newBrand", newBrand)
                 return await Brand.findOneAndUpdate({_id: id}, newBrand, {new: true});
             } catch (err) {
                 throw new ApolloError("Internal Server Error", '500');
@@ -125,7 +137,7 @@ const resolvers = {
                     await Brand.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
                     return true
                 } else {
-                    await Brand.findOneAndUpdate({id: id, owner: user.id}, {status: Status.DELETED}, {new: true});
+                    let brand = await Brand.findOneAndUpdate({_id: id, owner: user.id}, {status: Status.DELETED}, {new: true});
                     return true
                 }
             } catch (e) {

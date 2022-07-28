@@ -26,6 +26,7 @@ const shopSchema = new Schema({
         ref: 'tags'
     }],
     website: String,
+    email: String,
     phoneNumbers: String,
     mobileNumber: String,
     location: String,
