@@ -22,11 +22,17 @@ export const Status = {
     PENDING: 'PENDING',
     NOT_SUBMITTED: 'NOT_SUBMITTED',
     VERIFIED: 'VERIFIED',
+    REJECTED: 'REJECTED',
     ARCHIVED: 'ARCHIVED',
     DELETED: 'DELETED',
     UPCOMING: 'UPCOMING',
     PUBLISHED: 'PUBLISHED',
     DRAFT: 'DRAFT',
+}
+export const Verified = {
+    PENDING: 'PENDING',
+    VERIFIED: 'VERIFIED',
+    REJECTED: 'REJECTED',
 }
 export const MediaTypes = {
     AVATAR: 'AVATAR',
@@ -36,5 +42,4 @@ export const MediaTypes = {
     LOGO: 'LOGO',
     VIDEO: 'VIDEO',
     VIDEO_THUMBNAIL: 'VIDEO_THUMBNAIL',
-
 }

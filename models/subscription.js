@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userFavouriteSchema = new Schema({
+const subscriptionSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -13,11 +13,11 @@ const userFavouriteSchema = new Schema({
     brands:[{
         type: Schema.Types.ObjectId,
         ref: 'brands',
-    }]
+    }],
 }, {
     timestamps: true
 });
 
-const UserFavourite = mongoose.model('user_favourites', userFavouriteSchema);
-export default UserFavourite;
+const Subscription = mongoose.model('subscriptions', subscriptionSchema);
+export default Subscription;
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userRoleBaseAccessSchema = new Schema({
+const roleBaseAccessSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -41,6 +41,6 @@ const userRoleBaseAccessSchema = new Schema({
     timestamps: true
 });
 
-const UserRoleBaseAccess = mongoose.model('user_role_base_access', userRoleBaseAccessSchema);
-export default UserRoleBaseAccess;
+const RoleBaseAccess = mongoose.model('role_base_access', roleBaseAccessSchema);
+export default RoleBaseAccess;
 

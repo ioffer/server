@@ -11,6 +11,7 @@ import mongoose from 'mongoose'
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
 import AuthMiddleware from './middleware/auth.js';
+import {graphqlUploadExpress} from 'graphql-upload';
 import {join} from "path";
 let cors=require('cors');
 import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
@@ -23,8 +24,9 @@ let app = express();
 
 const uri = "mongodb://qasim:qasim1234@abdulla-shard-00-00.eftvp.mongodb.net:27017,abdulla-shard-00-01.eftvp.mongodb.net:27017,abdulla-shard-00-02.eftvp.mongodb.net:27017/ioffer?ssl=true&replicaSet=abdulla-shard-0&authSource=admin&retryWrites=true&w=majority";
 mongoose.connect(uri);
+mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
-const port = process.env.PORT || process.env.port || 4000
+const port = process.env.PORT || process.env.port || 4001
 app.use(cors());
 
 // view engine setup
@@ -33,6 +35,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
+app.use(graphqlUploadExpress());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -118,7 +121,7 @@ const server = new ApolloServer({
     await server.start();
     server.applyMiddleware({app});
     mongoose.connection.once('open', () => {
-        console.log(' 🍃 connected to mongoDB mLab');
+        console.log(' 🍃 connected to mongoDB mLab1');
         app.listen( port, () => {
             console.log('🚀 now listening for requests on port',  port);
         });

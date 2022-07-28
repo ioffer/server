@@ -1,9 +1,6 @@
 import {User, Promotion, Shop} from "../../models";
-import {find} from "lodash"
+import lodash from "lodash"
 
-const {SECRET} = require("../../config")
-const {hash, compare} = require('bcryptjs')
-const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
 const {
     UserRegisterationRules,
     UserAuthenticationRules,
@@ -11,18 +8,14 @@ const {
     PasswordRules,
     UserRules
 } = require('../../validations');
-const {verify} = require('jsonwebtoken');
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
-import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
-import speakeasy from "speakeasy";
-import qrcode from "qrcode";
 
+let fetchData = async() => {
+    return await Shop.find({});
 
-let fetchData = () => {
-    return User.find();
 }
 
 const resolvers = {
@@ -30,6 +23,7 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
+
     },
     Query: {
         shops: () => {
@@ -151,7 +145,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        inviteModerators: async (_, {id,emails}, {Shop, user}) => {
+        inviteShopModerator: async (_, {id,email, role}, {Shop, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -174,7 +168,7 @@ const resolvers = {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        addModerator: async (_, {id,userID}, {Shop, user}) => {
+        removeShopModerator: async (_, {id,email,role}, {Shop, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }

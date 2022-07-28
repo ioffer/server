@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userPinSchema = new Schema({
+const pinSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -26,6 +26,6 @@ const userPinSchema = new Schema({
     timestamps: true
 });
 
-const UserPin = mongoose.model('user_pins', userPinSchema);
-export default UserPin;
+const Pin = mongoose.model('user_pins', pinSchema);
+export default Pin;
 

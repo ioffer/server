@@ -8,11 +8,24 @@ const promotionQuery = require('./promotion/query.js')
 const promotionTypeDefs =require('./promotion/type')
 
 const baseTypeDefs =require('./baseDefs.js')
-const imageTypeDefs = require('./image/type.js')
-const imageQuery = require('./image/query.js')
 // const unBlockRequestTypeDefs = require('./unBlockRequest/type.js')
 // const unBlockRequestQuery = require('./unBlockRequest/query.js')
 const enumsTypeDefs = require('./constants/enums.js')
+const userSubscriptionTypeDefs = require('./userSubscription/type.js')
+
+const shopRoleBaseAccessInviteTypeDefs = require('./shopRoleBaseAccessInvite/type.js')
+const roleBasedAccessTypeDefs = require('./roleBasedAccess/type.js')
+const pinTypeDefs = require('./pin/type.js')
+const mediaTypeDefs = require('./media/type.js')
+const mediaQuery = require('./media/query.js')
+const favoriteTypeDefs = require('./favorite/type.js')
+const brandRoleBaseAccessInviteTypeDefs = require('./brandRoleBaseAccessInvite/type')
+const brandTypeDefs = require('./brand/type')
+const brandQuery = require('./brand/query')
+const categoryTypeDefs = require('./category/type')
+const categoryQuery = require('./category/query')
+const tagQuery = require('./tag/query')
+const tagTypeDefs = require('./tag/type')
 
 const typeDefs = [
     baseTypeDefs,
@@ -23,10 +36,23 @@ const typeDefs = [
     shopTypeDefs,
     promotionQuery,
     promotionTypeDefs,
-    imageTypeDefs,
-    imageQuery,
+    mediaTypeDefs,
+    mediaQuery,
     // unBlockRequestTypeDefs,
     // unBlockRequestQuery,
+    userSubscriptionTypeDefs,
+    shopRoleBaseAccessInviteTypeDefs,
+    roleBasedAccessTypeDefs,
+    pinTypeDefs,
+    favoriteTypeDefs,
+    brandRoleBaseAccessInviteTypeDefs,
+    brandTypeDefs,
+    brandQuery,
+    categoryTypeDefs,
+    categoryQuery,
+    tagTypeDefs,
+    tagQuery,
+
 ];
 
 module.exports = mergeTypeDefs(typeDefs);

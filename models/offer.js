@@ -1,3 +1,5 @@
+import {Status, Verified} from "../constants/enums";
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -5,7 +7,7 @@ const Schema = mongoose.Schema;
 let offerSchema = new Schema({
     name: String,
     media: {
-        ref: 'media',
+        ref: 'medias',
         type: Schema.Types.ObjectId
     },
     tags:[String],
@@ -22,7 +24,8 @@ let offerSchema = new Schema({
     publishingDateTime:String,
     verified: {
         type: String,
-        default:"PENDING"
+        enum:Verified,
+        default:Verified.PENDING
     },
     viewCounts: {
         type: Number,
@@ -38,8 +41,9 @@ let offerSchema = new Schema({
         default:false
     },
     status:{
-        type:Boolean,
-        default:false
+        type:String,
+        enum:Status,
+        default:Status.DRAFT
     },
     publisher: {
         ref: 'users',

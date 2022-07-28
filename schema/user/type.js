@@ -13,9 +13,8 @@ const userTypeDefs = gql`
     input UserInput {
         fullName: String,
         avatar: String,
-        balance: String,
         location: String,
-        type:Type,
+        type:Role,
     }
     
     type User {
@@ -26,6 +25,7 @@ const userTypeDefs = gql`
         email: String!,
         password: String!,
         confirmed: Boolean!,
+        status(status:Status):String,
         resetPasswordToken: String,
         emailConfirmToken: String,
         twoFactorEnabled:Boolean!,
@@ -33,16 +33,22 @@ const userTypeDefs = gql`
         twoFactorCode: String,
         avatar: String,
         location: String,
-        type(type:Type): String,
+        type(type:Role): String,
         createdAt: String,
         updatedAt: String,
         kyc: Kyc,
         shops:[Shop],
+        brands:[Brand],
+        favourites:Favorite,
+        pins:Pin,
+        subscriptions:UserSubscription,
+        roleBasedAccess:RoleBasedAccess,
     }
     
     
     type Kyc {
         mobile: String,
+        gender: String,
         birthDate: String,
         nationality: String,
         country: String,
@@ -50,7 +56,7 @@ const userTypeDefs = gql`
         city: String,
         street: String,
         building: String,
-        kycStatus(status: Status): String! 
+        kycStatus(status: Status): String!
     }
     
     type AuthUser {

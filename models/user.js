@@ -1,3 +1,5 @@
+import {Roles, Status} from "../constants/enums";
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -38,10 +40,15 @@ const userSchema = new Schema({
     },
     type: {
         type: String,
-        default: "USER",
+        enum:Roles,
+        default: Roles.USER,
     },
     kyc: {
         mobile: {
+            type: String,
+            default: ""
+        },
+        gender: {
             type: String,
             default: ""
         },
@@ -76,7 +83,8 @@ const userSchema = new Schema({
         //TODO use enums
         kycStatus: {
             type: String,
-            default: "NOT_SUBMITTED"
+            enum : Status,
+            default: Status.NOT_SUBMITTED
         }
     },
     shops: [{
@@ -87,21 +95,21 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'brands',
     }],
-    favourites:{
+    favorite:{
         type: Schema.Types.ObjectId,
-        ref: 'user_favourites',
+        ref: 'favorites',
     },
     pins:{
         type: Schema.Types.ObjectId,
-        ref: 'user_pins',
+        ref: 'pins',
     },
     subscriptions:{
         type: Schema.Types.ObjectId,
-        ref: 'user_subscriptions',
+        ref: 'subscriptions',
     },
     roleBasedAccess:{
         type: Schema.Types.ObjectId,
-        ref: 'user_subscriptions',
+        ref: 'role_based_access',
     }
 }, {
     timestamps: true
