@@ -10,6 +10,7 @@ const userQuery = gql`
         userById(id:ID!):User,
         searchPendingKyc:[User] @isAuth,
         searchUnBlockedUsers: [User] @isAuth
+        version:String!
     },
     
     extend type Mutation {

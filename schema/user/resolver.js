@@ -50,6 +50,9 @@ const resolvers = {
         users: () => {
             return fetchData()
         },
+        version:()=>{
+            return "0.0.1";
+        },
         me: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
