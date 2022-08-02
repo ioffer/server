@@ -1,4 +1,4 @@
-import {User, Promotion, Shop, Tag, Category, Media} from "../../models";
+import {User, Promotion, Shop, Tag, Category, Media, Brand} from "../../models";
 import lodash from "lodash"
 
 const {
@@ -82,35 +82,53 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                console.log('here')
+                let tags = [];
+                if (newShop.tags) {
+                    tags = [...new Set(newShop.tags)];
+                }
                 let shop = Shop({
                     ...newShop,
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
                 console.log('shop', shop)
-                let result = null;
-                try{
-                    result = await shop.save();
-                    let response = await User.findById(user.id);
-                    console.log('response:', response)
-                    response.shops.push(result.id);
-                    console.log('response2:', response)
-                    await response.save();
-                }catch (e) {
-                    return  new ApolloError("Unable to save Shop", 500)
+                if (tags) {
+                    for (let i = 0; i < tags.length; i++) {
+                        if(tags[i]!==""){
+                            let tag = await Tag.findById(tags[i]);
+                            if (!tag.shops.includes(shop.id)) {
+                                tag.shops.push(shop.id);
+                                let tagData = await tag.save();
+                                console.log("tagData", tagData);
+                            }
+                        }
+                    }
                 }
+                let result = await shop.save();
+                console.log("result", result);
+                console.log("user3", user);
+                let userRes = await User.findById(user._id);
+                console.log('response:', userRes)
+                userRes.shops.push(result.id);
+                console.log('response2:', userRes)
+                await userRes.save();
                 return result;
             } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        editShop: async (_, {id, newShop}, {Shop, user}) => {
+        editShop: async (_, {id, newShop}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await Shop.findOneAndUpdate({_id: id}, newShop, {new: true});
+                if (newShop.tags) {
+                    let tagsSet = new Set(newShop.tags);
+                    tagsSet.delete('')
+                    newShop.tags = [...tagsSet];
+                }
+                console.log("newShop", newShop)
+                return await Shop.findOneAndUpdate({id: id}, newShop, {new: true});
             } catch (err) {
                 throw new ApolloError("Internal Server Error", '500');
             }

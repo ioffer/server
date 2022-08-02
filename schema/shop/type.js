@@ -8,7 +8,7 @@ const shopTypeDefs = gql`
         category:[ID!]!,
         subCategory:[ID!]!,
         logo: ID,
-        coverImage:ID,
+        coverImage:String,
         tags:[ID],
         website: String,
         phoneNumbers: String!,

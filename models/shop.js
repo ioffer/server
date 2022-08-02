@@ -45,6 +45,7 @@ const shopSchema = new Schema({
     status: {
         type:String,
         enum:Status,
+        default: Status.DRAFT
     },
     verified: {
         type:String,
