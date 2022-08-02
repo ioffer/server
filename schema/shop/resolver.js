@@ -1,4 +1,4 @@
-import {User, Promotion, Shop, Tag} from "../../models";
+import {User, Promotion, Shop, Tag, Category, Media} from "../../models";
 import lodash from "lodash"
 
 const {
@@ -23,9 +23,25 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
-        tags:async ()=>{
-            return await Tag.find({_id: {$in:parent.tags}})
-        }
+        tags: async(parent) => {
+            console.log(parent._id,'parent.tags->', parent.tags)
+            return await Tag.find({_id: {$in:parent.tags}});
+        },
+        category: async(parent) => {
+            return await Category.find({_id: {$in:parent.category}});
+        },
+        subCategory: async(parent) => {
+            return await Category.find({_id: {$in:parent.subCategory}});
+        },
+        owner: async(parent) => {
+            return await User.findById(parent.owner);
+        },
+        logo: async (parent) => {
+            return await Media.findById(parent.logo);
+        },
+        coverImage: async (parent) => {
+            return await Media.findById(parent.coverImage);
+        },
 
     },
     Query: {
@@ -61,16 +77,18 @@ const resolvers = {
 
     },
     Mutation: {
-        registerShop: async (_, {newShop}, {Shop, user}) => {
+        registerShop: async (_, {newShop}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
+                console.log('here')
                 let shop = Shop({
                     ...newShop,
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
+                console.log('shop', shop)
                 let result = null;
                 try{
                     result = await shop.save();

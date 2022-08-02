@@ -5,8 +5,8 @@ const shopTypeDefs = gql`
 
     input ShopInput {
         name: String!,
-        category:[ID]!,
-        subCategory:[ID],
+        category:[ID!]!,
+        subCategory:[ID!]!,
         logo: ID,
         coverImage:ID,
         tags:[ID],
@@ -21,7 +21,7 @@ const shopTypeDefs = gql`
         instagram: String,
         youtube: String,
         linkedIn: String,
-        status:String,
+        status:Status,
         email:String,
     }
 
