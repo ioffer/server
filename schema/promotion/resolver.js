@@ -135,7 +135,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        deleteShop: async (_, {id}, {Promotion, user}) => {
+        deletePromotion: async (_, {id}, {Promotion, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }

@@ -12,6 +12,7 @@ import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-ex
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
+import {Roles, Status} from "../../constants/enums";
 
 let fetchData = async() => {
     return await Shop.find({});
@@ -133,16 +134,18 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        deleteShop: async (_, {id}, {Shop, user}) => {
+        deleteShop: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if (user.type === "ADMIN") {
-                    await Shop.findByIdAndRemove(id);
+                if (user.type === Roles.SUPER_ADMIN) {
+                    await Shop.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
                     return true
                 } else {
-                    await Shop.findOneAndRemove({id: id, owner: user.id});
+                    console.log("here")
+                    let shop = await Shop.findOneAndUpdate({_id: id, owner: user.id}, {status: Status.DELETED}, {new: true});
+                    console.log("here2", shop)
                     return true
                 }
             } catch (e) {
