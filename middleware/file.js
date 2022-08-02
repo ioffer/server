@@ -12,7 +12,7 @@ export const readFile = async (file) => {
     await stream.pipe(imageStream)
     // const baseURL = process.env.BASE_URL
     // const port = process.env.PORT
-    url = `http://localhost:4000${url.split('uploads')[1]}`
+    url = `${url.split('uploads')[1]}`
     return url
 }
 

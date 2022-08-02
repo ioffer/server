@@ -1,4 +1,4 @@
-import {User, Promotion, Shop} from "../../models";
+import {User, Promotion, Shop, Tag} from "../../models";
 import lodash from "lodash"
 
 const {
@@ -23,6 +23,9 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
+        tags:async ()=>{
+            return await Tag.find({_id: {$in:parent.tags}})
+        }
 
     },
     Query: {
