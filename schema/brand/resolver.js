@@ -147,7 +147,11 @@ const resolvers = {
                         _id: id,
                         owner: user.id
                     }, {status: Status.DELETED}, {new: true});
-                    return true
+                    if (brand){
+                        return true
+                    } else {
+                        return new ApolloError("Brand Not Found", '404');
+                    }
                 }
             } catch (e) {
                 throw new ApolloError("Internal Server Error", '500');
