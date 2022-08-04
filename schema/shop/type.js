@@ -5,6 +5,7 @@ const shopTypeDefs = gql`
 
     input ShopInput {
         name: String!,
+        brand:ID,
         category:[ID!]!,
         subCategory:[ID!]!,
         logo: ID,

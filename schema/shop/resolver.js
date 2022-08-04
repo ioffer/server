@@ -12,9 +12,9 @@ import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-ex
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
-import {Roles, Status} from "../../constants/enums";
+import {Roles, Status, Verified} from "../../constants/enums";
 
-let fetchData = async() => {
+let fetchData = async () => {
     return await Shop.find({});
 
 }
@@ -24,17 +24,17 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
-        tags: async(parent) => {
-            console.log(parent._id,'parent.tags->', parent.tags)
-            return await Tag.find({_id: {$in:parent.tags}});
+        tags: async (parent) => {
+            console.log(parent._id, 'parent.tags->', parent.tags)
+            return await Tag.find({_id: {$in: parent.tags}});
         },
-        category: async(parent) => {
-            return await Category.find({_id: {$in:parent.category}});
+        category: async (parent) => {
+            return await Category.find({_id: {$in: parent.category}});
         },
-        subCategory: async(parent) => {
-            return await Category.find({_id: {$in:parent.subCategory}});
+        subCategory: async (parent) => {
+            return await Category.find({_id: {$in: parent.subCategory}});
         },
-        owner: async(parent) => {
+        owner: async (parent) => {
             return await User.findById(parent.owner);
         },
         logo: async (parent) => {
@@ -92,10 +92,13 @@ const resolvers = {
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
+                if (newShop["brand"] !== undefined) {
+                    await Brand.findByIdAndUpdate(newShop.brand, {$push:{brandShops:shop.id}});
+                }
                 console.log('shop', shop)
                 if (tags) {
                     for (let i = 0; i < tags.length; i++) {
-                        if(tags[i]!==""){
+                        if (tags[i] !== "") {
                             let tag = await Tag.findById(tags[i]);
                             if (!tag.shops.includes(shop.id)) {
                                 tag.shops.push(shop.id);
@@ -144,7 +147,10 @@ const resolvers = {
                     return true
                 } else {
                     console.log("here")
-                    let shop = await Shop.findOneAndUpdate({_id: id, owner: user.id}, {status: Status.DELETED}, {new: true});
+                    let shop = await Shop.findOneAndUpdate({
+                        _id: id,
+                        owner: user.id
+                    }, {status: Status.DELETED}, {new: true});
                     console.log("here2", shop)
                     return true
                 }
@@ -152,13 +158,25 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        verifyShop: async (_, {id}, {user, Shop}) => {
+        archiveShop: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type === "ADMIN") {
+            try {
+                await Shop.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
+                return true
+
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", '500');
+            }
+        },
+        verifyShop: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.type === Roles.SUPER_ADMIN) {
                 try {
-                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": "VERIFIED"}});
+                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
                     if (!response) {
                         return new ApolloError("Shop not found", '404');
                     }
@@ -170,12 +188,12 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        blockShop: async (_, {id}, {user, Shop}) => {
+        blockShop: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if (user.type === 'ADMIN') {
+                if (user.type === Roles.SUPER_ADMIN) {
                     let blockingShop = await Shop.findById(id);
                     let response = await Shop.findByIdAndUpdate(id, {isBlocked: true});
                     if (!response) {
@@ -187,21 +205,21 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        inviteShopModerator: async (_, {id,email, role}, {Shop, user}) => {
+        inviteShopModerator: async (_, {id, email, role}, {Shop, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let shop = await Shop.findOne({_id: id, owner:user.id});
-                if (shop){
-                    for(email of emails){
+                let shop = await Shop.findOne({_id: id, owner: user.id});
+                if (shop) {
+                    for (email of emails) {
                         await EmailRules.validate({email}, {abortEarly: false});
                         let emailLink = await emailConfirmationUrl(email);
                         //TODO change emailConfirmBody()
                         let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                        try{
+                        try {
                             await sendEmail(email, emailLink, emailHtml)
-                        }catch (e) {
+                        } catch (e) {
                             return new ApolloError(`Email Sending Failed to ${email}`, 500);
                         }
                     }
@@ -210,34 +228,30 @@ const resolvers = {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        removeShopModerator: async (_, {id,email,role}, {Shop, user}) => {
+        removeShopModerator: async (_, {id, email, role}, {Shop, user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators:userID}}, {new: true});
+                return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
             } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        clickShop:async (_, {id}, {Shop})=>{
-            try{
-                let shop = Shop.findById(id)
-                shop.clickCounts++
-                shop.save()
+        clickShop: async (_, {id}) => {
+            try {
+                await Shop.findByIdAndUpdate(id, {$inc: {clickCounts: 1}});
                 return true
-            }catch (e) {
+            } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        viewShop:async (_, {id}, {Shop})=>{
-            try{
-                let shop = Shop.findById(id)
-                shop.viewCounts++
-                shop.save()
+        viewShop: async (_, {id}) => {
+            try {
+                await Shop.findByIdAndUpdate(id, {$inc: {viewCounts: 1}});
                 return true
-            }catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (e) {
+                return new ApolloError(e, 500)
             }
         }
     },

@@ -204,7 +204,7 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
-        clickShop:async (_, {id}, {Promotion})=>{
+        clickPromotion:async (_, {id}, {Promotion})=>{
             try{
                 let promotion = Promotion.findById(id)
                 promotion.clickCounts++
@@ -214,7 +214,7 @@ const resolvers = {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        viewShop:async (_, {id}, {Promotion})=>{
+        viewPromotion:async (_, {id}, {Promotion})=>{
             try{
                 let promotion = Promotion.findById(id)
                 promotion.viewCounts++

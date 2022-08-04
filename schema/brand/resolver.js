@@ -10,7 +10,7 @@ import RoleBaseAccess from "../../models/roleBaseAccess";
 
 
 let fetchData = async () => {
-    return await Brand.find();
+    return await Brand.find({});
 }
 
 const resolvers = {
@@ -24,21 +24,24 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
-        category: async(parent) => {
-            return await Category.find({_id: {$in:parent.category}});
+        category: async (parent) => {
+            return await Category.find({_id: {$in: parent.category}});
         },
-        subCategory: async(parent) => {
-            return await Category.find({_id: {$in:parent.subCategory}});
+        subCategory: async (parent) => {
+            return await Category.find({_id: {$in: parent.subCategory}});
         },
-        tags: async(parent) => {
-            console.log(parent._id,'parent.tags->', parent.tags)
-            return await Tag.find({_id: {$in:parent.tags}});
+        tags: async (parent) => {
+            console.log(parent._id, 'parent.tags->', parent.tags)
+            return await Tag.find({_id: {$in: parent.tags}});
         }
 
     },
     Query: {
         brands: (offset) => {
             return fetchData()
+        },
+        publishedBrands: async (offset) => {
+            return await Brand.find({status:Status.PUBLISHED})
         },
         brandById: async (_, args) => {
             return await Brand.findById(args.id);
@@ -53,7 +56,7 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchBlockedShops: async (_, {}, {user}) => {
+        searchBlockedBrands: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -73,7 +76,7 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            console.log("user: " + user )
+            console.log("user: " + user)
             try {
                 let tags = [];
                 if (newBrand.tags) {
@@ -88,7 +91,7 @@ const resolvers = {
                 console.log("brand", brand);
                 if (tags) {
                     for (let i = 0; i < tags.length; i++) {
-                        if(tags[i]!==""){
+                        if (tags[i] !== "") {
                             let tag = await Tag.findById(tags[i]);
                             if (!tag.brands.includes(brand.id)) {
                                 tag.brands.push(brand.id);
@@ -99,13 +102,13 @@ const resolvers = {
                     }
                 }
                 let result = await brand.save();
-                    console.log("result", result);
-                    console.log("user3", user);
-                    let userRes = await User.findById(user._id);
-                    console.log('response:', userRes)
-                    userRes.brands.push(result.id);
-                    console.log('response2:', userRes)
-                    await userRes.save();
+                console.log("result", result);
+                console.log("user3", user);
+                let userRes = await User.findById(user._id);
+                console.log('response:', userRes)
+                userRes.brands.push(result.id);
+                console.log('response2:', userRes)
+                await userRes.save();
                 return result;
             } catch (e) {
                 console.log("error", e)
@@ -137,9 +140,23 @@ const resolvers = {
                     await Brand.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
                     return true
                 } else {
-                    let brand = await Brand.findOneAndUpdate({_id: id, owner: user.id}, {status: Status.DELETED}, {new: true});
+                    let brand = await Brand.findOneAndUpdate({
+                        _id: id,
+                        owner: user.id
+                    }, {status: Status.DELETED}, {new: true});
                     return true
                 }
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", '500');
+            }
+        },
+        archiveBrand: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                await Brand.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
+                return true
             } catch (e) {
                 throw new ApolloError("Internal Server Error", '500');
             }
@@ -269,23 +286,23 @@ const resolvers = {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        clickBrand: async (_, {id},{user}) => {
+        clickBrand: async (_, {id}, {user}) => {
             try {
                 let brand = Brand.findById(id)
                 brand.clickCounts++
                 await brand.save();
-                await BrandClick.create({brand:brand.id, user:user?.id});
+                await BrandClick.create({brand: brand.id, user: user?.id});
                 return true
             } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
-        viewBrand: async (_, {id}, {user})=> {
+        viewBrand: async (_, {id}, {user}) => {
             try {
                 let brand = Brand.findById(id)
                 brand.viewCounts++
                 await brand.save();
-                await BrandView.create({brand:brand.id, user:user?.id});
+                await BrandView.create({brand: brand.id, user: user?.id});
                 return true
             } catch (e) {
                 return new ApolloError("Internal Server Error", 500)

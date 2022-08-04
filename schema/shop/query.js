@@ -15,6 +15,7 @@ const userQuery = gql`
         deleteShop(id: ID!):Boolean @isAuth,
         verifyShop(id:ID!):Boolean @isAuth,
         blockShop(id:ID!):Boolean @isAuth,
+        archiveShop(id:ID!):Boolean @isAuth,
         inviteShopModerator(id:ID!, email:String!, role:String!):Boolean @isAuth
         removeShopModerator(id:ID!,email:String!, role:String!):Boolean @isAuth
         clickShop(id:ID!):Boolean

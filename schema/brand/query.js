@@ -3,6 +3,7 @@
 const brandQuery = gql`
     extend type Query {
         brands(offset: Int, limit: Int):[Brand],
+        publishedBrands(offset: Int, limit: Int):[Brand],
         brandById(id:ID!):Brand @isAuth,
         searchPendingBrands:[Brand] @isAuth,
         searchBlockedBrands: [Brand] @isAuth
@@ -13,6 +14,7 @@ const brandQuery = gql`
         createBrand(newBrand: BrandInput!):Brand @isAuth,
         editBrand(id:ID!, newBrand: BrandInput!): Brand @isAuth,
         deleteBrand(id: ID!):Boolean @isAuth,
+        archiveBrand(id: ID!):Boolean @isAuth,
         verifyBrand(id:ID!):Boolean @isAuth,
         blockBrand(id:ID!):Boolean @isAuth,
         inviteBrandModerator(id:ID!, email:String!, role:String!):Boolean @isAuth
