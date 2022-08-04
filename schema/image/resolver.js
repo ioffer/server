@@ -33,10 +33,10 @@ const resolvers = {
                 if(!(serverFile.split('uploads')[1][0]==='/')){
                     let wrongPath=serverFile.split('uploads')[1];
                     correctedPath = wrongPath.replace("\\","/")
-                    serverFile = `${BASE_URL}${correctedPath}`;
+                    serverFile = `${correctedPath}`;
 
                 }else{
-                    serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
+                    serverFile = `${serverFile.split('uploads')[1]}`;
                 }
 
                 return serverFile;
