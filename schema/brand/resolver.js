@@ -164,6 +164,17 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
+        unArchiveBrand: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                await Brand.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
+                return true
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", '500');
+            }
+        },
         verifyBrand: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")

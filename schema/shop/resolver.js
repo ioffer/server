@@ -174,6 +174,18 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
+        unArchiveShop: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                await Shop.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
+                return true
+
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", '500');
+            }
+        },
         verifyShop: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")

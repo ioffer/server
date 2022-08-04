@@ -15,6 +15,7 @@ const brandQuery = gql`
         editBrand(id:ID!, newBrand: BrandInput!): Brand @isAuth,
         deleteBrand(id: ID!):Boolean @isAuth,
         archiveBrand(id: ID!):Boolean @isAuth,
+        unArchiveBrand(id: ID!):Boolean @isAuth,
         verifyBrand(id:ID!):Boolean @isAuth,
         blockBrand(id:ID!):Boolean @isAuth,
         inviteBrandModerator(id:ID!, email:String!, role:String!):Boolean @isAuth
