@@ -24,6 +24,10 @@ const resolvers = {
         promotions: async (parent) => {
             return await Promotion.find({"shop": parent.id})
         },
+        brand: async (parent) => {
+            console.log(parent.brand)
+            return await Brand.findById(parent.brand)
+        },
         tags: async (parent) => {
             console.log(parent._id, 'parent.tags->', parent.tags)
             return await Tag.find({_id: {$in: parent.tags}});

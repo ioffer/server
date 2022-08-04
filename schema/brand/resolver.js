@@ -33,6 +33,9 @@ const resolvers = {
         tags: async (parent) => {
             console.log(parent._id, 'parent.tags->', parent.tags)
             return await Tag.find({_id: {$in: parent.tags}});
+        },
+        brandShops:async (parent)=>{
+            return await Shop.find({_id: {$in: parent.brandShops}});
         }
 
     },
