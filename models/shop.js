@@ -27,7 +27,7 @@ const shopSchema = new Schema({
     }],
     website: String,
     email: String,
-    phoneNumbers: String,
+    phoneNumber: String,
     mobileNumber: String,
     location: String,
     address: String,
