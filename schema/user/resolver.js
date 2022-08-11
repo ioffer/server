@@ -196,7 +196,8 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", '500');
+                    // throw new ApolloError("Internal Server Error", '500');
+                    return new ApolloError(err, 500);
                 }
             } else {
                 throw new AuthenticationError("Unauthorised", '401');
@@ -247,7 +248,8 @@ const resolvers = {
                 }
                 return response;
             } catch (err) {
-                throw new ApolloError("Internal Server Error", '500');
+                return new ApolloError(err, 500);
+
             }
         },
         forgetPassword: async (_, {email}) => {
@@ -366,14 +368,15 @@ const resolvers = {
             try {
                 return await User.findOneAndUpdate({_id: user.id}, newUser, {new: true});
             } catch (err) {
-                throw new ApolloError("Internal Server Error", '500');
+                return new ApolloError(err, 500);
+
             }
         },
         deleteUser: async (_, args) => {
             try {
                 return await User.findByIdAndRemove(args.id);
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         addKyc: async (_, args, {user}) => {
@@ -383,8 +386,8 @@ const resolvers = {
             try {
                 const kyc = args;
                 return await User.findOneAndUpdate({_id: args.id}, {$set: {kyc}}, {new: true});
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         editKyc: async (_, args, {user}) => {
@@ -403,8 +406,8 @@ const resolvers = {
                     {$set: {kyc: newKyc}},
                     {new: true}
                 );
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         createAdmin: async (_, {email}, {user}) => {
@@ -513,7 +516,7 @@ const resolvers = {
                 }
             } catch (err) {
                 console.error(err)
-                throw new ApolloError("Internal Server Error", '500');
+                return new ApolloError(err, 500);
             }
         },
     },

@@ -112,8 +112,8 @@ const resolvers = {
                     await Shop.findOneAndRemove({id: id, owner: user.id});
                     return true
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         verifyShop: async (_, {id}, {user, Shop}) => {

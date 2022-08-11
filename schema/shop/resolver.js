@@ -138,7 +138,7 @@ const resolvers = {
                 console.log("newShop", newShop)
                 return await Shop.findOneAndUpdate({id: id}, newShop, {new: true});
             } catch (err) {
-                throw new ApolloError("Internal Server Error", '500');
+                return new ApolloError(err, 500);
             }
         },
         deleteShop: async (_, {id}, {user}) => {
@@ -158,8 +158,8 @@ const resolvers = {
                     console.log("here2", shop)
                     return true
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         archiveShop: async (_, {id}, {user}) => {
@@ -170,8 +170,8 @@ const resolvers = {
                 await Shop.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
                 return true
 
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         unArchiveShop: async (_, {id}, {user}) => {
@@ -182,8 +182,8 @@ const resolvers = {
                 await Shop.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
                 return true
 
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         verifyShop: async (_, {id}, {user}) => {

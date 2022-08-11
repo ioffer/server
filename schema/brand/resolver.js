@@ -131,7 +131,7 @@ const resolvers = {
                 console.log("newBrand", newBrand)
                 return await Brand.findOneAndUpdate({_id: id}, newBrand, {new: true});
             } catch (err) {
-                throw new ApolloError("Internal Server Error", '500');
+                return new ApolloError(err, 500);
             }
         },
         deleteBrand: async (_, {id}, {user}) => {
@@ -153,8 +153,8 @@ const resolvers = {
                         return new ApolloError("Brand Not Found", '404');
                     }
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         archiveBrand: async (_, {id}, {user}) => {
@@ -164,8 +164,8 @@ const resolvers = {
             try {
                 await Brand.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
                 return true
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         unArchiveBrand: async (_, {id}, {user}) => {
@@ -175,8 +175,8 @@ const resolvers = {
             try {
                 await Brand.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
                 return true
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500');
+            } catch (err) {
+                return new ApolloError(err, 500);
             }
         },
         verifyBrand: async (_, {id}, {user}) => {

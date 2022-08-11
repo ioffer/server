@@ -7,6 +7,14 @@
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brandRoleBaseAccessInvite/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brandRoleBaseAccessInvite/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/favorite/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/favorite/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/pin/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/pin/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/roleBasedAccess/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/roleBasedAccess/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shopRoleBaseAccessInvite/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shopRoleBaseAccessInvite/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/userSubscription/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/userSubscription/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,26 +93,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Project.color": "590449",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "16.13.2",
-    "javascript.nodejs.core.library.typings.version": "16.11.47",
-    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer/ioffer-server/.github/workflows",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "project.propVCSSupport.Confirmation",
-    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5787.30/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Project.color&quot;: &quot;590449&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.13.2&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.11.47&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer/ioffer-server/.github/workflows&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.Confirmation&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/221.5787.30/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/.github/workflows" />
@@ -228,7 +236,8 @@
       <workItem from="1659519254620" duration="2624000" />
       <workItem from="1659522466022" duration="8000" />
       <workItem from="1659522547332" duration="45000" />
-      <workItem from="1659522639899" duration="8445000" />
+      <workItem from="1659522639899" duration="9620000" />
+      <workItem from="1660208204030" duration="300000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>
