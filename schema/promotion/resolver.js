@@ -45,8 +45,8 @@ const resolvers = {
                 if(shop.owner===user.id||shop.moderators.includes(user.id)){
                     return await Promotion.find({shop:shopID});
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         searchPendingPromotions: async (_, {}, {user, Promotion}) => {
@@ -70,8 +70,8 @@ const resolvers = {
                 }else{
                     return new AuthenticationError("Unauthorised User", '401');
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         searchArchivedPromotions: async (_, {shopID}, {user, Promotion}) => {
@@ -85,8 +85,8 @@ const resolvers = {
                 } else {
                     return new new AuthenticationError("Unauthorised User", 401);
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         // searchPromotions: async (_, {query}, {Shop}) => {
@@ -115,8 +115,8 @@ const resolvers = {
                 } else {
                     return new AuthenticationError("Unauthorised User", 401);
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         editPromotion: async (_, {id, newPromotion}, {Promotion, user}) => {
@@ -131,8 +131,8 @@ const resolvers = {
                 } else {
                     return new AuthenticationError("Unauthorised User", 401);
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         deletePromotion: async (_, {id}, {Promotion, user}) => {
@@ -148,8 +148,8 @@ const resolvers = {
                 } else {
                     return new AuthenticationError("Unauthorised User", 401);
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         verifyPromotion: async (_, {id}, {user, Promotion}) => {
@@ -164,7 +164,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", 500)
+                    return new ApolloError( err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", 401);
@@ -183,8 +183,8 @@ const resolvers = {
                 } else {
                     return new AuthenticationError("Unauthorised User", 401);
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         archivePromotion: async (_, {id}, {user, Promotion}) => {
@@ -200,8 +200,8 @@ const resolvers = {
                 } else {
                     return new AuthenticationError("Unauthorised User", 401);
                 }
-            }catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         clickPromotion:async (_, {id}, {Promotion})=>{
@@ -210,8 +210,8 @@ const resolvers = {
                 promotion.clickCounts++
                 promotion.save()
                 return true
-            }catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         viewPromotion:async (_, {id}, {Promotion})=>{
@@ -220,8 +220,8 @@ const resolvers = {
                 promotion.viewCounts++
                 promotion.save()
                 return true
-            }catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         }
     },

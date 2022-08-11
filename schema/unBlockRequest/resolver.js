@@ -44,8 +44,8 @@ const resolvers = {
                     user:user.id,
                 })
                 return unBlockRequest.save()
-            }catch(e){
-                throw new ApolloError("Internal Server Error", 500)
+            }catch(err){
+                return new ApolloError( err, 500)
             }
         }
     }

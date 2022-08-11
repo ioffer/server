@@ -86,8 +86,8 @@ const resolvers = {
                     return  new ApolloError("Unable to save Shop", 500)
                 }
                 return result;
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         editShop: async (_, {id, newShop}, {Shop, user}) => {
@@ -128,7 +128,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", '500')
+                    return new ApolloError( err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -147,8 +147,8 @@ const resolvers = {
                     }
                     return true;
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         inviteModerators: async (_, {id,emails}, {Shop, user}) => {
@@ -170,8 +170,8 @@ const resolvers = {
                         }
                     }
                 }
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         addModerator: async (_, {id,userID}, {Shop, user}) => {
@@ -180,8 +180,8 @@ const resolvers = {
             }
             try {
                 return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators:userID}}, {new: true});
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         clickShop:async (_, {id}, {Shop})=>{
@@ -190,8 +190,8 @@ const resolvers = {
                 shop.clickCounts++
                 shop.save()
                 return true
-            }catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         viewShop:async (_, {id}, {Shop})=>{
@@ -200,8 +200,8 @@ const resolvers = {
                 shop.viewCounts++
                 shop.save()
                 return true
-            }catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            }catch (err) {
+                return new ApolloError( err, 500)
             }
         }
     },

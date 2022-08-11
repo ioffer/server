@@ -121,8 +121,8 @@ const resolvers = {
                 console.log('response2:', userRes)
                 await userRes.save();
                 return result;
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         editShop: async (_, {id, newShop}, {user}) => {
@@ -198,7 +198,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", '500')
+                    return new ApolloError( err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -217,8 +217,8 @@ const resolvers = {
                     }
                     return true;
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         inviteShopModerator: async (_, {id, email, role}, {Shop, user}) => {
@@ -240,8 +240,8 @@ const resolvers = {
                         }
                     }
                 }
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         removeShopModerator: async (_, {id, email, role}, {Shop, user}) => {
@@ -250,16 +250,16 @@ const resolvers = {
             }
             try {
                 return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         clickShop: async (_, {id}) => {
             try {
                 await Shop.findByIdAndUpdate(id, {$inc: {clickCounts: 1}});
                 return true
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         viewShop: async (_, {id}) => {

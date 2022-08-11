@@ -42,7 +42,7 @@ const resolvers = {
                 return serverFile;
             } catch (err) {
                 console.error(err)
-                throw new ApolloError("Internal Server Error", 500);
+                return new ApolloError( err, 500)
             }
         }
     },

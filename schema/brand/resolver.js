@@ -113,9 +113,9 @@ const resolvers = {
                 console.log('response2:', userRes)
                 await userRes.save();
                 return result;
-            } catch (e) {
+            } catch (err) {
                 console.log("error", e)
-                throw new ApolloError("Internal Server Error", 500)
+                return new ApolloError( err, 500)
             }
         },
         editBrand: async (_, {id, newBrand}, {user}) => {
@@ -191,7 +191,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", '500')
+                    return new ApolloError( err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -211,8 +211,8 @@ const resolvers = {
                     }
                     return true;
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         inviteBrandModerator: async (_, {id, email, role}, {user}) => {
@@ -255,8 +255,8 @@ const resolvers = {
                     }
                     return true;
                 }
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         removeBrandModerator: async (_, {id, email, role}, {user}) => {
@@ -300,8 +300,8 @@ const resolvers = {
 
                 }
                 return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         clickBrand: async (_, {id}, {user}) => {
@@ -311,8 +311,8 @@ const resolvers = {
                 await brand.save();
                 await BrandClick.create({brand: brand.id, user: user?.id});
                 return true
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         viewBrand: async (_, {id}, {user}) => {
@@ -322,8 +322,8 @@ const resolvers = {
                 await brand.save();
                 await BrandView.create({brand: brand.id, user: user?.id});
                 return true
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         // subscribeBrand: async (_,{})=>{

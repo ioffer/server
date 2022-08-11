@@ -160,8 +160,8 @@ const resolvers = {
                     }
                     return new ApolloError("Super Admin Cannot be Blocked", 403)
                 }
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         verifyKyc: async (_, {id}, {user}) => {
@@ -177,7 +177,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    throw new ApolloError("Internal Server Error", '500')
+                    return new ApolloError( err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -221,7 +221,7 @@ const resolvers = {
                 }
                 return true;
             } catch (err) {
-                throw new ApolloError("Internal Server Error", '500')
+                return new ApolloError( err, 500)
             }
         },
         enable2FA: async (_, __, {user}) => {
@@ -311,7 +311,7 @@ const resolvers = {
                         }
                         return true
                     } catch (err) {
-                        return new ApolloError("Internal Server Error", '500')
+                        return new ApolloError( err, 500)
                     }
                 }
             }
@@ -355,7 +355,7 @@ const resolvers = {
                         }
                         return true
                     } catch (err) {
-                        throw new ApolloError("Internal Server Error", '500')
+                        return new ApolloError( err, 500)
                     }
                 }
             }
@@ -422,8 +422,8 @@ const resolvers = {
                     return new ApolloError("User Not Found. User Must Be Registered")
                 }
                 return true;
-            } catch (e) {
-                return new ApolloError("Internal Server Error", 500)
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         changePassword: async (_, {password, newPassword}, {user}) => {
@@ -451,14 +451,14 @@ const resolvers = {
                         }
                         return true
                     } catch (err) {
-                        return new ApolloError("Internal Server Error", '500')
+                        return new ApolloError( err, 500)
                     }
                 } else {
                     return new ApolloError("Invalid Password", 403)
                 }
 
-            } catch (e) {
-                throw new ApolloError("Internal Server Error", '500')
+            } catch (err) {
+                return new ApolloError( err, 500)
             }
         },
         registerUser: async (_, {newUser}) => {
