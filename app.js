@@ -1,4 +1,5 @@
 import createError from 'http-errors'
+import LogRocket from 'logrocket';
 import express from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
@@ -15,6 +16,9 @@ import {graphqlUploadExpress} from 'graphql-upload';
 import {join} from "path";
 let cors=require('cors');
 import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import {authDirectiveTypeDefs, authDirectiveTransformer} from './schema/directives/isAuth2.directive'
+
 
 
 // import { v4 } from "uuid";
@@ -50,10 +54,16 @@ app.use(AuthMiddleware)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-
-const server = new ApolloServer({
-    typeDefs,
+let schema = makeExecutableSchema({
+    typeDefs: [
+        authDirectiveTypeDefs,
+        typeDefs,
+    ],
     resolvers,
+})
+schema = authDirectiveTransformer(schema)
+const server = new ApolloServer({
+    schema,
     introspection: true,
     playground: {
         settings: {
@@ -124,6 +134,7 @@ const server = new ApolloServer({
         console.log(' 🍃 connected to mongoDB mLab1');
         app.listen( port, () => {
             console.log('🚀 now listening for requests on port',  port);
+            LogRocket.init('2oiqcd/ioffer');
         });
     })
 })()

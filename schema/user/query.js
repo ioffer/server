@@ -7,7 +7,7 @@ const userQuery = gql`
         verify2FA(token: String!):Boolean! @isAuth,
         users: [User],
         me:User! @isAuth,
-        userById(id:ID!):User,
+        userById(id:ID!):User @isAuth2,
         searchPendingKyc:[User] @isAuth,
         searchUnBlockedUsers: [User] @isAuth
         version:String!

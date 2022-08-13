@@ -136,7 +136,7 @@ const resolvers = {
                     newShop.tags = [...tagsSet];
                 }
                 console.log("newShop", newShop)
-                return await Shop.findOneAndUpdate({id: id}, newShop, {new: true});
+                return await Shop.findOneAndUpdate({_id: id}, newShop, {new: true});
             } catch (err) {
                 return new ApolloError(err, 500);
             }
