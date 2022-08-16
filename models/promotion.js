@@ -1,4 +1,3 @@
-import Category from "./category";
 import {Status, Verified} from "../constants/enums";
 
 const mongoose = require('mongoose');
@@ -11,11 +10,11 @@ const promotionSchema = new Schema({
         type: Schema.Types.ObjectId
     },
     tags:[String],
-    Category:[{
+    category:[{
         ref:'categories',
         type:Schema.Types.ObjectId,
     }],
-    subCategories:[{
+    subCategory:[{
         ref:'categories',
         type:Schema.Types.ObjectId,
     }],
@@ -34,7 +33,6 @@ const promotionSchema = new Schema({
         type: Number,
         default:0
     },
-    //hidden replaced by upcoming
     isUpcoming:{
         type:Boolean,
         default:false
@@ -52,10 +50,10 @@ const promotionSchema = new Schema({
         ref: 'users',
         type: Schema.Types.ObjectId
     },
-    shop:{
+    shops:[{
         ref: 'shops',
         type: Schema.Types.ObjectId
-    },
+    }],
     brand:{
         ref: 'brands',
         type: Schema.Types.ObjectId

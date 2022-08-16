@@ -5,32 +5,34 @@ function authDirective(directiveName, getUserFn) {
     const typeDirectiveArgumentMaps = {}
     return {
         authDirectiveTypeDefs: `directive @${directiveName}(
-      requires: Role = USER,
+      requires: [Role] = [USER],
     ) on OBJECT | FIELD_DEFINITION
     `,
         authDirectiveTransformer: (schema) =>
             mapSchema(schema, {
                 [MapperKind.TYPE]: type => {
-                    // console.log('inside mapping')
                     const authDirective = getDirective(schema, type, directiveName)?.[0]
-                    // console.log('authDirective on type', authDirective)
                     if (authDirective) {
                         typeDirectiveArgumentMaps[type.name] = authDirective
                     }
                     return undefined
                 },
                 [MapperKind.OBJECT_FIELD]: (fieldConfig, _fieldName, typeName) => {
-                    // console.log("fieldConfig ==> ", fieldConfig,'_fieldName ==> ', _fieldName, 'typeName ==> ', typeName)
+                    // console.log('_fieldName ==> ', _fieldName, 'typeName ==> ', typeName)
+                    // if(_fieldName == 'userById'){
+                    //     console.log("fieldConfig", fieldConfig)
+                    // }
                     const authDirective =
                         getDirective(schema, fieldConfig, directiveName)?.[0] ?? typeDirectiveArgumentMaps[typeName]
-                    // console.log('authDirective on query', authDirective)
                     if (authDirective) {
                         const { requires } = authDirective
                         if (requires) {
                             const { resolve = defaultFieldResolver } = fieldConfig
                             fieldConfig.resolve = function (source, args, context, info) {
+                                if(!context.isAuth){
+                                    throw new Error('Need Authorization')
+                                }
                                 const user = getUserFn(context.user)
-                                console.log("user", user)
                                 if (!user.hasRole(requires)) {
                                     throw new Error('not authorized')
                                 }
@@ -46,15 +48,17 @@ function authDirective(directiveName, getUserFn) {
 }
 
 function getUser(user) {
-    const roles = ['UNKNOWN', 'USER', 'REVIEWER', 'ADMIN']
-    console.log("User:", user)
-
+    let roles = Object.keys(Roles)
+    let userRole = user.type
     return {
-        hasRole: (role) => {
-            const tokenIndex = roles.indexOf(token)
-            const roleIndex = roles.indexOf(role)
-            console.log('role:', roleIndex >= 0 && tokenIndex >= roleIndex, "token", token)
-            return roleIndex >= 0 && tokenIndex >= roleIndex
+        hasRole: (requiredRole) => {
+            let hasRole = false;
+            requiredRole.forEach((rr)=>{
+                if(userRole === rr){
+                    hasRole = true
+                }
+            })
+            return hasRole;
         }
     }
 }

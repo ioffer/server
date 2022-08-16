@@ -4,34 +4,39 @@ const {gql} = require('apollo-server-express');
 const promotionTypeDefs = gql`
 
     input PromotionInput {
-        name: String,
-        images: [String],
-        tags:[String],
-        category: [String],
+        name: String!,
+        media: [ID]!,
+        tags:[ID],
+        category: [ID],
+        subCategory:[ID],
         description: String,
         price: String,
         startDate: String,
         endDate: String,
-        hidden: Boolean
+        isUpcoming: Boolean
+        status:Status
+        shops:[ID],
     }
 
     type Promotion {
         id: ID!,
         name: String,
-        images: [String],
-        tags:[String],
-        category: [String],
+        media: [Media],
+        tags:[Tag],
+        category: [Category],
+        subCategory:[Category],
         description: String,
         price: String,
         publishingDateTime:String,
-        verified:Boolean,
+        verified(verified:Verified):String,
         viewCounts:Int,
         clickCounts:Int,
-        hidden:Boolean,
-        archived:Boolean,
+        isUpcoming:Boolean,
+        status(status:Status):String,
         publisher:User,
         verifiedBy:User,
-        shop:Shop,
+        brand:Brand,
+        shops:[Shop],
         startDate: String,
         endDate: String,
     }

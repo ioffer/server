@@ -1,4 +1,4 @@
-import {User, Shop, Promotion} from "../../models";
+import {User, Shop, Promotion, Tag, Brand, Category, Media} from "../../models";
 import _ from 'lodash'
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
 const {
@@ -19,15 +19,30 @@ let fetchData = () => {
 
 const resolvers = {
     Promotion: {
-        shop: async (parent) => {
-            return await Shop.find({"id": parent.shop})
+        shops: async (parent) => {
+            return await Shop.find({_id: {$in: parent.shops}});
         },
         publisher: async (parent)=>{
-            return await User.find({'id':parent.publisher})
+            return await User.findById(parent.publisher)
         },
         verifiedBy: async (parent)=>{
-            return await User.find({'id':parent.verifiedBy})
-        }
+            return await User.findById(parent.verifiedBy)
+        },
+        brand: async (parent)=>{
+            return await Brand.findById(parent.brand)
+        },
+        category: async (parent) => {
+            return await Category.find({_id: {$in: parent.category}});
+        },
+        subCategory: async (parent) => {
+            return await Category.find({_id: {$in: parent.subCategory}});
+        },
+        tags: async (parent) => {
+            return await Tag.find({_id: {$in: parent.tags}});
+        },
+        media: async (parent) => {
+            return await Media.findById(parent.media);
+        },
     },
     Query: {
         promotions: () => {

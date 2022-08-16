@@ -22,7 +22,7 @@ const resolvers = {
             return await Media.findById(parent.coverImage);
         },
         promotions: async (parent) => {
-            return await Promotion.find({"shop": parent.id})
+            return await Promotion.find({"brand": parent.id})
         },
         category: async (parent) => {
             return await Category.find({_id: {$in: parent.category}});
@@ -31,7 +31,6 @@ const resolvers = {
             return await Category.find({_id: {$in: parent.subCategory}});
         },
         tags: async (parent) => {
-            console.log(parent._id, 'parent.tags->', parent.tags)
             return await Tag.find({_id: {$in: parent.tags}});
         },
         brandShops:async (parent)=>{
@@ -326,6 +325,23 @@ const resolvers = {
                 return new ApolloError( err, 500)
             }
         },
+        createBrandPromotion: async (_, {id, newPromotion},{user})=>{
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            let brand = await Brand.findById(id);
+            if (newPromotion.status===Status.PUBLISHED){
+                newPromotion['publisher'] = user._id;
+                newPromotion['publishingDateTime'] = dateTime();
+            }
+            let promotion = Promotion({
+                ...newPromotion,
+                brand: brand.id,
+            })
+            brand.promotions.push(promotion.id);
+            await brand.save()
+            return await promotion.save()
+        }
         // subscribeBrand: async (_,{})=>{
         //
         // }
