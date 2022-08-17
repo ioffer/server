@@ -15,7 +15,6 @@ const userQuery = gql`
         editPromotion(id:ID!, newPromotion: PromotionInput!): Promotion @isAuth,
         deletePromotion(id: ID!):Boolean @isAuth,
         verifyPromotion(id:ID!):Boolean @isAuth,
-        hidePromotion(id:ID!):Boolean @isAuth
         archivePromotion(id:ID!):Boolean @isAuth
         clickPromotion(id:ID!):Boolean
         viewPromotion(id:ID!):Boolean

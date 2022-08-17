@@ -192,8 +192,8 @@ const resolvers = {
             }
             if (user.type === Roles.SUPER_ADMIN) {
                 try {
-                    let response = await Promotion.findByIdAndUpdate(id, {$set: {"verified": "VERIFIED"}});
-                    if (!response) {
+                    let promotion = await Promotion.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
+                    if (!promotion) {
                         return new ApolloError("Promotion not found", 404);
                     }
                     return true
@@ -202,23 +202,6 @@ const resolvers = {
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", 401);
-            }
-        },
-        hidePromotion: async (_, {id}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            try {
-                let promotion = await Promotion.findById(id);
-                let shop = await Shop.findById(promotion.shop);
-                if (shop.owner === user.id || shop.moderators.includes(user.id)) {
-                    await Promotion.findByIdAndUpdate(id, {hidden: true})
-                    return true
-                } else {
-                    return new AuthenticationError("Unauthorised User", 401);
-                }
-            } catch (err) {
-                return new ApolloError(err, 500)
             }
         },
         archivePromotion: async (_, {id}, {user}) => {

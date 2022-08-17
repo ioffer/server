@@ -6,13 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/brand/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/media/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/media/query.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/promotion/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/query.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +234,7 @@
       <workItem from="1659522639899" duration="9620000" />
       <workItem from="1660208204030" duration="20246000" />
       <workItem from="1660551171928" duration="11959000" />
-      <workItem from="1660639578843" duration="14924000" />
+      <workItem from="1660639578843" duration="16633000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

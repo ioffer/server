@@ -8,8 +8,8 @@ const mediaQuery = gql`
     },
 
     extend type Mutation {
-        singleUpload(file: Upload!): Media,
-        multipleUpload(files: [Upload]!): Media
+        singleUpload(file: Upload!, type:MediaTypes): Media,
+        multipleUpload(files: [Upload]!, type:MediaTypes): Media
     }
 
 `;
