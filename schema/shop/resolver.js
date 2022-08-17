@@ -22,7 +22,7 @@ let fetchData = async () => {
 const resolvers = {
     Shop: {
         promotions: async (parent) => {
-            return await Promotion.find({"shop": parent.id})
+            return await Promotion.find({_id: {$in: parent.promotions}});
         },
         brand: async (parent) => {
             console.log(parent.brand)

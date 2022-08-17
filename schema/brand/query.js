@@ -23,7 +23,6 @@ const brandQuery = gql`
         clickBrand(id:ID!):Boolean
         viewBrand(id:ID!):Boolean
         subscribeBrand(id:ID!):Boolean @isAuth
-        createBrandPromotion(id:ID!, newPromotion:PromotionInput!):Promotion
     }
     
 `;

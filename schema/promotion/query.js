@@ -4,15 +4,14 @@ const userQuery = gql`
     extend type Query {
         promotions:[Promotion],
         promotionById(id:ID!):Promotion @isAuth,
-        promotionByShop(shopID:ID!):Promotion @isAuth,
         searchPendingPromotions:[Promotion] @isAuth,
         searchArchivedPromotions(shopId:ID!):[Promotion] @isAuth,
-        searchHiddenPromotions(shopId:ID!):[Promotion] @isAuth,
+        searchUpcomingPromotions(shopId:ID!):[Promotion] @isAuth,
 #        searchPromotions(query:Query):[Promotion]
     },
     
     extend type Mutation {
-        createPromotion(shopID:ID!, newPromotion: PromotionInput!):Promotion @isAuth,
+        createPromotion(newPromotion: PromotionInput!):Promotion @isAuth,
         editPromotion(id:ID!, newPromotion: PromotionInput!): Promotion @isAuth,
         deletePromotion(id: ID!):Boolean @isAuth,
         verifyPromotion(id:ID!):Boolean @isAuth,

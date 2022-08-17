@@ -22,7 +22,6 @@ const userQuery = gql`
         clickShop(id:ID!):Boolean
         viewShop(id:ID!):Boolean
         subscribeShop(id:ID!):Boolean @isAuth
-        createShopPromotion(id:ID!):Promotion
     }
     
 `;

@@ -16,6 +16,7 @@ const promotionTypeDefs = gql`
         isUpcoming: Boolean
         status:Status
         shops:[ID],
+        brand:ID,
     }
 
     type Promotion {
