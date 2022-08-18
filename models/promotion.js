@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 
 const promotionSchema = new Schema({
     name: String,
-    media: {
+    media: [{
         ref: 'medias',
         type: Schema.Types.ObjectId
-    },
+    }],
     tags:[String],
     category:[{
         ref:'categories',
