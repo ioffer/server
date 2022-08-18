@@ -9,7 +9,7 @@ const {verify} = require('jsonwebtoken');
  */
 const AuthMiddleware = async (req, res, next) => {
     // Extract Authorization Header
-    console.log("headers:",req.get("Authorization"))
+    // console.log("headers:",req.get("Authorization"))
     const authHeader = req.get("Authorization");
     if (!authHeader) {
         req.isAuth = false;

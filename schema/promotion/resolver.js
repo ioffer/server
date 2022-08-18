@@ -43,7 +43,7 @@ const resolvers = {
             return await Tag.find({_id: {$in: parent.tags}});
         },
         media: async (parent) => {
-            return await Media.findById(parent.media);
+            return await Media.find({_id: {$in: parent.media}});
         },
     },
     Query: {
@@ -163,17 +163,53 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            try {
-                let promotion = await Promotion.findById(id);
-                let shop = await Shop.findById(promotion.shop);
-                if (shop.owner === user.id || shop.moderators.includes(user.id)) {
-                    return await Promotion.findByIdAndUpdate(id, newPromotion)
-                } else {
-                    return new AuthenticationError("Unauthorised User", 401);
-                }
-            } catch (err) {
-                return new ApolloError(err, 500)
+            let promotion = await Promotion.findById(id);
+            if (newPromotion.status === Status.PUBLISHED) {
+                newPromotion['publisher'] = user._id;
+                newPromotion['publishingDateTime'] = dateTime();
             }
+            await Shop.updateMany({_id: {$in: promotion.shops}}, {$pull: {promotions:promotion.id}});
+            await Brand.updateMany({_id: promotion.brand}, {$pull: {promotions:promotion.id}});
+            let brand = null;
+            let shops = [];
+            let brandShops = [];
+            if (newPromotion.brand) {
+                brand = await Brand.findById(newPromotion.brand);
+                let invalidBrandedShop = null;
+                if (newPromotion.shops) {
+                    brand.brandShops.forEach((brandsShop) => {
+                        brandShops.push(brandsShop.toString());
+                    })
+                    newPromotion.shops.forEach((shop) => {
+                        if (!brandShops.includes(shop)) {
+                            invalidBrandedShop = shop
+                        }
+                    })
+                    if (invalidBrandedShop) {
+                        let shop = await Shop.findById(invalidBrandedShop);
+                        return new ApolloError('Invalid Branded Shop ' + shop.name + '. Select Branded Shops Only', 400)
+                    }
+                }
+            } else {
+                if (newPromotion.shops) {
+                    for (let i = 0; i < newPromotion.shops.length; i++) {
+                        let shop = await Shop.findById(newPromotion.shops[i]);
+                        shops.push(shop)
+                        if (shop.brand) {
+                            return new ApolloError('Invalid Shop ' + shop.name + '. Select non Branded Shops Only', 400)
+                        }
+                    }
+                }
+            }
+            if (brand) {
+                brand.promotions.push(promotion.id);
+                await brand.save()
+                if (!newPromotion.shops) {
+                    await Shop.updateMany({_id: {$in: brand.brandShops}}, {$push: {promotions: promotion.id}});
+                }
+            }
+            await Shop.updateMany({_id: {$in: newPromotion.shops}}, {$push: {promotions: promotion.id}});
+            return Promotion.findByIdAndUpdate(id, {...newPromotion},{new:true});
         },
         deletePromotion: async (_, {id}, {user}) => {
             if (!user) {
