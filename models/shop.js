@@ -1,4 +1,5 @@
 import {Status, Verified} from "../constants/enums";
+import {error} from "logrocket";
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -108,5 +109,36 @@ const shopSchema = new Schema({
     timestamps: true
 });
 
+// shopSchema.methods.getUserRelation = function (user){
+//     console.log('user:',user);
+//     console.log('this:',this.name);
+//     return "user"
+// }
+shopSchema.virtual('reviews', { //the name of the virtual field
+    ref: 'role_base_accesses', //the child model
+    foreignField: 'admin.shops', //name of the field in the child model that contains the reference to the current (parent) model
+    localField: '_id' //name of the field where the ID is stored on the current (parent) model.
+});
+shopSchema.virtual('name2').get(function (doc){
+    console.log('doc ==> ', doc)
+    return "hello"
+})
+shopSchema.virtual('hi', { //the name of the virtual field
+    ref: 'role_base_accesses', //the child model
+    foreignField: 'user', //name of the field in the child model that contains the reference to the current (parent) model
+    localField: '_id' //name of the field where the ID is stored on the current (parent) model.
+});
+shopSchema.query.byName = function (name) {
+    return this.where({ name: new RegExp(name, 'i') })
+}
+shopSchema.query.byEmail = function (email) {
+    return this.where({ email: new RegExp(email, 'i') })
+}
+shopSchema.query.published = function () {
+    return this.where({ status: Status.PUBLISHED})
+}
+shopSchema.query.getUserRelation = function (user) {
+    return this.where({ status: Status.PUBLISHED})
+}
 const Shop = mongoose.model('shops', shopSchema);
 export default Shop;

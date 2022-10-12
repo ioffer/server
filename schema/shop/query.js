@@ -1,9 +1,8 @@
   const {gql} = require('apollo-server-express');
-
 const userQuery = gql`
     extend type Query {
-        shops:[Shop],
-        shopById(id:ID!):Shop @isAuth,
+        shops:[Shop] @isAuth2(requires: [USER]),
+        shopById(id:ID!):Shop @isAuth2(requires: [MODIFIER,WATCHER]),
         searchPendingShops:[Shop] @isAuth,
         searchBlockedShops: [Shop] @isAuth
 #        searchShops(query:Query):[Shop]

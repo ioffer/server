@@ -1,4 +1,4 @@
-import {User, Promotion, Shop, Tag, Category, Media, Brand} from "../../models";
+import {User, Promotion, Shop, Tag, Category, Media, Brand, RoleBaseAccess} from "../../models";
 import lodash from "lodash"
 
 const {
@@ -15,8 +15,13 @@ import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConf
 import {Roles, Status, Verified} from "../../constants/enums";
 
 let fetchData = async () => {
-    return await Shop.find({});
+    let shops = await Shop.find({}).byName('shop').byEmail('testing').published();
+    // let shops = await Shop.aggregate([]);
+    console.log("shops.user",shops.user)
+    console.log("shops virtual ==> ",shops[0].toObject({ virtuals: true }))
 
+    // console.log("shops.user",shops[0].getUserRelation('user1'))
+    return shops
 }
 
 const resolvers = {
@@ -50,7 +55,10 @@ const resolvers = {
 
     },
     Query: {
-        shops: () => {
+        shops: (data,data2, context) => {
+            console.log('context:',context)
+            console.log('data:',data)
+            console.log('data2:',data2)
             return fetchData()
         },
         shopById: async (_, args) => {

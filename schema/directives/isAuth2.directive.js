@@ -1,6 +1,9 @@
 import {Roles} from "../../constants/enums";
-import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils'
-import { GraphQLSchema } from 'graphql'
+import {RoleBaseAccess, Shop} from '../../models'
+import {mapSchema, getDirective, MapperKind} from '@graphql-tools/utils'
+import {GraphQLSchema} from 'graphql'
+import {ObjectSchema} from "yup";
+
 function authDirective(directiveName, getUserFn) {
     const typeDirectiveArgumentMaps = {}
     return {
@@ -25,17 +28,24 @@ function authDirective(directiveName, getUserFn) {
                     const authDirective =
                         getDirective(schema, fieldConfig, directiveName)?.[0] ?? typeDirectiveArgumentMaps[typeName]
                     if (authDirective) {
-                        const { requires } = authDirective
+                        // console.log('authDirective ==>', authDirective)
+                        const {requires} = authDirective
                         if (requires) {
-                            const { resolve = defaultFieldResolver } = fieldConfig
-                            fieldConfig.resolve = function (source, args, context, info) {
-                                if(!context.isAuth){
+                            const {resolve = defaultFieldResolver} = fieldConfig
+                            fieldConfig.resolve = async function (source, args, context, info) {
+                                console.log('info:', JSON.stringify(info))
+
+                                if (!context.isAuth) {
                                     throw new Error('Need Authorization')
                                 }
                                 const user = getUserFn(context.user)
-                                if (!user.hasRole(requires)) {
+                                let baseRole = await user.getRoleBaseAccess(context, info);
+                                console.log(baseRole, ' :baseRole')
+                                if (!user.hasRole(requires, baseRole)) {
                                     throw new Error('not authorized')
                                 }
+                                context.user.baseRole = "none"
+                                context.baseRole = "none"
                                 return resolve(source, args, context, info)
                             }
                             return fieldConfig
@@ -51,10 +61,50 @@ function getUser(user) {
     let roles = Object.keys(Roles)
     let userRole = user.type
     return {
-        hasRole: (requiredRole) => {
+        getRoleBaseAccess: async (context, info) => {
+            let {user} = context
+            // let access = await RoleBaseAccess.findOne({"user": user.id})
+            // console.log('fieldName==>', info['fieldName'])
+            if (info.fieldName.toLowerCase().includes('shop')) {
+                let key = Object.keys(info.variableValues)[0];
+                let id = info.variableValues[key];
+                if (id && id.length === 24) {
+                    let shop = await Shop.findById(id);
+                    console.log('shop:', shop)
+                    if (shop.owner === user.id) {
+                        return Roles.OWNER
+                    } else if (shop.admins.includes(user.id)) {
+                        return Roles.ADMIN
+                    } else if (shop.modifiers.includes(user.id)) {
+                        return Roles.MODIFIER
+                    } else if (shop.watchers.includes(user.id)) {
+                        return Roles.WATCHER
+                    }
+                }
+            }
+            if (info.fieldName.toLowerCase().includes('brand')) {
+                let key = Object.keys(info.variableValues)[0];
+                let id = info.variableValues[key];
+                if (id.length === 24) {
+                    let brand = await Brand.findById(id);
+                    console.log('brand:', shop)
+                    if (brand.owner === user.id) {
+                        return Roles.OWNER
+                    } else if (brand.admins.includes(user.id)) {
+                        return Roles.ADMIN
+                    } else if (brand.modifiers.includes(user.id)) {
+                        return Roles.MODIFIER
+                    } else if (brand.watchers.includes(user.id)) {
+                        return Roles.WATCHER
+                    }
+                }
+            }
+            return ""
+        },
+        hasRole: (requiredRole, baseRole) => {
             let hasRole = false;
-            requiredRole.forEach((rr)=>{
-                if(userRole === rr){
+            requiredRole.forEach((rr) => {
+                if (userRole === rr || baseRole === rr) {
                     hasRole = true
                 }
             })
@@ -63,4 +113,4 @@ function getUser(user) {
     }
 }
 
-export const { authDirectiveTypeDefs, authDirectiveTransformer } = authDirective('isAuth2', getUser)
+export const {authDirectiveTypeDefs, authDirectiveTransformer} = authDirective('isAuth2', getUser)

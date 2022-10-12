@@ -4,7 +4,7 @@
 export {default as User} from './user';
 export {default as Favorite} from './favorite';
 export {default as UserPin} from './pin';
-export {default as UserRoleBaseAccess} from './roleBaseAccess';
+export {default as RoleBaseAccess} from './roleBaseAccess';
 export {default as UserSubscription} from './subscription';
 export {default as Promotion} from './promotion';
 export {default as Shop} from './shop';

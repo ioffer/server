@@ -47,6 +47,7 @@ const AuthMiddleware = async (req, res, next) => {
 
     req.isAuth = true;
     req.user = authUser;
+    console.log('next ==>', next )
     return next();
 }
 
