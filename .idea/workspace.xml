@@ -6,17 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/favorite.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/favorite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/roleBaseAccess.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/roleBaseAccess.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/directives/auth.directive.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/directives/isAuth2.directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/directives/isAuth2.directive.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/type.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,6 +246,7 @@
       <workItem from="1663071378265" duration="617000" />
       <workItem from="1663356487147" duration="1802000" />
       <workItem from="1665388804992" duration="9084000" />
+      <workItem from="1665644752632" duration="7417000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

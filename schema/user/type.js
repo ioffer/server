@@ -39,7 +39,7 @@ const userTypeDefs = gql`
         kyc: Kyc,
         shops:[Shop],
         brands:[Brand],
-        favourites:Favorite,
+        favorites:Favorite,
         pins:Pin,
         subscriptions:UserSubscription,
         roleBasedAccess:RoleBasedAccess,

@@ -15,7 +15,7 @@ import AuthMiddleware from './middleware/auth.js';
 import {graphqlUploadExpress} from 'graphql-upload';
 import {join} from "path";
 let cors=require('cors');
-import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
+import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled, ApolloServerPluginInlineTrace } from 'apollo-server-core';
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import {authDirectiveTypeDefs, authDirectiveTransformer} from './schema/directives/isAuth2.directive'
 
@@ -76,6 +76,7 @@ const server = new ApolloServer({
         ],
     },
     plugins: [
+        ApolloServerPluginInlineTrace(),
         ApolloServerPluginLandingPageGraphQLPlayground(
             {
                 settings: {

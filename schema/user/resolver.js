@@ -1,4 +1,4 @@
-import {User, Shop, Brand, UserFavourite} from "../../models";
+import {User, Shop, Brand, Favorite, Pin, RoleBaseAccess, UserSubscription} from "../../models";
 import {find} from "lodash"
 
 const {SECRET} = require("../../config")
@@ -31,26 +31,29 @@ const resolvers = {
             return await Shop.find({"owner": parent.id})
         },
         brands: async (parent) => {
-            return await Brand.find({"id": parent.brands})
+            console.log("Brands:", parent.brands)
+            let brands = await Brand.find({"owner": parent.id})
+            console.log("Brands:", brands)
+            return brands
         },
-        favourites: async (parent) => {
-            return await UserFavourite.find({"user":parent.id})
+        favorites: async (parent) => {
+            return await Favorite.find({"user": parent.id})
         },
         pins: async (parent) => {
-            return await UserPin.find({"user":parent.id})
+            return await Pin.find({"user": parent.id})
         },
         subscriptions: async (parent) => {
-            return await UserSubscription.find({"user":parent.id})
+            return await UserSubscription.find({"user": parent.id})
         },
         roleBasedAccess: async (parent) => {
-            return await UserRoleBaseAccess.find({"user":parent.id})
+            return await RoleBaseAccess.find({"user": parent.id})
         }
     },
     Query: {
         users: () => {
             return fetchData()
         },
-        version:()=>{
+        version: () => {
             return "0.0.1";
         },
         me: async (_, {}, {user}) => {
@@ -71,7 +74,7 @@ const resolvers = {
             await PasswordRules.validate({password}, {abortEarly: false});
             // Find the user from the database
             let user = await User.findOne(
-            { $or: [ {"userName":userName}, { "email":userName} ] }
+                {$or: [{"userName": userName}, {"email": userName}]}
             );
             // If User is not found
             if (!user) {
@@ -133,7 +136,7 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if (user.type ===Roles.SUPER_ADMIN) {
+            if (user.type === Roles.SUPER_ADMIN) {
                 return await User.find({"isBlocked": false, "confirmed": true});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -161,7 +164,7 @@ const resolvers = {
                     return new ApolloError("Super Admin Cannot be Blocked", 403)
                 }
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         verifyKyc: async (_, {id}, {user}) => {
@@ -177,7 +180,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    return new ApolloError( err, 500)
+                    return new ApolloError(err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -203,7 +206,7 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised", '401');
             }
         },
-        disable2FA: async (_, __, { user}) => {
+        disable2FA: async (_, __, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -221,7 +224,7 @@ const resolvers = {
                 }
                 return true;
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         enable2FA: async (_, __, {user}) => {
@@ -265,7 +268,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                let emailHtml = await forgetPasswordBody(user.userName ,emailLink);
+                let emailHtml = await forgetPasswordBody(user.userName, emailLink);
                 return await sendEmail(email, emailLink, emailHtml);
             }
 
@@ -311,7 +314,7 @@ const resolvers = {
                         }
                         return true
                     } catch (err) {
-                        return new ApolloError( err, 500)
+                        return new ApolloError(err, 500)
                     }
                 }
             }
@@ -355,7 +358,7 @@ const resolvers = {
                         }
                         return true
                     } catch (err) {
-                        return new ApolloError( err, 500)
+                        return new ApolloError(err, 500)
                     }
                 }
             }
@@ -423,7 +426,7 @@ const resolvers = {
                 }
                 return true;
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         changePassword: async (_, {password, newPassword}, {user}) => {
@@ -451,14 +454,14 @@ const resolvers = {
                         }
                         return true
                     } catch (err) {
-                        return new ApolloError( err, 500)
+                        return new ApolloError(err, 500)
                     }
                 } else {
                     return new ApolloError("Invalid Password", 403)
                 }
 
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         registerUser: async (_, {newUser}) => {
@@ -495,7 +498,21 @@ const resolvers = {
                 user.password = await hash(user.password, 10);
                 console.log("error4")
                 // Save the user to the database
+                let favorite = await Favorite({
+                    user: user.id,
+                }).save()
+                let pin = await Pin({
+                    user: user.id,
+                }).save()
+                let userSubscription = await UserSubscription({
+                    user: user.id,
+                }).save()
+                user.favorites = favorite.id;
+                user.subscriptions = userSubscription.id;
+                user.pins = pin.id;
+                console.log('User:',user)
                 let result = await user.save();
+
                 let emailstr = {
                     id: user.id,
                     email: user.email
