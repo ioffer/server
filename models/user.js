@@ -97,7 +97,7 @@ const userSchema = new Schema({
     }],
     favorites:{
         type: Schema.Types.ObjectId,
-        ref: 'favourites',
+        ref: 'favorites',
     },
     pins:{
         type: Schema.Types.ObjectId,

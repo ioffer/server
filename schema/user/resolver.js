@@ -37,16 +37,16 @@ const resolvers = {
             return brands
         },
         favorites: async (parent) => {
-            return await Favorite.find({"user": parent.id})
+            return await Favorite.findById( parent.favorites)
         },
         pins: async (parent) => {
-            return await Pin.find({"user": parent.id})
+            return await Pin.findById( parent.pins)
         },
         subscriptions: async (parent) => {
-            return await UserSubscription.find({"user": parent.id})
+            return await UserSubscription.findById( parent.subscriptions)
         },
         roleBasedAccess: async (parent) => {
-            return await RoleBaseAccess.find({"user": parent.id})
+            return await RoleBaseAccess.findById( parent.roleBasedAccess)
         }
     },
     Query: {
@@ -61,7 +61,9 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await User.findById(user.id)
+                let res = await User.findById(user.id)
+                console.log("User",res);
+                return res;
             } catch (err) {
                 throw new ApolloError(err)
             }
@@ -507,9 +509,13 @@ const resolvers = {
                 let userSubscription = await UserSubscription({
                     user: user.id,
                 }).save()
+                let roleBaseAccess = await RoleBaseAccess({
+                    user: user.id,
+                }).save()
                 user.favorites = favorite.id;
                 user.subscriptions = userSubscription.id;
                 user.pins = pin.id;
+                user.roleBasedAccess = roleBaseAccess.id;
                 console.log('User:',user)
                 let result = await user.save();
 

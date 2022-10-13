@@ -5,7 +5,7 @@ const userSubscriptionTypeDefs = gql`
 
     type UserSubscription {
         id: ID!,
-        user: User,
+        user: User!,
         shops:[Shop],
         brands:[Shop],
         createdAt: String,

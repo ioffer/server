@@ -5,7 +5,7 @@ const favoriteTypeDefs = gql`
 
     type Favorite {
         id: ID!,
-        user: User,
+        user: User!,
         shops:[Shop],
         brands:[Shop],
         createdAt: String,
