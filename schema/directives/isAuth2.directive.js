@@ -42,7 +42,8 @@ function authDirective(directiveName, getUserFn) {
                                 let baseRole = await user.getRoleBaseAccess(context, info);
                                 console.log(baseRole, ' :baseRole')
                                 if (!user.hasRole(requires, baseRole)) {
-                                    throw new Error('not authorized')
+                                    let required = requires.toString()
+                                    throw new Error(`Not Authorized, User Must Be ${required}`)
                                 }
                                 context.user.baseRole = "none"
                                 context.baseRole = "none"

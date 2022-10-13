@@ -5,21 +5,21 @@ const userQuery = gql`
         publishedShops:[Shop] @isAuth2(requires: [USER]),
         shops:[Shop] @isAuth2(requires: [USER]),
         shopById(id:ID!):Shop @isAuth2(requires: [MODIFIER,WATCHER]),
-        searchPendingShops:[Shop] @isAuth,
-        searchBlockedShops: [Shop] @isAuth
+        searchPendingShops:[Shop] @isAuth2(requires: [SUPER_ADMIN]),
+        searchBlockedShops: [Shop] @isAuth2(requires: [SUPER_ADMIN])
 #        searchShops(query:Query):[Shop]
     },
     
     extend type Mutation {
         registerShop(newShop: ShopInput!):Shop @isAuth,
         editShop(id:ID!, newShop: ShopInput!): Shop @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
-        deleteShop(id: ID!):Boolean @isAuth,
-        verifyShop(id:ID!):Boolean @isAuth,
-        blockShop(id:ID!):Boolean @isAuth,
-        archiveShop(id:ID!):Boolean @isAuth,
-        unArchiveShop(id:ID!):Boolean @isAuth,
-        inviteShopModerator(id:ID!, email:String!, role:String!):Boolean @isAuth
-        removeShopModerator(id:ID!,email:String!, role:String!):Boolean @isAuth
+        deleteShop(id: ID!):Boolean @isAuth2(requires: [ADMIN,OWNER]),
+        verifyShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
+        blockShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
+        archiveShop(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
+        unArchiveShop(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
+        inviteShopModerator(id:ID!, email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])
+        removeShopModerator(id:ID!,email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])
         clickShop(id:ID!):Boolean
         viewShop(id:ID!):Boolean
         subscribeShop(id:ID!):Boolean @isAuth
