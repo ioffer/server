@@ -15,13 +15,7 @@ import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConf
 import {Roles, Status, Verified} from "../../constants/enums";
 
 let fetchData = async () => {
-    let shops = await Shop.find({}).byName('shop').byEmail('testing').published();
-    // let shops = await Shop.aggregate([]);
-    console.log("shops.user",shops.user)
-    console.log("shops virtual ==> ",shops[0].toObject({ virtuals: true }))
-
-    // console.log("shops.user",shops[0].getUserRelation('user1'))
-    return shops
+    return await Shop.find({});
 }
 
 const resolvers = {
@@ -55,11 +49,14 @@ const resolvers = {
 
     },
     Query: {
-        shops: (data,data2, context) => {
-            console.log('context:',context)
-            console.log('data:',data)
-            console.log('data2:',data2)
-            return fetchData()
+        shops: async() => {
+            return await Shop.find({}).published();
+        },
+        publishedShops: async() => {
+            return await Shop.find({}).published();
+        },
+        allShops: async() => {
+            return await fetchData()
         },
         shopById: async (_, args) => {
             return await Shop.findById(args.id);

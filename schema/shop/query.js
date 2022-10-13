@@ -1,6 +1,8 @@
   const {gql} = require('apollo-server-express');
 const userQuery = gql`
     extend type Query {
+        allShops:[Shop] @isAuth2(requires: [SUPER_ADMIN]),
+        publishedShops:[Shop] @isAuth2(requires: [USER]),
         shops:[Shop] @isAuth2(requires: [USER]),
         shopById(id:ID!):Shop @isAuth2(requires: [MODIFIER,WATCHER]),
         searchPendingShops:[Shop] @isAuth,
@@ -10,7 +12,7 @@ const userQuery = gql`
     
     extend type Mutation {
         registerShop(newShop: ShopInput!):Shop @isAuth,
-        editShop(id:ID!, newShop: ShopInput!): Shop @isAuth,
+        editShop(id:ID!, newShop: ShopInput!): Shop @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
         deleteShop(id: ID!):Boolean @isAuth,
         verifyShop(id:ID!):Boolean @isAuth,
         blockShop(id:ID!):Boolean @isAuth,

@@ -70,8 +70,7 @@ function getUser(user) {
                 let id = info.variableValues[key];
                 if (id && id.length === 24) {
                     let shop = await Shop.findById(id);
-                    console.log('shop:', shop)
-                    if (shop.owner === user.id) {
+                    if (shop.owner.toString() === user.id) {
                         return Roles.OWNER
                     } else if (shop.admins.includes(user.id)) {
                         return Roles.ADMIN
