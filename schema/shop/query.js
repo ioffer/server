@@ -2,9 +2,9 @@
 const userQuery = gql`
     extend type Query {
         allShops:[Shop] @isAuth2(requires: [SUPER_ADMIN]),
-        publishedShops:[Shop] @isAuth2(requires: [USER]),
-        shops:[Shop] @isAuth2(requires: [USER]),
-        shopById(id:ID!):Shop @isAuth2(requires: [MODIFIER,WATCHER]),
+        publishedShops:[Shop] @isAuth,
+        shops:[Shop] @isAuth,
+        shopById(id:ID!):Shop @isAuth,
         searchPendingShops:[Shop] @isAuth2(requires: [SUPER_ADMIN]),
         searchBlockedShops: [Shop] @isAuth2(requires: [SUPER_ADMIN])
 #        searchShops(query:Query):[Shop]

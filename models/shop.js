@@ -109,25 +109,14 @@ const shopSchema = new Schema({
     timestamps: true
 });
 
-// shopSchema.methods.getUserRelation = function (user){
-//     console.log('user:',user);
-//     console.log('this:',this.name);
-//     return "user"
-// }
-shopSchema.virtual('reviews', { //the name of the virtual field
-    ref: 'role_base_accesses', //the child model
-    foreignField: 'admin.shops', //name of the field in the child model that contains the reference to the current (parent) model
-    localField: '_id' //name of the field where the ID is stored on the current (parent) model.
-});
-shopSchema.virtual('name2').get(function (doc){
-    console.log('doc ==> ', doc)
-    return "hello"
-})
-shopSchema.virtual('hi', { //the name of the virtual field
-    ref: 'role_base_accesses', //the child model
-    foreignField: 'user', //name of the field in the child model that contains the reference to the current (parent) model
-    localField: '_id' //name of the field where the ID is stored on the current (parent) model.
-});
+shopSchema.methods.getUserRelation = function (user){
+    return "user"
+}
+// shopSchema.virtual('user').get(function (){
+//     console.log('virtual user')
+//     return null
+// })
+
 shopSchema.query.byName = function (name) {
     return this.where({ name: new RegExp(name, 'i') })
 }
@@ -137,8 +126,13 @@ shopSchema.query.byEmail = function (email) {
 shopSchema.query.published = function () {
     return this.where({ status: Status.PUBLISHED})
 }
+shopSchema.query.pending = function () {
+    return this.where({ verified: Verified.PENDING})
+}
 shopSchema.query.getUserRelation = function (user) {
     return this.where({ status: Status.PUBLISHED})
 }
+shopSchema.set('toObject', { virtuals: true })
+shopSchema.set('toJSON', { virtuals: true })
 const Shop = mongoose.model('shops', shopSchema);
 export default Shop;

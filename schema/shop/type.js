@@ -62,6 +62,7 @@ const shopTypeDefs = gql`
         roleBaseAccessInvites:ShopRoleBaseAccessInvite,
         verifiedBy: User,
         promotions: [Promotion],
+        user:String,
 #        offers: [Offer]
     }
     

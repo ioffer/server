@@ -49,13 +49,20 @@ const resolvers = {
 
     },
     Query: {
-        shops: async() => {
+        shops: async () => {
+            let shops = await Shop.find({}).published();
+            for (let i = 0; i < shops.length; i++) {
+                let relation = await shops[i].getUserRelation()
+                shops[i]._doc.user = relation;
+                shops[i].user= relation;
+            }
+            console.log("shops:", shops)
+            return shops
+        },
+        publishedShops: async () => {
             return await Shop.find({}).published();
         },
-        publishedShops: async() => {
-            return await Shop.find({}).published();
-        },
-        allShops: async() => {
+        allShops: async () => {
             return await fetchData()
         },
         shopById: async (_, args) => {
@@ -102,7 +109,7 @@ const resolvers = {
                     publishingDateTime: dateTime()
                 })
                 if (newShop["brand"] !== undefined) {
-                    await Brand.findByIdAndUpdate(newShop.brand, {$push:{brandShops:shop.id}});
+                    await Brand.findByIdAndUpdate(newShop.brand, {$push: {brandShops: shop.id}});
                 }
                 console.log('shop', shop)
                 if (tags) {
@@ -127,7 +134,7 @@ const resolvers = {
                 await userRes.save();
                 return result;
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         editShop: async (_, {id, newShop}, {user}) => {
@@ -203,7 +210,7 @@ const resolvers = {
                     }
                     return true
                 } catch (err) {
-                    return new ApolloError( err, 500)
+                    return new ApolloError(err, 500)
                 }
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
@@ -223,7 +230,7 @@ const resolvers = {
                     return true;
                 }
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         inviteShopModerator: async (_, {id, email, role}, {Shop, user}) => {
@@ -246,7 +253,7 @@ const resolvers = {
                     }
                 }
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         removeShopModerator: async (_, {id, email, role}, {Shop, user}) => {
@@ -256,7 +263,7 @@ const resolvers = {
             try {
                 return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         clickShop: async (_, {id}) => {
@@ -264,7 +271,7 @@ const resolvers = {
                 await Shop.findByIdAndUpdate(id, {$inc: {clickCounts: 1}});
                 return true
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         viewShop: async (_, {id}) => {
