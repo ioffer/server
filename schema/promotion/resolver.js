@@ -15,8 +15,8 @@ import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
 
-let fetchData = () => {
-    return Promotion.find();
+let fetchData = async () => {
+    return await Promotion.find({});
 }
 
 const resolvers = {
@@ -47,8 +47,8 @@ const resolvers = {
         },
     },
     Query: {
-        promotions: () => {
-            return fetchData()
+        promotions: async () => {
+            return await fetchData()
         },
         promotionById: async (_, args) => {
             return await Promotion.findById(args.id);
