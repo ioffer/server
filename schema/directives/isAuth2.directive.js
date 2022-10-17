@@ -67,8 +67,9 @@ function getUser(user) {
             // let access = await RoleBaseAccess.findOne({"user": user.id})
             // console.log('fieldName==>', info['fieldName'])
             if (info.fieldName.toLowerCase().includes('shop')) {
-                let key = Object.keys(info.variableValues)[0];
-                let id = info.variableValues[key];
+                // let key = Object.keys(info.variableValues)[0];
+                let id = info.variableValues?.id;
+                // let id = info.variableValues[key];
                 if (id && id.length === 24) {
                     let shop = await Shop.findById(id);
                     if (shop.owner.toString() === user.id) {

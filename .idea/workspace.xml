@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -242,7 +241,7 @@
       <workItem from="1663356487147" duration="1802000" />
       <workItem from="1665388804992" duration="9084000" />
       <workItem from="1665644752632" duration="23397000" />
-      <workItem from="1665932990042" duration="22955000" />
+      <workItem from="1665932990042" duration="41920000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>
