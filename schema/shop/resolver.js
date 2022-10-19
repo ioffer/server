@@ -13,6 +13,7 @@ import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
+import ShopRoleBaseAccessInvite from "../../models/shopRoleBaseAccessInvite";
 
 let fetchData = async () => {
     return await Shop.find({});
@@ -24,12 +25,19 @@ const resolvers = {
             return await Promotion.find({_id: {$in: parent.promotions}});
         },
         brand: async (parent) => {
-            console.log(parent.brand)
             return await Brand.findById(parent.brand)
         },
         tags: async (parent) => {
-            console.log(parent._id, 'parent.tags->', parent.tags)
             return await Tag.find({_id: {$in: parent.tags}});
+        },
+        admins: async (parent) => {
+            return await User.find({_id: {$in: parent.admins}});
+        },
+        modifiers: async (parent) => {
+            return await User.find({_id: {$in: parent.modifiers}});
+        },
+        watchers: async (parent) => {
+            return await User.find({_id: {$in: parent.watchers}});
         },
         category: async (parent) => {
             return await Category.find({_id: {$in: parent.category}});
@@ -49,44 +57,38 @@ const resolvers = {
 
     },
     Query: {
-        shops: async () => {
+        shops: async (_, {}, {user}) => {
             let shops = await Shop.find({}).published();
-            for (let i = 0; i < shops.length; i++) {
-                let relation = await shops[i].getUserRelation()
-                shops[i]._doc.user = relation;
-                shops[i].user= relation;
-            }
-            console.log("shops:", shops)
+            await getShopUserRelation(user.id, shops)
             return shops
         },
-        publishedShops: async () => {
-            return await Shop.find({}).published();
+        publishedShops: async (_, {}, {user}) => {
+            let shops = await Shop.find({}).published();
+            await getShopUserRelation(user.id, shops)
+            return shops
         },
-        allShops: async () => {
-            return await fetchData()
+        allShops: async (_, {}, {user}) => {
+            let shops = await fetchData()
+            await getShopUserRelation(user.id, shops)
+            return shops
         },
-        shopById: async (_, args) => {
-            return await Shop.findById(args.id);
+        shopById: async (_, {id}, {user}) => {
+            console.log("user", user)
+            let shop = await Shop.findById(id);
+            console.log("here")
+            await getShopUserRelation(user.id, shop)
+            console.log("heree")
+            return shop
         },
-        searchPendingShops: async (_, {}, {user, Shop}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            if (user.type === "ADMIN") {
-                return await Shop.find({'verified': "PENDING"});
-            } else {
-                throw new AuthenticationError("Unauthorised User", '401');
-            }
+        searchPendingShops: async (_, {}, {user}) => {
+            let shops = await Shop.find({}).pending();
+            await getShopUserRelation(user.id, shops)
+            return shops
         },
-        searchBlockedShops: async (_, {}, {user, Shop}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            if (user.type === "ADMIN") {
-                return await Shop.find({"isBlocked": true, "confirmed": true});
-            } else {
-                throw new AuthenticationError("Unauthorised User", '401');
-            }
+        searchBlockedShops: async (_, {}, {user}) => {
+            let shops = await Shop.find({}).blocked();
+            await getShopUserRelation(user.id, shops)
+            return shops
         },
         // searchShops: async (_, {query}, {Shop}) => {
         //
@@ -138,9 +140,6 @@ const resolvers = {
             }
         },
         editShop: async (_, {id, newShop}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
             try {
                 if (newShop.tags) {
                     let tagsSet = new Set(newShop.tags);
@@ -154,66 +153,38 @@ const resolvers = {
             }
         },
         deleteShop: async (_, {id}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
             try {
-                if (user.type === Roles.SUPER_ADMIN) {
-                    await Shop.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
-                    return true
-                } else {
-                    console.log("here")
-                    let shop = await Shop.findOneAndUpdate({
-                        _id: id,
-                        owner: user.id
-                    }, {status: Status.DELETED}, {new: true});
-                    console.log("here2", shop)
-                    return true
-                }
+                await Shop.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
+                return true
             } catch (err) {
                 return new ApolloError(err, 500);
             }
         },
         archiveShop: async (_, {id}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
             try {
                 await Shop.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
                 return true
-
             } catch (err) {
                 return new ApolloError(err, 500);
             }
         },
         unArchiveShop: async (_, {id}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
             try {
                 await Shop.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
                 return true
-
             } catch (err) {
                 return new ApolloError(err, 500);
             }
         },
         verifyShop: async (_, {id}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            if (user.type === Roles.SUPER_ADMIN) {
-                try {
-                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
-                    if (!response) {
-                        return new ApolloError("Shop not found", '404');
-                    }
-                    return true
-                } catch (err) {
-                    return new ApolloError(err, 500)
+            try {
+                let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
+                if (!response) {
+                    return new ApolloError("Shop not found", '404');
                 }
-            } else {
-                throw new AuthenticationError("Unauthorised User", '401');
+                return true
+            } catch (err) {
+                return new ApolloError(err, 500)
             }
         },
         blockShop: async (_, {id}, {user}) => {
@@ -222,7 +193,6 @@ const resolvers = {
             }
             try {
                 if (user.type === Roles.SUPER_ADMIN) {
-                    let blockingShop = await Shop.findById(id);
                     let response = await Shop.findByIdAndUpdate(id, {isBlocked: true});
                     if (!response) {
                         return new ApolloError("Shop Not Found", '404')
@@ -233,35 +203,49 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        inviteShopModerator: async (_, {id, email, role}, {Shop, user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
+        inviteShopModerator: async (_, {id, email, role}, {user}) => {
             try {
-                let shop = await Shop.findOne({_id: id, owner: user.id});
+                let shop = await Shop.findById(id);
                 if (shop) {
-                    for (email of emails) {
-                        await EmailRules.validate({email}, {abortEarly: false});
-                        let emailLink = await emailConfirmationUrl(email);
-                        //TODO change emailConfirmBody()
-                        let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                        try {
-                            await sendEmail(email, emailLink, emailHtml)
-                        } catch (e) {
-                            return new ApolloError(`Email Sending Failed to ${email}`, 500);
+                    await EmailRules.validate({email}, {abortEarly: false});
+                    let emailLink = await emailShopInviteUrl(email);
+                    //TODO change emailConfirmBody()
+                    let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
+                    let invitedUser = await User.find({email: email})
+                    try {
+                        let invited = null;
+                        await sendEmail(email, emailLink, emailHtml)
+                        if (user) {
+                            invited = invitedUser.id;
                         }
+                        let shopRoleBaseAccessInvite = new ShopRoleBaseAccessInvite({
+                            user: user.id,
+                            invited,
+                            invitedEmail: email,
+                            role,
+                            shop: shop.id,
+                            inviteLink: emailLink,
+                            expiresAt: Date.now() + 86400000
+                        });
+                        await shopRoleBaseAccessInvite.save();
+                    } catch (e) {
+                        return new ApolloError(`Email Sending Failed to ${email}`, 500);
                     }
                 }
             } catch (err) {
                 return new ApolloError(err, 500)
             }
         },
-        removeShopModerator: async (_, {id, email, role}, {Shop, user}) => {
+        removeShopModerator: async (_, {id, email, role}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
+                let shop = await Shop.findById(id);
+                if(shop){
+                    let shopRoleBaseAccessInvite = await ShopRoleBaseAccessInvite.findOneAndUpdate({invitedEmail:email, shop:shop.id},{isDeleted:true})
+                    return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
+                }
             } catch (err) {
                 return new ApolloError(err, 500)
             }
@@ -283,6 +267,23 @@ const resolvers = {
             }
         }
     },
+}
+
+async function getShopUserRelation(userId, shops = null) {
+    if (shops) {
+        if (Array.isArray(shops)) {
+            for (const shop of shops) {
+                const i = shops.indexOf(shop);
+                let relation = await shop.getRelation(userId)
+                shops[i]._doc.user = relation;
+                shops[i].user = relation;
+            }
+        } else {
+            let relation = await shops.getRelation(userId)
+            shops._doc.user = relation;
+            shops.user = relation;
+        }
+    }
 }
 
 module.exports = resolvers;

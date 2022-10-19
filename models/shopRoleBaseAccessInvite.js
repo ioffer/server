@@ -6,10 +6,11 @@ const shopRoleBaseAccessInviteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users',
     },
-    invite: {
+    invited: {
         type: Schema.Types.ObjectId,
         ref: 'users',
     },
+    invitedEmail: String,
     shop: {
         type: Schema.Types.ObjectId,
         ref: 'shops',
@@ -21,6 +22,7 @@ const shopRoleBaseAccessInviteSchema = new Schema({
     inviteLink:String,
     isAccepted:Boolean,
     isExpired:Boolean,
+    isDeleted:Boolean,
     expiresAt:String,
 }, {
     timestamps: true

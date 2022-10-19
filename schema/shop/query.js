@@ -13,7 +13,7 @@ const userQuery = gql`
     extend type Mutation {
         registerShop(newShop: ShopInput!):Shop @isAuth,
         editShop(id:ID!, newShop: ShopInput!): Shop @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
-        deleteShop(id: ID!):Boolean @isAuth2(requires: [ADMIN,OWNER]),
+        deleteShop(id: ID!):Boolean @isAuth2(requires: [OWNER, SUPER_ADMIN, ADMIN]),
         verifyShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
         blockShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
         archiveShop(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),

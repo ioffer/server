@@ -8,6 +8,16 @@ const emailConfirmationUrl=async(user)=>{
     await User.findByIdAndUpdate(user.id,{$set:{emailConfirmToken:token}},{new: true});
     return `${FRONTEND_URL}/user/confirm/${token}`;
 }
+const emailShopInviteUrl=async(user) => {
+    const token = await issueConfirmEmailToken(user);
+    await User.findByIdAndUpdate(user.id,{$set:{emailConfirmToken:token}},{new: true});
+    return `${FRONTEND_URL}/user/shopInvite/${token}`;
+}
+const emailBrandInviteUrl=async(user) => {
+    const token = await issueConfirmEmailToken(user);
+    await User.findByIdAndUpdate(user.id,{$set:{emailConfirmToken:token}},{new: true});
+    return `${FRONTEND_URL}/user/brandInvite/${token}`;
+}
 const emailConfirmationBody = async(name, link)=> {
     let mainLink = link;
     return `<div style="width: 574px;
@@ -42,4 +52,4 @@ const emailConfirmationBody = async(name, link)=> {
 }
 
 
-module.exports={emailConfirmationUrl, emailConfirmationBody}
+module.exports={emailConfirmationUrl, emailConfirmationBody, emailShopInviteUrl, emailBrandInviteUrl}

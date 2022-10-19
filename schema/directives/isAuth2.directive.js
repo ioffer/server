@@ -84,8 +84,7 @@ function getUser(user) {
                 }
             }
             if (info.fieldName.toLowerCase().includes('brand')) {
-                let key = Object.keys(info.variableValues)[0];
-                let id = info.variableValues[key];
+                let id = info.variableValues?.id;
                 if (id.length === 24) {
                     let brand = await Brand.findById(id);
                     console.log('brand:', shop)
