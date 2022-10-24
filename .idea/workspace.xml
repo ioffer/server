@@ -5,13 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change afterPath="$PROJECT_DIR$/credentials.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpers/googleAuth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sendemail.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/token.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shopRoleBaseAccessInvite.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shopRoleBaseAccessInvite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/directives/isAuth2.directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/directives/isAuth2.directive.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serializers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serializers/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/emailConfirmationUrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/emailConfirmationUrl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/sendEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/sendEmail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +31,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="JavaScript File" />
         <option value="tsconfig.json" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -118,6 +127,9 @@
       <recent name="$PROJECT_DIR$/.github/workflows" />
       <recent name="$PROJECT_DIR$/models" />
       <recent name="$PROJECT_DIR$/schema" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager" selected="npm.start">
@@ -247,7 +259,8 @@
       <workItem from="1663356487147" duration="1802000" />
       <workItem from="1665388804992" duration="9084000" />
       <workItem from="1665644752632" duration="23397000" />
-      <workItem from="1665932990042" duration="57879000" />
+      <workItem from="1665932990042" duration="84646000" />
+      <workItem from="1666603197584" duration="14941000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

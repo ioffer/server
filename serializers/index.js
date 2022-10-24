@@ -1,1 +1,1 @@
-export {issueAuthToken, serializeUser, issueConfirmEmailToken, serializeEmail} from './user';
+export {issueAuthToken, serializeUser, issueConfirmEmailToken, serializeEmail, issueShopInviteToken} from './user';

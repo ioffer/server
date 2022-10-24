@@ -11,7 +11,7 @@ const {
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
-import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
+import {emailConfirmationUrl, emailShopInviteUrl, emailInviteBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
 import ShopRoleBaseAccessInvite from "../../models/shopRoleBaseAccessInvite";
 
@@ -208,43 +208,93 @@ const resolvers = {
                 let shop = await Shop.findById(id);
                 if (shop) {
                     await EmailRules.validate({email}, {abortEarly: false});
-                    let emailLink = await emailShopInviteUrl(email);
-                    //TODO change emailConfirmBody()
-                    let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
-                    let invitedUser = await User.find({email: email})
-                    try {
-                        let invited = null;
-                        await sendEmail(email, emailLink, emailHtml)
-                        if (user) {
-                            invited = invitedUser.id;
+                    let invitedUser = await User.findOne({email: email})
+                    let invited = null;
+                    if (invitedUser) {
+                        invited = invitedUser.id;
+                        console.log('invited:', invited)
+                        await getShopUserRelation(invitedUser.id, shop)
+                        console.log('shop:', shop.user)
+                    }
+                    let shopRoleBaseAccessInvite = await ShopRoleBaseAccessInvite.findOne({
+                        invitedEmail: email,
+                        shop: shop.id,
+                        isDeleted: false,
+                    })
+
+                    if (shop.user) {
+                        return new ApolloError(`User has already Joined as ${shop.user}`, 400)
+                    }
+                    if (shopRoleBaseAccessInvite) {
+                        console.log("shopRoleBaseAccessInvite:", shopRoleBaseAccessInvite)
+                        if (shopRoleBaseAccessInvite.isExpired){
+                            shopRoleBaseAccessInvite.isExpired = true;
+                        } else {
+                            return new ApolloError(`Already Invited as ${shopRoleBaseAccessInvite.role}`, 400)
                         }
-                        let shopRoleBaseAccessInvite = new ShopRoleBaseAccessInvite({
-                            user: user.id,
-                            invited,
-                            invitedEmail: email,
-                            role,
-                            shop: shop.id,
-                            inviteLink: emailLink,
-                            expiresAt: Date.now() + 86400000
-                        });
-                        await shopRoleBaseAccessInvite.save();
+                        shopRoleBaseAccessInvite.isDeleted = true;
+                        shop.roleBasedAccessInvites = lodash.remove(shop.roleBasedAccessInvites,shopRoleBaseAccessInvite.id)
+                        await shopRoleBaseAccessInvite.save()
+                    }
+                    shopRoleBaseAccessInvite = new ShopRoleBaseAccessInvite({
+                        user: user.id,
+                        invited,
+                        invitedEmail: email,
+                        role,
+                        shop: shop.id,
+                        expiresAt: Date.now() + 86400000
+                    });
+                    let emailLink = await emailShopInviteUrl(shopRoleBaseAccessInvite);
+                    shopRoleBaseAccessInvite.inviteLink = emailLink;
+                    //TODO change emailConfirmBody()
+                    try {
+                        let emailHtml = await emailInviteBody(shopRoleBaseAccessInvite, emailLink);
+                        await sendEmail(email, emailLink, emailHtml)
                     } catch (e) {
                         return new ApolloError(`Email Sending Failed to ${email}`, 500);
                     }
+                    await shopRoleBaseAccessInvite.save();
+                    shop.roleBasedAccessInvites.push(shopRoleBaseAccessInvite.id)
+                    shop.save();
+                    return true
+                } else {
+                    return new ApolloError('Shop not found', 404)
                 }
             } catch (err) {
                 return new ApolloError(err, 500)
             }
         },
         removeShopModerator: async (_, {id, email, role}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
             try {
                 let shop = await Shop.findById(id);
-                if(shop){
-                    let shopRoleBaseAccessInvite = await ShopRoleBaseAccessInvite.findOneAndUpdate({invitedEmail:email, shop:shop.id},{isDeleted:true})
-                    return await Shop.findOneAndUpdate({_id: id}, {$push: {moderators: userID}}, {new: true});
+                if (shop) {
+                    let shopRoleBaseAccessInvites = await ShopRoleBaseAccessInvite.find({
+                        invitedEmail: email,
+                        shop: shop.id,
+                        isDeleted: false
+                    },{isDeleted:true})
+                    await ShopRoleBaseAccessInvite.updateMany({
+                        invitedEmail: email,
+                        shop: shop.id,
+                        isDeleted: false
+                    },{isDeleted:true})
+                    console.log("shopRoleBaseAccessInvites ==>", shopRoleBaseAccessInvites)
+                    shopRoleBaseAccessInvites.forEach((shopRoleBaseAccessInvite)=>{
+                        console.log("shopRoleBaseAccessInvite=>>", shopRoleBaseAccessInvite)
+                        lodash.remove(shop.roleBasedAccessInvites,shopRoleBaseAccessInvite.id)
+                    })
+                    let invitedUser = await User.findOne({email})
+                    if(role===Roles.ADMIN){
+                        return await Shop.findOneAndUpdate({_id: id}, {$pullAll: {admins: [invitedUser.id]}}, {new: true});
+                    }else if(role===Roles.MODIFIER){
+                        return await Shop.findOneAndUpdate({_id: id}, {$pullAll: {modifiers: [invitedUser.id]}}, {new: true});
+                    }else if(role===Roles.WATCHER){
+                        return await Shop.findOneAndUpdate({_id: id}, {$pullAll: {watchers: [invitedUser.id]}}, {new: true});
+                    }
+                    let roleBaseAccess = await RoleBaseAccess.find({user:invitedUser.id});
+                    console.log("roleBaseAccess=>", roleBaseAccess)
+                    //! remove shop from roleBaseAccess too.
+                    // roleBaseAccess.
                 }
             } catch (err) {
                 return new ApolloError(err, 500)
@@ -271,6 +321,7 @@ const resolvers = {
 
 async function getShopUserRelation(userId, shops = null) {
     if (shops) {
+        console.log("userId:", userId)
         if (Array.isArray(shops)) {
             for (const shop of shops) {
                 const i = shops.indexOf(shop);

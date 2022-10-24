@@ -19,15 +19,31 @@ const shopRoleBaseAccessInviteSchema = new Schema({
         type:String,
         enum:Roles,
     },
-    inviteLink:String,
-    isAccepted:Boolean,
-    isExpired:Boolean,
-    isDeleted:Boolean,
+    inviteLink:{
+        type:String,
+        default:null,
+    },
+    isAccepted:{
+        type:Boolean,
+        default:false,
+    },
+    // isExpired:{
+    //     type:Boolean,
+    //     default:false,
+    // },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+    },
     expiresAt:String,
 }, {
     timestamps: true
 });
-
+shopRoleBaseAccessInviteSchema.set('toObject', { virtuals: true })
+shopRoleBaseAccessInviteSchema.set('toJSON', { virtuals: true })
+shopRoleBaseAccessInviteSchema.virtual('isExpired').get(function (){
+    return  this.expiresAt < Date.now()
+})
 const ShopRoleBaseAccessInvite = mongoose.model('shop_role_base_access_invites', shopRoleBaseAccessInviteSchema);
 export default ShopRoleBaseAccessInvite;
 

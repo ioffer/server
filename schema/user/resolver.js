@@ -483,17 +483,17 @@ const resolvers = {
                     userName
                 });
                 console.log("error1", user)
-                if (user) {
-                    return new ApolloError('Username Is Already Taken.', '403')
-                }
+                // if (user) {
+                //     return new ApolloError('Username Is Already Taken.', '403')
+                // }
                 console.log("error2")
                 // Check is the Email address is already registered
                 user = await User.findOne({
                     email
                 });
-                if (user) {
-                    return new ApolloError('Email is already registered.', '403')
-                }
+                // if (user) {
+                //     return new ApolloError('Email is already registered.', '403')
+                // }
                 console.log("error4")
                 user = new User(newUser);
                 // Hash the user password
@@ -517,7 +517,8 @@ const resolvers = {
                 user.pins = pin.id;
                 user.roleBasedAccess = roleBaseAccess.id;
                 console.log('User:',user)
-                let result = await user.save();
+                // let result = await user.save();
+                let result = user
 
                 let emailstr = {
                     id: user.id,
