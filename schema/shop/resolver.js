@@ -14,6 +14,8 @@ import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailShopInviteUrl, emailInviteBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
 import ShopRoleBaseAccessInvite from "../../models/shopRoleBaseAccessInvite";
+import {verify} from "jsonwebtoken";
+import {SECRET} from "../../config";
 
 let fetchData = async () => {
     return await Shop.find({});
@@ -227,13 +229,13 @@ const resolvers = {
                     }
                     if (shopRoleBaseAccessInvite) {
                         console.log("shopRoleBaseAccessInvite:", shopRoleBaseAccessInvite)
-                        if (shopRoleBaseAccessInvite.isExpired){
+                        if (shopRoleBaseAccessInvite.isExpired) {
                             shopRoleBaseAccessInvite.isExpired = true;
                         } else {
                             return new ApolloError(`Already Invited as ${shopRoleBaseAccessInvite.role}`, 400)
                         }
                         shopRoleBaseAccessInvite.isDeleted = true;
-                        shop.roleBasedAccessInvites = lodash.remove(shop.roleBasedAccessInvites,shopRoleBaseAccessInvite.id)
+                        shop.roleBasedAccessInvites = lodash.remove(shop.roleBasedAccessInvites, shopRoleBaseAccessInvite.id)
                         await shopRoleBaseAccessInvite.save()
                     }
                     shopRoleBaseAccessInvite = new ShopRoleBaseAccessInvite({
@@ -264,37 +266,110 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
+        acceptShopInvite: async (_, {token}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            user = await User.findById(user.id);
+            console.log("user:", user)
+            console.log("token: ", token)
+            if (!token || token === "" || token == "") {
+                throw new UserInputError("Token Not Found", '401');
+            }
+
+            // Verify the extracted token
+            let decodedToken;
+            try {
+                decodedToken = verify(token, SECRET);
+            } catch (err) {
+                throw new AuthenticationError("Token Not Found", '401');
+            }
+
+            // If decoded token is null then set authentication of the request false
+            if (!decodedToken) {
+                throw new AuthenticationError("Token Not Found", '401');
+            }
+            console.log("decodedToken:", decodedToken)
+
+            // If the user has valid token then Find the user by decoded token's id
+            let shopRoleBaseAccessInvite = await ShopRoleBaseAccessInvite.findById(decodedToken.jwtPayload.id);
+            if (shopRoleBaseAccessInvite) {
+                if (shopRoleBaseAccessInvite.isExpired) {
+                    return new AuthenticationError("Token is Expired. Ask to invite you again.", '401');
+                }
+                if (shopRoleBaseAccessInvite.isAccepted) {
+                    return new AuthenticationError("This invitation has been used.", '401');
+                }
+                if (shopRoleBaseAccessInvite.isDeleted) {
+                    return new AuthenticationError("Invite has been Deleted. Ask to invite you again.", '401');
+                }
+                console.log("shopRoleBaseAccessInvite:", shopRoleBaseAccessInvite)
+                if (user.email === decodedToken.jwtPayload.invitedEmail) {
+                    let shop = await Shop.findById(shopRoleBaseAccessInvite.shop);
+                    console.log("user:", user)
+                    let roleBasedAccess = await RoleBaseAccess.findById(user.roleBasedAccess)
+                    if (shopRoleBaseAccessInvite.role === 'ADMIN') {
+                        shop.admins.push(user.id);
+                        roleBasedAccess.admin.shops.push(shop.id);
+                    } else if (shopRoleBaseAccessInvite.role === 'MODIFIER') {
+                        shop.modifiers.push(user.id);
+                        roleBasedAccess.modifier.shops.push(shop.id);
+
+                    } else if (shopRoleBaseAccessInvite.role === 'WATCHER') {
+                        shop.watchers.push(user.id);
+                        roleBasedAccess.watcher.shops.push(shop.id);
+
+                    } else {
+
+                    }
+                    shopRoleBaseAccessInvite.isAccepted = true;
+                    shopRoleBaseAccessInvite.isDeleted = true;
+                    await shop.save();
+                    await shopRoleBaseAccessInvite.save();
+                    await roleBasedAccess.save();
+                    return true
+                } else {
+                    return new AuthenticationError("Unauthorised User's token.", '401');
+                }
+            }
+
+        },
         removeShopModerator: async (_, {id, email, role}, {user}) => {
             try {
                 let shop = await Shop.findById(id);
+                if(user.email === email){
+                    return new AuthenticationError("Cannot remove your self.", '401');
+                }
                 if (shop) {
                     let shopRoleBaseAccessInvites = await ShopRoleBaseAccessInvite.find({
                         invitedEmail: email,
                         shop: shop.id,
                         isDeleted: false
-                    },{isDeleted:true})
+                    }, {isDeleted: true})
                     await ShopRoleBaseAccessInvite.updateMany({
                         invitedEmail: email,
                         shop: shop.id,
                         isDeleted: false
-                    },{isDeleted:true})
-                    console.log("shopRoleBaseAccessInvites ==>", shopRoleBaseAccessInvites)
-                    shopRoleBaseAccessInvites.forEach((shopRoleBaseAccessInvite)=>{
-                        console.log("shopRoleBaseAccessInvite=>>", shopRoleBaseAccessInvite)
-                        lodash.remove(shop.roleBasedAccessInvites,shopRoleBaseAccessInvite.id)
+                    }, {isDeleted: true})
+                    shopRoleBaseAccessInvites.forEach((shopRoleBaseAccessInvite) => {
+                        lodash.remove(shop.roleBasedAccessInvites, shopRoleBaseAccessInvite.id)
                     })
                     let invitedUser = await User.findOne({email})
-                    if(role===Roles.ADMIN){
-                        return await Shop.findOneAndUpdate({_id: id}, {$pullAll: {admins: [invitedUser.id]}}, {new: true});
-                    }else if(role===Roles.MODIFIER){
-                        return await Shop.findOneAndUpdate({_id: id}, {$pullAll: {modifiers: [invitedUser.id]}}, {new: true});
-                    }else if(role===Roles.WATCHER){
-                        return await Shop.findOneAndUpdate({_id: id}, {$pullAll: {watchers: [invitedUser.id]}}, {new: true});
+                    if (invitedUser) {
+                        if (role === Roles.ADMIN) {
+                            await Shop.findOneAndUpdate({_id: id}, {$pullAll: {admins: [invitedUser.id]}}, {new: true});
+                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"admin.shops":[shop.id]}})
+
+                        } else if (role === Roles.MODIFIER) {
+                            await Shop.findOneAndUpdate({_id: id}, {$pullAll: {modifiers: [invitedUser.id]}}, {new: true});
+                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"modifier.shops":[shop.id]}})
+
+                        } else if (role === Roles.WATCHER) {
+                            await Shop.findOneAndUpdate({_id: id}, {$pullAll: {watchers: [invitedUser.id]}}, {new: true});
+                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"watcher.shops":[shop.id]}})
+                        }
                     }
-                    let roleBaseAccess = await RoleBaseAccess.find({user:invitedUser.id});
-                    console.log("roleBaseAccess=>", roleBaseAccess)
-                    //! remove shop from roleBaseAccess too.
-                    // roleBaseAccess.
+                    return true
                 }
             } catch (err) {
                 return new ApolloError(err, 500)

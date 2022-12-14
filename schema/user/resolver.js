@@ -491,9 +491,9 @@ const resolvers = {
                 user = await User.findOne({
                     email
                 });
-                // if (user) {
-                //     return new ApolloError('Email is already registered.', '403')
-                // }
+                if (user) {
+                    return new ApolloError('Email is already registered.', '403')
+                }
                 console.log("error4")
                 user = new User(newUser);
                 // Hash the user password
@@ -527,13 +527,17 @@ const resolvers = {
                 let userEmail = await serializeEmail(emailstr);
                 let emailLink = await emailConfirmationUrl(userEmail);
                 let emailHtml = await emailConfirmationBody(result.fullName, emailLink);
-                await sendEmail(result.email, emailLink, emailHtml);
-
+                try {
+                    await sendEmail(result.email, emailLink, emailHtml);
+                }catch (e) {
+                    console.error(e)
+                }
 
                 result = await serializeUser(result);
 
                 // Issue Token
                 let token = await issueAuthToken(result);
+                await user.save();
                 return {
                     token,
                     user: result

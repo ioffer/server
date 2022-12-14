@@ -20,6 +20,7 @@ const userQuery = gql`
         unArchiveShop(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
         inviteShopModerator(id:ID!, email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])
         removeShopModerator(id:ID!,email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])
+        acceptShopInvite(token:String!):Boolean @isAuth
         clickShop(id:ID!):Boolean
         viewShop(id:ID!):Boolean
         subscribeShop(id:ID!):Boolean @isAuth
