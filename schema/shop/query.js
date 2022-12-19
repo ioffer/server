@@ -16,6 +16,7 @@ const userQuery = gql`
         deleteShop(id: ID!):Boolean @isAuth2(requires: [OWNER, SUPER_ADMIN, ADMIN]),
         verifyShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
         blockShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
+        unblockShop(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
         archiveShop(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
         unArchiveShop(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
         inviteShopModerator(id:ID!, email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])

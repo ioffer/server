@@ -222,6 +222,22 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
+        unblockShop: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                if (user.type === Roles.SUPER_ADMIN) {
+                    let response = await Shop.findByIdAndUpdate(id, {isBlocked: false});
+                    if (!response) {
+                        return new ApolloError("Shop Not Found", '404')
+                    }
+                    return true;
+                }
+            } catch (err) {
+                return new ApolloError(err, 500)
+            }
+        },
         inviteShopModerator: async (_, {id, email, role}, {user}) => {
             try {
                 let shop = await Shop.findById(id);
