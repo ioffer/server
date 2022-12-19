@@ -92,9 +92,6 @@ const resolvers = {
             await getBrandUserRelation(user.id, brands);
             return brands;
         },
-        // searchShops: async (_, {query}, {Shop}) => {
-        //
-        // }
 
     },
     Mutation: {
@@ -214,9 +211,7 @@ const resolvers = {
             }
             try {
                 if (user.type === Roles.SUPER_ADMIN) {
-                    let blockingShop = await Brand.findById(id);
-                    let response = await Shop.findByIdAndUpdate(id, {isBlocked: true});
-
+                    let response = await Brand.findByIdAndUpdate(id, {isBlocked: true});
                     if (!response) {
                         return new ApolloError("Brand Not Found", '404')
                     }
@@ -226,7 +221,23 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        inviteBrandModerator:async (_, {id, email, role}, {user}) => {
+        unblockBrand: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                if (user.type === Roles.SUPER_ADMIN) {
+                    let response = await Brand.findByIdAndUpdate(id, {isBlocked: false});
+                    if (!response) {
+                        return new ApolloError("Brand Not Found", '404')
+                    }
+                    return true;
+                }
+            } catch (err) {
+                return new ApolloError(err, 500)
+            }
+        },
+        inviteBrandModerator: async (_, {id, email, role}, {user}) => {
             try {
                 let brand = await Brand.findById(id);
                 if (brand) {
@@ -241,7 +252,7 @@ const resolvers = {
                     }
                     let brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.findOne({
                         invitedEmail: email,
-                        brand:brand.id,
+                        brand: brand.id,
                         isDeleted: false,
                     })
 

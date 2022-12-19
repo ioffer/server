@@ -18,6 +18,7 @@ const brandQuery = gql`
         unArchiveBrand(id: ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
         verifyBrand(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
         blockBrand(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
+        unblockBrand(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
         inviteBrandModerator(id:ID!, email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])
         removeBrandModerator(id:ID!,email:String!, role:String!):Boolean @isAuth2(requires: [ADMIN,OWNER])
         acceptBrandInvite(token:String!):Boolean @isAuth
