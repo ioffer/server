@@ -2,20 +2,17 @@ import {User, Promotion, Shop, Tag, Category, Media, Brand, RoleBaseAccess} from
 import lodash from "lodash"
 
 const {
-    UserRegisterationRules,
-    UserAuthenticationRules,
     EmailRules,
-    PasswordRules,
-    UserRules
 } = require('../../validations');
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
-import {emailConfirmationUrl, emailShopInviteUrl, emailInviteBody} from "../../utils/emailConfirmationUrl";
+import {emailShopInviteUrl, emailInviteBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
 import ShopRoleBaseAccessInvite from "../../models/shopRoleBaseAccessInvite";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
+import Subscription from "../../models/subscription";
 
 let fetchData = async () => {
     return await Shop.find({});
@@ -55,6 +52,15 @@ const resolvers = {
         },
         coverImage: async (parent) => {
             return await Media.findById(parent.coverImage);
+        },
+        verifiedBy: async (parent) => {
+            return await User.findById(parent.verifiedBy);
+        },
+        subscribers: async (parent) => {
+            return await User.find({_id: {$in: parent.subscribers}});
+        },
+        roleBaseAccessInvites: async (parent) => {
+            return await ShopRoleBaseAccessInvite.find({_id: {$in: parent.roleBaseAccessInvites}});
         },
 
     },
@@ -107,12 +113,23 @@ const resolvers = {
                 if (newShop.tags) {
                     tags = [...new Set(newShop.tags)];
                 }
+                let owner = user.id;
                 let shop = Shop({
                     ...newShop,
-                    owner: user.id,
+                    owner: owner,
                     publishingDateTime: dateTime()
                 })
                 if (newShop["brand"] !== undefined) {
+                    let brand = await Brand.findById(newShop.brand);
+                    if (user.id === brand.owner || brand.admins.includes(user.id)) {
+                        owner = brand.owner;
+                        shop.admins = brand.admins;
+                        shop.modifiers = brand.modifiers;
+                        shop.watchers = brand.watchers;
+
+                    } else {
+                        return new AuthenticationError("Authentication Failed. User must be brand owner or admin.")
+                    }
                     await Brand.findByIdAndUpdate(newShop.brand, {$push: {brandShops: shop.id}});
                 }
                 console.log('shop', shop)
@@ -235,7 +252,7 @@ const resolvers = {
                             return new ApolloError(`Already Invited as ${shopRoleBaseAccessInvite.role}`, 400)
                         }
                         shopRoleBaseAccessInvite.isDeleted = true;
-                        shop.roleBasedAccessInvites = lodash.remove(shop.roleBasedAccessInvites, shopRoleBaseAccessInvite.id)
+                        shop.roleBasedAccessInvites = arrayRemove(shop.roleBasedAccessInvites, shopRoleBaseAccessInvite.id)
                         await shopRoleBaseAccessInvite.save()
                     }
                     shopRoleBaseAccessInvite = new ShopRoleBaseAccessInvite({
@@ -337,7 +354,7 @@ const resolvers = {
         removeShopModerator: async (_, {id, email, role}, {user}) => {
             try {
                 let shop = await Shop.findById(id);
-                if(user.email === email){
+                if (user.email === email) {
                     return new AuthenticationError("Cannot remove your self.", '401');
                 }
                 if (shop) {
@@ -352,21 +369,21 @@ const resolvers = {
                         isDeleted: false
                     }, {isDeleted: true})
                     shopRoleBaseAccessInvites.forEach((shopRoleBaseAccessInvite) => {
-                        lodash.remove(shop.roleBasedAccessInvites, shopRoleBaseAccessInvite.id)
+                        shop.roleBasedAccessInvites = arrayRemove(shop.roleBasedAccessInvites, shopRoleBaseAccessInvite.id)
                     })
                     let invitedUser = await User.findOne({email})
                     if (invitedUser) {
                         if (role === Roles.ADMIN) {
                             await Shop.findOneAndUpdate({_id: id}, {$pullAll: {admins: [invitedUser.id]}}, {new: true});
-                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"admin.shops":[shop.id]}})
+                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"admin.shops": [shop.id]}})
 
                         } else if (role === Roles.MODIFIER) {
                             await Shop.findOneAndUpdate({_id: id}, {$pullAll: {modifiers: [invitedUser.id]}}, {new: true});
-                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"modifier.shops":[shop.id]}})
+                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"modifier.shops": [shop.id]}})
 
                         } else if (role === Roles.WATCHER) {
                             await Shop.findOneAndUpdate({_id: id}, {$pullAll: {watchers: [invitedUser.id]}}, {new: true});
-                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"watcher.shops":[shop.id]}})
+                            await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"watcher.shops": [shop.id]}})
                         }
                     }
                     return true
@@ -386,6 +403,51 @@ const resolvers = {
         viewShop: async (_, {id}) => {
             try {
                 await Shop.findByIdAndUpdate(id, {$inc: {viewCounts: 1}});
+                return true
+            } catch (e) {
+                return new ApolloError(e, 500)
+            }
+        },
+        toggleSubscribeShop: async (_, {id}, {user}) => {
+            try {
+                let shop = await Shop.findById(id)
+                user = await User.findById(user.id)
+                console.log("user:", user)
+                let subscription = await Subscription.findById(user.subscriptions)
+                console.log("subscription:", subscription)
+                if (!subscription) {
+                    subscription = new Subscription({
+                        user: user.id
+                    })
+                    user.subscriptions = subscription.id
+                    await user.save()
+                }
+                if (shop.brand) {
+                    let brand = await Brand.findById(shop.brand)
+                    if (subscription.brands.includes(brand.id)) {
+                        console.log("removing brand")
+                        subscription.brands = arrayRemove(subscription.brands, brand.id)
+                        brand.subscribers = arrayRemove(brand.subscribers, user.id)
+                    } else {
+                        subscription.brands.push(brand.id)
+                        brand.subscribers.push(user.id)
+                    }
+                    await brand.save()
+                } else {
+                    console.log("shop",shop, subscription.shops.includes(shop.id))
+                    if (subscription.shops.includes(shop.id)) {
+                        console.log("removing shop")
+                        subscription.shops = arrayRemove(subscription.shops, shop.id)
+                        shop.subscribers = arrayRemove(shop.subscribers,user.id)
+                    } else {
+                        console.log("adding shop")
+                        subscription.shops.push(shop.id)
+                        shop.subscribers.push(user.id)
+                    }
+                }
+                console.log("final subscription:", subscription)
+                await shop.save()
+                await subscription.save()
                 return true
             } catch (e) {
                 return new ApolloError(e, 500)
@@ -410,6 +472,12 @@ async function getShopUserRelation(userId, shops = null) {
             shops.user = relation;
         }
     }
+}
+function arrayRemove(arr, value) {
+
+    return arr.filter(function(ele){
+        return ele != value;
+    });
 }
 
 module.exports = resolvers;

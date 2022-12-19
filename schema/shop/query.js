@@ -23,7 +23,7 @@ const userQuery = gql`
         acceptShopInvite(token:String!):Boolean @isAuth
         clickShop(id:ID!):Boolean
         viewShop(id:ID!):Boolean
-        subscribeShop(id:ID!):Boolean @isAuth
+        toggleSubscribeShop(id:ID!):Boolean @isAuth
     }
     
 `;

@@ -142,11 +142,9 @@ shopSchema.query.pending = function () {
     return this.where({verified: Verified.PENDING})
 }
 shopSchema.query.blocked = function () {
-    return this.where({"isBlocked": true, "confirmed": true})
+    return this.where({isBlocked: true})
 }
-shopSchema.query.getUserRelation = function (user) {
-    return this.where({status: Status.PUBLISHED})
-}
+
 shopSchema.set('toObject', {virtuals: true})
 shopSchema.set('toJSON', {virtuals: true})
 const Shop = mongoose.model('shops', shopSchema);
