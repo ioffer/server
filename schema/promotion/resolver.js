@@ -141,16 +141,26 @@ const resolvers = {
                 if (newPromotion.shops) {
                     for (let i = 0; i < newPromotion.shops.length; i++) {
                         let shop = await Shop.findById(newPromotion.shops[i]);
-                        shops.push(shop)
-                        if (shop.brand) {
-                            return new ApolloError('Invalid Shop ' + shop.name + '. Select non Branded Shops Only', 400)
+                        if(shop){
+                            shops.push(shop)
+                            if (shop.brand) {
+                                return new ApolloError('Invalid Shop ' + shop.name + '. Select non Branded Shops Only', 400)
+                            }
+                        }else{
+                            return new ApolloError('Shop not found', 404);
                         }
+
                     }
                 }
             }
             let promotion = Promotion({
                 ...newPromotion,
             })
+            await getPromotionUserRelation(user.id, promotion);
+            console.log("promotion.user:", promotion)
+            if(!(promotion.user === Roles.ADMIN||promotion.user === Roles.OWNER||promotion.user === Roles.MODIFIER)) {
+                return new ApolloError(`Unauthorized, User Must Be OWNER, ADMIN or MODIFIER ${brand?"of this brand or all the branded shops":"of all these shops"}`, 400)
+            }
             if (brand) {
                 brand.promotions.push(promotion.id);
                 await brand.save()
@@ -273,6 +283,7 @@ const resolvers = {
 }
 
 async function getPromotionUserRelation(userId, promotions = null) {
+    console.log("userId: 👨🏻 ‍🎨", userId)
     if (promotions) {
         console.log("userId:", userId)
         if (Array.isArray(promotions)) {
@@ -283,7 +294,9 @@ async function getPromotionUserRelation(userId, promotions = null) {
                 promotions[i].user = relation;
             }
         } else {
+            console.log("userId:", userId)
             let relation = await promotions.getRelation(userId)
+            console.log("relation:", relation)
             promotions._doc.user = relation;
             promotions.user = relation;
         }
