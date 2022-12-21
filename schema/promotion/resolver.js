@@ -50,8 +50,10 @@ const resolvers = {
         promotions: async () => {
             return await fetchData()
         },
-        promotionById: async (_, args) => {
-            return await Promotion.findById(args.id);
+        promotionById: async (_, {id},{user}) => {
+            let promotion = await Promotion.findById(id);
+            await getPromotionUserRelation(user.id)
+            return promotion;
         },
         searchPendingPromotions: async (_, {}, {user}) => {
             if (!user) {
@@ -268,6 +270,24 @@ const resolvers = {
             }
         }
     },
+}
+
+async function getPromotionUserRelation(userId, promotions = null) {
+    if (promotions) {
+        console.log("userId:", userId)
+        if (Array.isArray(promotions)) {
+            for (const promotion of promotions) {
+                const i = promotions.indexOf(promotion);
+                let relation = await promotion.getRelation(userId)
+                promotions[i]._doc.user = relation;
+                promotions[i].user = relation;
+            }
+        } else {
+            let relation = await promotions.getRelation(userId)
+            promotions._doc.user = relation;
+            promotions.user = relation;
+        }
+    }
 }
 
 module.exports = resolvers;

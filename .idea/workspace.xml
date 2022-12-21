@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/promotion.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/promotion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/directives/isAuth2.directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/directives/isAuth2.directive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/promotion/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/type.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,7 +257,7 @@
       <workItem from="1666603197584" duration="23898000" />
       <workItem from="1670614166154" duration="9097000" />
       <workItem from="1670857324217" duration="77256000" />
-      <workItem from="1671177112653" duration="29747000" />
+      <workItem from="1671177112653" duration="60863000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>
@@ -294,66 +297,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added promotion queries, working on resolvers" />
     <option name="LAST_COMMIT_MESSAGE" value="added promotion queries, working on resolvers" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>6</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>20</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>22</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>23</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>27</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>31</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>35</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>39</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>44</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>48</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/promotion.js</url>
-          <line>21</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

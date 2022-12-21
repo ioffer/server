@@ -59,6 +59,8 @@ const brandTypeDefs = gql`
         promotions: [Promotion],
         createdAt: String,
         updatedAt: String,
+        user:String,
+
         #        offers: [Offer]
     }
     
