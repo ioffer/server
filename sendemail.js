@@ -1,47 +1,37 @@
-import {
-    GMAIL_USER,
-    GMAIL_PASSWORD,
-    GOOGLE_ACCESS_TOKEN,
-    GOOGLE_REFRESH_TOKEN,
-    GOOGLE_CLIENT_SECRET,
-    GOOGLE_REDIRECT_URL,
-    GOOGLE_CLIENT_ID
-} from "../config"
+import {GMAIL_USER,GMAIL_PASSWORD, GOOGLE_REFRESH_TOKEN, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URL,GOOGLE_CLIENT_ID} from "../config"
 import nodemailer from "nodemailer";
 import {google} from "googleapis"
-import main from '../helpers/googleAuth'
 
-
-// async..await is not allowed in global scope, must use a wrapper
-export async function sendEmail(email, link, html) {
+const oAuth2Client = new google.auth.OAuth2(
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    GOOGLE_REDIRECT_URL
+);
+oAuth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
+// async.await is not allowed in global scope, must use a wrapper
+export async function sendEmail(email,link,html) {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
-    const testAccount = await nodemailer.createTestAccount();
+    // const testAccount = await nodemailer.createTestAccount();
+    console.log("here")
+    const accessToken = await oAuth2Client.getAccessToken();
+    console.log("here2")
 
-    try {
-        console.warn("here")
-        await main()
-        console.log("here accessToken:", accessToken)
-
-        // const accessToken = await oAuth2Client.getAccessToken();
-    }catch (e) {
-        console.log("Error in getting accessToken:", e)
-    }
 
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service:'gmail',
         // host: "smtp.ethereal.email",
         // port: 587,
         // secure: false, // true for 465, false for other ports
         auth: {
             type: 'OAuth2',
-            user: GMAIL_USER, // generated ethereal user
-            pass: GMAIL_PASSWORD, // generated ethereal password
-            clientId: "519527238773-g5ule7vgg7cfr5qt83s6fqr8pj7juvln.apps.googleusercontent.com",
-            clientSecret: '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',
-            refreshToken: '1//04CZiKqP-qSjdCgYIARAAGAQSNwF-L9IrS-So7dAolmi4eWYX0K20TvQfea24Q15_Wo1ruFQUFXvkuDabcD6OD7W-Fzbl9UHhkU4',
-            accessToken: GOOGLE_ACCESS_TOKEN
+            user: GMAIL_USER , // generated ethereal user
+            // pass: GMAIL_PASSWORD, // generated ethereal password
+            clientId: GOOGLE_CLIENT_ID,
+            clientSecret: GOOGLE_CLIENT_SECRET,
+            refreshToken: GOOGLE_REFRESH_TOKEN,
+            accessToken: accessToken,
         },
     });
 
@@ -55,11 +45,12 @@ export async function sendEmail(email, link, html) {
     // send mail with defined transport object
 
 
-    try {
+
+    try{
         const info = await transporter.sendMail(mailOptions);
         return true;
-    } catch (err) {
-        console.log("Sending mail Error:", err)
+    }catch (err){
+        console.log("Sending mail Error:",err)
         return false
     }
 

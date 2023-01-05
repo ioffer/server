@@ -26,6 +26,7 @@ const categoryTypeDefs = require('./category/type')
 const categoryQuery = require('./category/query')
 const tagQuery = require('./tag/query')
 const tagTypeDefs = require('./tag/type')
+import {authDirectiveTypeDefs} from'./directives/isAuth2.directive'
 
 const typeDefs = [
     baseTypeDefs,
@@ -52,7 +53,7 @@ const typeDefs = [
     categoryQuery,
     tagTypeDefs,
     tagQuery,
-
+    authDirectiveTypeDefs,
 ];
 
 module.exports = mergeTypeDefs(typeDefs);

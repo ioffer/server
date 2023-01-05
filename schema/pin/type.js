@@ -5,7 +5,7 @@ const pinTypeDefs = gql`
 
     type Pin {
         id: ID!,
-        user: User,
+        user: User!,
         shops:[Shop],
         brands:[Shop],
         promotions:[Promotion],

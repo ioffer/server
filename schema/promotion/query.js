@@ -3,21 +3,20 @@
 const userQuery = gql`
     extend type Query {
         promotions:[Promotion],
-        promotionById(id:ID!):Promotion @isAuth,
-        promotionByShop(shopID:ID!):Promotion @isAuth,
-        searchPendingPromotions:[Promotion] @isAuth,
-        searchArchivedPromotions(shopId:ID!):[Promotion] @isAuth,
-        searchHiddenPromotions(shopId:ID!):[Promotion] @isAuth,
+        promotionById(id:ID!):Promotion,
+        searchPendingPromotions:[Promotion] @isAuth2(requires: [SUPER_ADMIN]),
+        searchArchivedPromotions(shopId:ID!):[Promotion] @isAuth2(requires: [SUPER_ADMIN, OWNER]),
+        searchUpcomingPromotions(shopId:ID!):[Promotion] @isAuth2(requires: [SUPER_ADMIN]),
 #        searchPromotions(query:Query):[Promotion]
     },
     
     extend type Mutation {
-        createPromotion(shopID:ID!, newPromotion: PromotionInput!):Promotion @isAuth,
-        editPromotion(id:ID!, newPromotion: PromotionInput!): Promotion @isAuth,
-        deletePromotion(id: ID!):Boolean @isAuth,
-        verifyPromotion(id:ID!):Boolean @isAuth,
-        hidePromotion(id:ID!):Boolean @isAuth
-        archivePromotion(id:ID!):Boolean @isAuth
+        createPromotion(newPromotion: PromotionInput!):Promotion @isAuth, #ADMIN, OWNER or MODIFIER of Brand or of all Shops
+        editPromotion(id:ID!, newPromotion: PromotionInput!): Promotion @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
+        deletePromotion(id: ID!):Boolean @isAuth2(requires: [OWNER, SUPER_ADMIN, ADMIN]),
+        verifyPromotion(id:ID!):Boolean @isAuth2(requires: [SUPER_ADMIN]),
+        archivePromotion(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER]),
+        unArchivePromotion(id:ID!):Boolean @isAuth2(requires: [MODIFIER,ADMIN,OWNER])
         clickPromotion(id:ID!):Boolean
         viewPromotion(id:ID!):Boolean
     }

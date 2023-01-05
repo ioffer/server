@@ -1,0 +1,448 @@
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+"The `Upload` scalar type represents a file upload."
+scalar Upload
+type Query {
+    _: String
+    authUser: User
+    loginUser(userName: String!, password: String!): AuthUser!
+    verify2FA(token: String!): Boolean!
+    users: [User]
+    me: User!
+    userById(id: ID!): User
+    searchPendingKyc: [User]
+    searchUnBlockedUsers: [User]
+    version: String!
+    shops: [Shop]
+    shopById(id: ID!): Shop
+    searchPendingShops: [Shop]
+    searchBlockedShops: [Shop]
+    promotions: [Promotion]
+    promotionById(id: ID!): Promotion
+    searchPendingPromotions: [Promotion]
+    searchArchivedPromotions(shopId: ID!): [Promotion]
+    searchUpcomingPromotions(shopId: ID!): [Promotion]
+    greeting: String!
+    brands(offset: Int, limit: Int): [Brand]
+    publishedBrands(offset: Int, limit: Int): [Brand]
+    brandById(id: ID!): Brand
+    searchPendingBrands: [Brand]
+    searchBlockedBrands: [Brand]
+    categories: [Category]
+    categoryById(id: ID!): Category
+    mainCategories: [Category]
+    subCategories(id: ID!): [Category]
+    tags: [Tag]
+    tagById(id: ID!): Tag
+    tagByTitle(title: String!): Tag
+}
+type Mutation {
+    _: String
+    verifyKyc(id: ID!): Boolean
+    cancelKyc(id: ID!): Boolean
+    registerUser(newUser: UserRegisterInput!): AuthUser!
+    editUser(newUser: UserInput!): User
+    confirmEmail(token: String!): Boolean!
+    forgetPassword(email: String!): Boolean!
+    resetPassword(token: String!, password: String!): Boolean!
+    changePassword(password: String!, newPassword: String!): Boolean!
+    enable2FA: User
+    disable2FA: Boolean!
+    blockUser(id: ID!): Boolean!
+    deleteUser(id: String!): User
+    addKyc(id: String!, mobile: String, birthDate: String, nationality: String, country: String, postalCode: String, city: String, street: String, building: String, kycStatus: Status): User
+    editKyc(id: String!, mobile: String, birthDate: String, nationality: String, country: String, postalCode: String, city: String, street: String, building: String, kycStatus: Status): User
+    createAdmin(email: String!): Boolean!
+    registerShop(newShop: ShopInput!): Shop
+    editShop(id: ID!, newShop: ShopInput!): Shop
+    deleteShop(id: ID!): Boolean
+    verifyShop(id: ID!): Boolean
+    blockShop(id: ID!): Boolean
+    archiveShop(id: ID!): Boolean
+    unArchiveShop(id: ID!): Boolean
+    inviteShopModerator(id: ID!, email: String!, role: String!): Boolean
+    removeShopModerator(id: ID!, email: String!, role: String!): Boolean
+    clickShop(id: ID!): Boolean
+    viewShop(id: ID!): Boolean
+    subscribeShop(id: ID!): Boolean
+    createPromotion(newPromotion: PromotionInput!): Promotion
+    editPromotion(id: ID!, newPromotion: PromotionInput!): Promotion
+    deletePromotion(id: ID!): Boolean
+    verifyPromotion(id: ID!): Boolean
+    archivePromotion(id: ID!): Boolean
+    clickPromotion(id: ID!): Boolean
+    viewPromotion(id: ID!): Boolean
+    singleUpload(file: Upload!, mediaType: MediaTypes): Media
+    multipleUpload(files: [Upload]!, mediaType: MediaTypes): Media
+    createBrand(newBrand: BrandInput!): Brand
+    editBrand(id: ID!, newBrand: BrandInput!): Brand
+    deleteBrand(id: ID!): Boolean
+    archiveBrand(id: ID!): Boolean
+    unArchiveBrand(id: ID!): Boolean
+    verifyBrand(id: ID!): Boolean
+    blockBrand(id: ID!): Boolean
+    inviteBrandModerator(id: ID!, email: String!, role: String!): Boolean
+    removeBrandModerator(id: ID!, email: String!, role: String!): Boolean
+    clickBrand(id: ID!): Boolean
+    viewBrand(id: ID!): Boolean
+    subscribeBrand(id: ID!): Boolean
+    createTag(title: String!): Tag
+}
+type Subscription {
+    _: String
+}
+type MessageResponse {
+    message: String!
+    success: Boolean
+}
+type User {
+    id: ID!
+    isBlocked: Boolean!
+    fullName: String!
+    userName: String!
+    email: String!
+    password: String!
+    confirmed: Boolean!
+    status(status: Status): String
+    resetPasswordToken: String
+    emailConfirmToken: String
+    twoFactorEnabled: Boolean!
+    twoFactorSecret: String!
+    twoFactorCode: String
+    avatar: String
+    location: String
+    type(type: Role): String
+    createdAt: String
+    updatedAt: String
+    kyc: Kyc
+    shops: [Shop]
+    brands: [Brand]
+    favourites: Favorite
+    pins: Pin
+    subscriptions: UserSubscription
+    roleBasedAccess: RoleBasedAccess
+}
+type Kyc {
+    mobile: String
+    gender: String
+    birthDate: String
+    nationality: String
+    country: String
+    postalCode: String
+    city: String
+    street: String
+    building: String
+    kycStatus(status: Status): String!
+}
+type AuthUser {
+    user: User!
+    token: String!
+}
+type Shop {
+    id: ID!
+    name: String
+    email: String
+    category: [Category]
+    subCategory: [Category]
+    logo: Media
+    coverImage: Media
+    tags: [Tag]
+    website: String
+    phoneNumber: String
+    mobileNumber: String
+    location: String
+    address: String
+    publishingDateTime: String
+    facebook: String
+    tiktok: String
+    twitter: String
+    instagram: String
+    youtube: String
+    linkedIn: String
+    isBlocked: Boolean
+    status(status: Status): String
+    verified(verified: Verified): String
+    viewCounts: Int
+    clickCounts: Int
+    subscriberCounts: Int
+    owner: User
+    brand: Brand
+    admin: [User]
+    modifier: [User]
+    watcher: [User]
+    subscribers: [User]
+    roleBaseAccessInvites: ShopRoleBaseAccessInvite
+    verifiedBy: User
+    promotions: [Promotion]
+}
+type Promotion {
+    id: ID!
+    name: String
+    media: [Media]
+    tags: [Tag]
+    category: [Category]
+    subCategory: [Category]
+    description: String
+    price: String
+    publishingDateTime: String
+    verified(verified: Verified): String
+    viewCounts: Int
+    clickCounts: Int
+    isUpcoming: Boolean
+    status(status: Status): String
+    publisher: User
+    verifiedBy: User
+    brand: Brand
+    shops: [Shop]
+    startDate: String
+    endDate: String
+}
+type Media {
+    id: ID!
+    url: [String]
+    mediaType(mediaType: MediaTypes): String
+    uploadedBy: User
+    createdAt: String
+    updatedAt: String
+}
+type UserSubscription {
+    id: ID!
+    user: User
+    shops: [Shop]
+    brands: [Shop]
+    createdAt: String
+    updatedAt: String
+}
+type ShopRoleBaseAccessInvite {
+    id: ID!
+    user: User
+    invite: User
+    shop: Shop
+    role(role: Role): String
+    inviteLink: String
+    isAccepted: Boolean
+    isExpired: Boolean
+    createdAt: String
+    updatedAt: String
+}
+type RoleBasedAccess {
+    id: ID!
+    admin: AccessItem
+    modifier: AccessItem
+    watcher: AccessItem
+    createdAt: String
+    updatedAt: String
+}
+type AccessItem {
+    shops: [Shop]
+    brands: [Brand]
+}
+type Pin {
+    id: ID!
+    user: User
+    shops: [Shop]
+    brands: [Shop]
+    promotions: [Promotion]
+    createdAt: String
+    updatedAt: String
+}
+type Favorite {
+    id: ID!
+    user: User
+    shops: [Shop]
+    brands: [Shop]
+    createdAt: String
+    updatedAt: String
+}
+type BrandRoleBaseAccessInvite {
+    id: ID!
+    user: User!
+    email: String!
+    invite: User
+    brand: Brand!
+    role(role: Role): String!
+    inviteLink: String!
+    isAccepted: Boolean
+    isExpired: Boolean
+    createdAt: String
+    updatedAt: String
+}
+type Brand {
+    id: ID!
+    name: String
+    email: String
+    category: [Category]
+    subCategory: [Category]
+    logo: Media
+    coverImage: Media
+    tags: [Tag]
+    website: String
+    phoneNumber: String
+    mobileNumber: String
+    publishingDateTime: String
+    facebook: String
+    tiktok: String
+    twitter: String
+    instagram: String
+    youtube: String
+    linkedIn: String
+    status(status: Status): String
+    isBlocked: Boolean
+    verified(verified: Verified): String
+    viewCounts: Int
+    clickCounts: Int
+    subscriberCounts: Int
+    owner: User
+    brandShops: [Shop]
+    admins: [User]
+    modifiers: [User]
+    watchers: [User]
+    roleBaseAccessInvites: [BrandRoleBaseAccessInvite]
+    subscribers: [User]
+    verifiedBy: User
+    promotions: [Promotion]
+    createdAt: String
+    updatedAt: String
+}
+type BrandClick {
+    brand: Brand
+    user: User
+}
+type BrandView {
+    brand: Brand
+    user: User
+}
+type Category {
+    id: ID
+    title: String
+    level: Float
+    subCategories: [Category]
+    parentCategory: Category
+    createdAt: String
+    updatedAt: String
+}
+type Tag {
+    id: ID
+    title: String
+    shops: [Shop]
+    brands: [Brand]
+    createdAt: String
+    updatedAt: String
+}
+enum Status {
+    PENDING
+    NOT_SUBMITTED
+    VERIFIED
+    REJECTED
+    ARCHIVED
+    DELETED
+    UPCOMING
+    PUBLISHED
+    DRAFT
+}
+enum Role {
+    SUPER_ADMIN
+    ADMIN
+    MODIFIER
+    WATCHER
+    OWNER
+    USER
+}
+enum Verified {
+    REJECTED
+    PENDING
+    VERIFIED
+}
+enum Sort {
+    NEWEST
+    LOW_TO_HIGH
+    HIGH_TO_LOW
+    TOP_SOLD
+}
+enum MediaTypes {
+    AVATAR
+    IMAGE
+    BOOKLET
+    THUMBNAIL
+    LOGO
+    VIDEO
+    VIDEO_THUMBNAIL
+}
+input UserRegisterInput {
+    fullName: String!
+    userName: String!
+    email: String!
+    password: String!
+}
+input UserInput {
+    fullName: String
+    avatar: String
+    location: String
+    type: Role
+}
+input ShopInput {
+    name: String!
+    brand: ID
+    category: [ID!]!
+    subCategory: [ID!]!
+    logo: ID
+    coverImage: String
+    tags: [ID]
+    website: String
+    phoneNumber: String!
+    mobileNumber: String
+    location: String!
+    address: String!
+    facebook: String
+    tiktok: String
+    twitter: String
+    instagram: String
+    youtube: String
+    linkedIn: String
+    status: Status
+    email: String
+}
+input PromotionInput {
+    name: String!
+    media: [ID]!
+    tags: [ID]
+    category: [ID]
+    subCategory: [ID]
+    description: String
+    price: String
+    startDate: String
+    endDate: String
+    isUpcoming: Boolean
+    status: Status
+    shops: [ID]
+    brand: ID
+}
+input BrandInput {
+    name: String
+    email: String
+    category: [ID]
+    subCategory: [ID]
+    logo: ID
+    coverImage: ID
+    tags: [ID]
+    website: String
+    phoneNumber: String
+    mobileNumber: String
+    facebook: String
+    tiktok: String
+    twitter: String
+    instagram: String
+    youtube: String
+    linkedIn: String
+    status: Status
+}
+directive @isAuth2(requires: [Role] = [USER]) on OBJECT | FIELD_DEFINITION
+directive @isAuth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
+"Exposes a URL that specifies the behavior of this scalar."
+directive @specifiedBy(
+    "The URL that specifies the behavior of this scalar."
+    url: String!
+) on SCALAR

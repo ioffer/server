@@ -5,6 +5,7 @@ const roleBasedAccessTypeDefs = gql`
 
     type RoleBasedAccess {
         id: ID!,
+        user: User!,
         admin: AccessItem,
         modifier: AccessItem,
         watcher: AccessItem,

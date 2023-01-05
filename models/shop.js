@@ -1,37 +1,38 @@
 import {Status, Verified} from "../constants/enums";
+import {error} from "logrocket";
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const shopSchema = new Schema({
     name: String,
-    category:[{
-        ref:'categories',
-        type:Schema.Types.ObjectId,
+    category: [{
+        ref: 'categories',
+        type: Schema.Types.ObjectId,
     }],
     subCategory: [{
-        ref:'categories',
-        type:Schema.Types.ObjectId,
+        ref: 'categories',
+        type: Schema.Types.ObjectId,
     }],
     logo: {
-        type:Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'medias'
     },
-    coverImage:{
-        type:Schema.Types.ObjectId,
+    coverImage: {
+        type: Schema.Types.ObjectId,
         ref: 'medias'
     },
-    tags:[{
-        type:Schema.Types.ObjectId,
+    tags: [{
+        type: Schema.Types.ObjectId,
         ref: 'tags'
     }],
     website: String,
     email: String,
-    phoneNumbers: String,
+    phoneNumber: String,
     mobileNumber: String,
     location: String,
     address: String,
-    publishingDateTime:String,
+    publishingDateTime: String,
     facebook: String,
     tiktok: String,
     twitter: String,
@@ -40,28 +41,29 @@ const shopSchema = new Schema({
     linkedIn: String,
     isBlocked: {
         type: Boolean,
-        default:false
+        default: false
     },
     status: {
-        type:String,
-        enum:Status,
+        type: String,
+        enum: Status,
+        default: Status.DRAFT
     },
     verified: {
-        type:String,
-        enum:Verified,
-        default:Verified.PENDING
+        type: String,
+        enum: Verified,
+        default: Verified.PENDING
     },
     viewCounts: {
         type: Number,
-        default:0
+        default: 0
     },
     clickCounts: {
         type: Number,
-        default:0
+        default: 0
     },
     subscriberCounts: {
         type: Number,
-        default:0
+        default: 0
     },
     owner: {
         ref: 'users',
@@ -107,5 +109,47 @@ const shopSchema = new Schema({
     timestamps: true
 });
 
+shopSchema.methods.getRelation = function (userId) {
+    console.log("userId === this.owner", userId, "===", this.owner)
+    if (userId.toString() === this.owner.toString()) {
+        return "OWNER"
+    } else if (this.admins.includes(userId)) {
+        return "ADMIN"
+    } else if (this.modifiers.includes(userId)) {
+        return "MODIFIER"
+    } else if (this.watchers.includes(userId)) {
+        return "WATCHER"
+    } else {
+        return null
+    }
+}
+
+// shopSchema.virtual('user').get(function (){
+//     console.log('virtual user')
+//     return null
+// })
+
+shopSchema.query.byName = function (name) {
+    return this.where({name: new RegExp(name, 'i')})
+}
+shopSchema.query.byEmail = function (email) {
+    return this.where({email: new RegExp(email, 'i')})
+}
+shopSchema.query.published = function () {
+    return this.where({status: Status.PUBLISHED})
+}
+shopSchema.query.pending = function () {
+    return this.where({verified: Verified.PENDING})
+}
+shopSchema.query.blocked = function () {
+    return this.where({isBlocked: true})
+}
+
+shopSchema.query.notDeleted = function () {
+    return this.where({status: {$not: Status.DELETED}})
+}
+
+shopSchema.set('toObject', {virtuals: true})
+shopSchema.set('toJSON', {virtuals: true})
 const Shop = mongoose.model('shops', shopSchema);
 export default Shop;

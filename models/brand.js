@@ -102,5 +102,38 @@ const brandSchema = new Schema({
     timestamps: true
 });
 
+brandSchema.methods.getRelation = function (userId) {
+    console.log("userId === this.owner", userId, "===", this.owner)
+    if (userId.toString() === this.owner.toString()) {
+        return "OWNER"
+    } else if (this.admins.includes(userId)) {
+        return "ADMIN"
+    } else if (this.modifiers.includes(userId)) {
+        return "MODIFIER"
+    } else if (this.watchers.includes(userId)) {
+        return "WATCHER"
+    } else {
+        return null
+    }
+}
+
+brandSchema.query.byName = function (name) {
+    return this.where({name: new RegExp(name, 'i')})
+}
+brandSchema.query.byEmail = function (email) {
+    return this.where({email: new RegExp(email, 'i')})
+}
+brandSchema.query.published = function () {
+    return this.where({status: Status.PUBLISHED})
+}
+brandSchema.query.pending = function () {
+    return this.where({verified: Verified.PENDING})
+}
+brandSchema.query.blocked = function () {
+    return this.where({isBlocked: true})
+}
+
+brandSchema.set('toObject', {virtuals: true})
+brandSchema.set('toJSON', {virtuals: true})
 const Brand = mongoose.model('brands', brandSchema);
 export default Brand;

@@ -33,16 +33,16 @@ const resolvers = {
                 if(!(serverFile.split('uploads')[1][0]==='/')){
                     let wrongPath=serverFile.split('uploads')[1];
                     correctedPath = wrongPath.replace("\\","/")
-                    serverFile = `${BASE_URL}${correctedPath}`;
+                    serverFile = `${correctedPath}`;
 
                 }else{
-                    serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
+                    serverFile = `${serverFile.split('uploads')[1]}`;
                 }
 
                 return serverFile;
             } catch (err) {
                 console.error(err)
-                throw new ApolloError("Internal Server Error", 500);
+                return new ApolloError( err, 500)
             }
         }
     },

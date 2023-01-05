@@ -41,6 +41,6 @@ const roleBaseAccessSchema = new Schema({
     timestamps: true
 });
 
-const RoleBaseAccess = mongoose.model('role_base_access', roleBaseAccessSchema);
+const RoleBaseAccess = mongoose.model('role_base_accesses', roleBaseAccessSchema);
 export default RoleBaseAccess;
 

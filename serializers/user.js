@@ -9,16 +9,24 @@ const {SECRET} = require('../config/index.js');
 
 const issueAuthToken = async (jwtPayload) => {
     let token = await sign(jwtPayload, SECRET, {
-        expiresIn: 3600*24
+        expiresIn: 3600 * 24
     });
     return `Bearer ${token}`;
 };
 
 const issueConfirmEmailToken = async (jwtPayload) => {
     let token = await sign(jwtPayload, SECRET, {
-        expiresIn: 3600*24
+        expiresIn: 3600 * 24
     });
 
+    return token;
+};
+const issueShopInviteToken = async (jwtPayload) => {
+    console.log("jwtPayload:", jwtPayload)
+    let token = await sign({jwtPayload}, SECRET, {
+        expiresIn: 3600 * 24
+    });
+    console.log("jwtPayload TOKEN:", token)
     return token;
 };
 
@@ -38,4 +46,4 @@ const serializeEmail = user => pick(user, [
 ]);
 
 
-module.exports = {issueAuthToken,serializeUser,issueConfirmEmailToken,serializeEmail};
+module.exports = {issueAuthToken, serializeUser, issueConfirmEmailToken, serializeEmail, issueShopInviteToken};

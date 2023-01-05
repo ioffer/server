@@ -6,10 +6,11 @@ const brandRoleBaseAccessInviteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users',
     },
-    invite: {
+    invited: {
         type: Schema.Types.ObjectId,
         ref: 'users',
     },
+    invitedEmail: String,
     brand: {
         type: Schema.Types.ObjectId,
         ref: 'brands',
@@ -18,13 +19,28 @@ const brandRoleBaseAccessInviteSchema = new Schema({
         type:String,
         enum:Roles,
     },
-    inviteLink:String,
-    isAccepted:Boolean,
-    isExpired:Boolean,
-    email: String,
+    inviteLink: {
+        type: String,
+        default: null,
+    },
+    isAccepted: {
+        type: Boolean,
+        default: false,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    expiresAt: String,
 }, {
     timestamps: true
 });
+
+brandRoleBaseAccessInviteSchema.set('toObject', {virtuals: true})
+brandRoleBaseAccessInviteSchema.set('toJSON', {virtuals: true})
+brandRoleBaseAccessInviteSchema.virtual('isExpired').get(function () {
+    return this.expiresAt < Date.now()
+})
 
 const BrandRoleBaseAccessInvite = mongoose.model('brand_role_base_access_invites', brandRoleBaseAccessInviteSchema);
 export default BrandRoleBaseAccessInvite;
