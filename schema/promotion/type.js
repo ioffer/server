@@ -40,6 +40,8 @@ const promotionTypeDefs = gql`
         shops:[Shop],
         startDate: String,
         endDate: String,
+        user:String,
+
     }
     
 `;
