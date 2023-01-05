@@ -13,7 +13,7 @@ const emailShopInviteUrl=async(shopInvite) => {
     return `${FRONTEND_URL}/user/shopInvite/${token}`;
 }
 const emailBrandInviteUrl=async(user) => {
-    const token = await issueConfirmEmailToken(user);
+    const token = await issueShopInviteToken(user);
     return `${FRONTEND_URL}/user/brandInvite/${token}`;
 }
 const emailConfirmationBody = async(name, link)=> {

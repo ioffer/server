@@ -13,7 +13,7 @@ const promotionTypeDefs = gql`
         price: String,
         startDate: String,
         endDate: String,
-        isUpcoming: Boolean
+        isUpcoming: Boolean #shop at start promotion time
         status:Status
         shops:[ID],
         brand:ID,

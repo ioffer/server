@@ -16,7 +16,7 @@ import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConf
 import {Roles, Status, Verified} from "../../constants/enums";
 
 let fetchData = async () => {
-    return await Promotion.find({});
+    return await Promotion.find({}).notDeleted();
 }
 
 const resolvers = {
@@ -258,6 +258,17 @@ const resolvers = {
             }
             try {
                 await Promotion.findByIdAndUpdate(id, {status:Status.ARCHIVED})
+                return true
+            } catch (err) {
+                return new ApolloError(err, 500)
+            }
+        },
+        unArchivePromotion: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                await Promotion.findByIdAndUpdate(id, {status:Status.DRAFT})
                 return true
             } catch (err) {
                 return new ApolloError(err, 500)

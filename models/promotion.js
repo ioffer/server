@@ -66,6 +66,12 @@ const promotionSchema = new Schema({
     timestamps: true
 });
 
+
+
+promotionSchema.query.notDeleted = function () {
+    return this.where({status: {$ne: Status.DELETED}})
+}
+
 promotionSchema.methods.getRelation = async function (userId) {
     let userRelation = await this.getBrandRelation(userId)
     if (!userRelation) {

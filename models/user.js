@@ -109,7 +109,7 @@ const userSchema = new Schema({
     },
     roleBasedAccess:{
         type: Schema.Types.ObjectId,
-        ref: 'role_based_access',
+        ref: 'role_base_accesses',
     }
 }, {
     timestamps: true

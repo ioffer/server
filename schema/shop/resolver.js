@@ -1,22 +1,18 @@
-import {User, Promotion, Shop, Tag, Category, Media, Brand, RoleBaseAccess} from "../../models";
-import lodash from "lodash"
-
-const {
-    EmailRules,
-} = require('../../validations');
+import {Brand, Category, Media, Promotion, RoleBaseAccess, Shop, Tag, User} from "../../models";
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
-import {emailShopInviteUrl, emailInviteBody} from "../../utils/emailConfirmationUrl";
+import {emailInviteBody, emailShopInviteUrl} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
 import ShopRoleBaseAccessInvite from "../../models/shopRoleBaseAccessInvite";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
 import Subscription from "../../models/subscription";
 
-let fetchData = async () => {
-    return await Shop.find({});
-}
+const {
+    EmailRules,
+} = require('../../validations');
+
 
 const resolvers = {
     Shop: {
@@ -66,37 +62,57 @@ const resolvers = {
     },
     Query: {
         shops: async (_, {}, {user}) => {
-            let shops = await Shop.find({}).published();
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            user = await User.findById(user.id).populate('roleBasedAccess');
+            let userShops = [];
+            userShops = [
+                ...user.shops,
+                ...user.roleBasedAccess.admin.shops,
+                ...user.roleBasedAccess.modifier.shops,
+                ...user.roleBasedAccess.watcher.shops
+            ]
+            userShops.forEach((shop, index) => {
+                userShops[index] = shop.toString();
+            })
+            userShops = new Set([...userShops])
+            let shops = await Shop.find({_id: {$in: [...userShops]}});
             await getShopUserRelation(user.id, shops)
-            return shops
+            return shops;
         },
-        publishedShops: async (_, {}, {user}) => {
-            let shops = await Shop.find({}).published();
-            await getShopUserRelation(user.id, shops)
-            return shops
+        publishedShops: async (_, {}, {}) => {
+            return await Shop.find({}).published()
         },
         allShops: async (_, {}, {user}) => {
-            let shops = await fetchData()
-            await getShopUserRelation(user.id, shops)
-            return shops
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            } else {
+                if (user.role !== Roles.SUPER_ADMIN) {
+                    return new ApolloError("User Must Be Super Admin", '400')
+                }
+                return await Shop.find({});
+            }
         },
         shopById: async (_, {id}, {user}) => {
-            console.log("user", user)
             let shop = await Shop.findById(id);
-            console.log("here")
-            await getShopUserRelation(user.id, shop)
-            console.log("heree")
-            return shop
+            if (user) {
+                await getShopUserRelation(user.id, shop)
+            }
+            if (shop.status === Status.PUBLISHED || shop.user || user.role === Roles.SUPER_ADMIN) {
+                return shop;
+            }
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided for unpublished brand")
+            } else {
+                return new ApolloError("Brand Not Found", '404')
+            }
         },
         searchPendingShops: async (_, {}, {user}) => {
-            let shops = await Shop.find({}).pending();
-            await getShopUserRelation(user.id, shops)
-            return shops
+            return await Shop.find({}).pending();
         },
         searchBlockedShops: async (_, {}, {user}) => {
-            let shops = await Shop.find({}).blocked();
-            await getShopUserRelation(user.id, shops)
-            return shops
+            return await Shop.find({}).blocked();
         },
         // searchShops: async (_, {query}, {Shop}) => {
         //
@@ -121,12 +137,13 @@ const resolvers = {
                 })
                 if (newShop["brand"] !== undefined) {
                     let brand = await Brand.findById(newShop.brand);
-                    if (user.id === brand.owner || brand.admins.includes(user.id)) {
+                    console.log(user.id," === ",brand.owner.toString()," || is admin=>",brand.admins.includes(user.id))
+                    if (user.id === brand.owner.toString() || brand.admins.includes(user.id)) {
                         owner = brand.owner;
-                        shop.admins = brand.admins;
-                        shop.modifiers = brand.modifiers;
-                        shop.watchers = brand.watchers;
-
+                        //TODO not including brand modifiers in branded shops
+                        // shop.admins = brand.admins;
+                        // shop.modifiers = brand.modifiers;
+                        // shop.watchers = brand.watchers;
                     } else {
                         return new AuthenticationError("Authentication Failed. User must be brand owner or admin.")
                     }
@@ -450,11 +467,11 @@ const resolvers = {
                     }
                     await brand.save()
                 } else {
-                    console.log("shop",shop, subscription.shops.includes(shop.id))
+                    console.log("shop", shop, subscription.shops.includes(shop.id))
                     if (subscription.shops.includes(shop.id)) {
                         console.log("removing shop")
                         subscription.shops = arrayRemove(subscription.shops, shop.id)
-                        shop.subscribers = arrayRemove(shop.subscribers,user.id)
+                        shop.subscribers = arrayRemove(shop.subscribers, user.id)
                     } else {
                         console.log("adding shop")
                         subscription.shops.push(shop.id)
@@ -489,9 +506,10 @@ async function getShopUserRelation(userId, shops = null) {
         }
     }
 }
+
 function arrayRemove(arr, value) {
 
-    return arr.filter(function(ele){
+    return arr.filter(function (ele) {
         return ele != value;
     });
 }

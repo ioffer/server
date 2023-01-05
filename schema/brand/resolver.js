@@ -16,10 +16,6 @@ import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
 
 
-let fetchData = async () => {
-    return await Brand.find({});
-}
-
 const resolvers = {
     Brand: {
         logo: async (parent) => {
@@ -68,19 +64,52 @@ const resolvers = {
     },
     Query: {
         brands: async (_, {offset}, {user}) => {
-            let brands = await fetchData();
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            user = await User.findById(user.id).populate('roleBasedAccess');
+            let userBrands = [];
+            userBrands = [
+                ...user.brands,
+                ...user.roleBasedAccess.admin.brands,
+                ...user.roleBasedAccess.modifier.brands,
+                ...user.roleBasedAccess.watcher.brands
+            ]
+            userBrands.forEach((brand, index) => {
+                userBrands[index] = brand.toString();
+            })
+            userBrands = new Set([...userBrands])
+            let brands = await Brand.find({_id: {$in: [...userBrands]}});
             await getBrandUserRelation(user.id, brands)
             return brands;
         },
-        publishedBrands: async (offset) => {
-            let brands = await Brand.find({}).published();
-            await getBrandUserRelation(user.id, brands);
-            return brands;
+        allBrands: async (_, {}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            } else {
+                if (user.role !== Roles.SUPER_ADMIN) {
+                    return new ApolloError("User Must Be Super Admin", '400')
+                }
+                return await Brand.find({});
+            }
+        },
+        publishedBrands: async () => {
+            return await Brand.find({}).published();
         },
         brandById: async (_, {id}, {user}) => {
             let brand = await Brand.findById(id);
-            await getBrandUserRelation(user.id, brand)
-            return brand;
+            if (user) {
+                await getBrandUserRelation(user.id, brand)
+            }
+            if (brand.status === Status.PUBLISHED || brand.user || user.role === Roles.SUPER_ADMIN) {
+                return brand;
+            }
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided for unpublished brand")
+            } else {
+                return new ApolloError("Brand Not Found", '404')
+            }
+
         },
         searchPendingBrands: async (_, {}, {user}) => {
             let brands = await Brand.find({}).pending();
@@ -285,12 +314,18 @@ const resolvers = {
                         let emailHtml = await emailInviteBody(brandRoleBaseAccessInvite, emailLink);
                         await sendEmail(email, emailLink, emailHtml)
                     } catch (e) {
-                        return new ApolloError(`Email Sending Failed to ${email}`, 500);
+                        // return new ApolloError(`Email Sending Failed to ${email}`, 500);
                     }
-                    await brandRoleBaseAccessInvite.save();
-                    brand.roleBasedAccessInvites.push(brandRoleBaseAccessInvite.id)
-                    brand.save();
-                    return true
+                    try {
+                        await brandRoleBaseAccessInvite.save();
+                        brand.roleBaseAccessInvites.push(brandRoleBaseAccessInvite.id)
+                        brand.save();
+                        return true
+                    }catch (e) {
+                        console.log("Saving error:", e)
+                        return new ApolloError('Saving error', 404)
+                    }
+
                 } else {
                     return new ApolloError('Brand not found', 404)
                 }
@@ -467,7 +502,6 @@ function arrayRemove(arr, value) {
 
 async function getBrandUserRelation(userId, brands = null) {
     if (brands) {
-        console.log("userId:", userId)
         if (Array.isArray(brands)) {
             for (const brand of brands) {
                 const i = brands.indexOf(brand);

@@ -2,12 +2,13 @@
 
 const brandQuery = gql`
     extend type Query {
-        brands(offset: Int, limit: Int):[Brand],
-        publishedBrands(offset: Int, limit: Int):[Brand],
-        brandById(id:ID!):Brand @isAuth,
-        searchPendingBrands:[Brand]  @isAuth2(requires: [SUPER_ADMIN]),
-        searchBlockedBrands: [Brand] @isAuth2(requires: [SUPER_ADMIN])
-#        searchShops(query:Query):[Shop]
+        allBrands:[Brand] @isAuth2(requires: [SUPER_ADMIN]) # for super admin
+        brands(offset: Int, limit: Int):[Brand] @isAuth, # for dashboard users
+        publishedBrands(offset: Int, limit: Int):[Brand], # for mobile app users
+        brandById(id:ID!):Brand @isAuth, # for everyone
+        searchPendingBrands:[Brand]  @isAuth2(requires: [SUPER_ADMIN]), # for super admins
+        searchBlockedBrands: [Brand] @isAuth2(requires: [SUPER_ADMIN]) # for super admins
+#        searchBrand(query:Query):[Brand]
     },
     
     extend type Mutation {
