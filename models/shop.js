@@ -145,6 +145,10 @@ shopSchema.query.blocked = function () {
     return this.where({isBlocked: true})
 }
 
+shopSchema.query.notDeleted = function () {
+    return this.where({status: {$not: Status.DELETED}})
+}
+
 shopSchema.set('toObject', {virtuals: true})
 shopSchema.set('toJSON', {virtuals: true})
 const Shop = mongoose.model('shops', shopSchema);

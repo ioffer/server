@@ -150,7 +150,7 @@ function getUser(user) {
                 if (id.length === 24) {
                     let brand = await Brand.findById(id);
                     console.log('brand:', brand)
-                    if (brand.owner === user.id) {
+                    if (brand.owner.toString() === user.id) {
                         return Roles.OWNER
                     } else if (brand.admins.includes(user.id)) {
                         return Roles.ADMIN

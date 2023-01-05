@@ -22,10 +22,11 @@ const issueConfirmEmailToken = async (jwtPayload) => {
     return token;
 };
 const issueShopInviteToken = async (jwtPayload) => {
+    console.log("jwtPayload:", jwtPayload)
     let token = await sign({jwtPayload}, SECRET, {
         expiresIn: 3600 * 24
     });
-
+    console.log("jwtPayload TOKEN:", token)
     return token;
 };
 
