@@ -4,16 +4,16 @@ const {gql} = require('apollo-server-express');
 const brandTypeDefs = gql`
     
     input BrandInput {
-        name: String,
+        name: String!,
         email: String,
-        category:[ID],
-        subCategory:[ID],
+        category:[ID]!,
+        subCategory:[ID]!,
         logo: ID,
         coverImage:ID,
-        tags:[ID],
+        tags:[ID]!,
         website: String,
-        phoneNumber: String,
-        mobileNumber: String,
+        phoneNumber: String!,
+        mobileNumber: String!,
         facebook: String,
         tiktok: String,
         twitter: String,
