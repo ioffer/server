@@ -14,6 +14,7 @@ import brand from "../../models/brand";
 import Subscription from "../../models/subscription";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
+import async from "async";
 
 
 const resolvers = {
@@ -121,6 +122,15 @@ const resolvers = {
             await getBrandUserRelation(user.id, brands);
             return brands;
         },
+        moderatorsByBrandId: async (_, {id}, {user}) => {
+            let brand = await Brand.findById(id);
+            if (!brand){
+                return new ApolloError("Brand Not Found", '404')
+            }
+            let  brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.find({_id: {$in: brand.roleBaseAccessInvites}});
+            console.log("brandRoleBaseAccessInvite:", brandRoleBaseAccessInvite)
+            return brandRoleBaseAccessInvite
+        }
 
     },
     Mutation: {
@@ -289,14 +299,12 @@ const resolvers = {
                         return new ApolloError(`User has already Joined as ${brand.user}`, 400)
                     }
                     if (brandRoleBaseAccessInvite) {
-                        console.log("brandRoleBaseAccessInvite:", brandRoleBaseAccessInvite)
-                        if (brandRoleBaseAccessInvite.isExpired) {
-                            brandRoleBaseAccessInvite.isExpired = true;
-                        } else {
+                        if (!brandRoleBaseAccessInvite.isExpired) {
                             return new ApolloError(`Already Invited as ${brandRoleBaseAccessInvite.role}`, 400)
                         }
                         brandRoleBaseAccessInvite.isDeleted = true;
-                        brand.roleBasedAccessInvites = arrayRemove(brand.roleBasedAccessInvites, brandRoleBaseAccessInvite.id)
+                        console.log("😂 brand.roleBasedAccessInvites:", brand)
+                        brand.roleBaseAccessInvites = arrayRemove(brand.roleBaseAccessInvites, brandRoleBaseAccessInvite.id)
                         await brandRoleBaseAccessInvite.save()
                     }
                     brandRoleBaseAccessInvite = new BrandRoleBaseAccessInvite({
@@ -390,7 +398,8 @@ const resolvers = {
 
                     }
                     brandRoleBaseAccessInvite.isAccepted = true;
-                    brandRoleBaseAccessInvite.isDeleted = true;
+                    brandRoleBaseAccessInvite.invited = user.id;
+                    brandRoleBaseAccessInvite.status = Status.ACCEPTED;
                     await brand.save();
                     await brandRoleBaseAccessInvite.save();
                     await roleBasedAccess.save();
@@ -412,15 +421,16 @@ const resolvers = {
                         invitedEmail: email,
                         brand: brand.id,
                         isDeleted: false
-                    }, {isDeleted: true})
+                    })
                     await BrandRoleBaseAccessInvite.updateMany({
                         invitedEmail: email,
                         brand: brand.id,
                         isDeleted: false
-                    }, {isDeleted: true})
+                    }, {isDeleted: true, status:Status.DELETED})
                     brandRoleBaseAccessInvites.forEach((brandRoleBaseAccessInvite) => {
-                        brand.roleBasedAccessInvites = arrayRemove(brand.roleBasedAccessInvites, brandRoleBaseAccessInvite.id)
+                        brand.roleBaseAccessInvites = arrayRemove(brand.roleBaseAccessInvites, brandRoleBaseAccessInvite.id)
                     })
+                    await brand.save()
                     let invitedUser = await User.findOne({email})
                     if (invitedUser) {
                         if (role === Roles.ADMIN) {

@@ -1,6 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-import {Roles} from '../constants/enums'
+import {Roles, Status, Verified} from '../constants/enums'
+
+function getStatus(status) {
+    if (this.isExpired && status === Status.PENDING) {
+        return Status.EXPIRED;
+    } else {
+        return status;
+    }
+}
+function setStatus(status) {
+    if (this.isExpired && status === Status.PENDING) {
+        return Status.EXPIRED;
+    } else {
+        return status;
+    }
+}
+
 const brandRoleBaseAccessInviteSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -15,9 +31,16 @@ const brandRoleBaseAccessInviteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'brands',
     },
-    role:{
-        type:String,
-        enum:Roles,
+    role: {
+        type: String,
+        enum: Roles,
+    },
+    status: {
+        type: String,
+        enum: Status,
+        default: Status.PENDING,
+        get: getStatus,
+        set:setStatus
     },
     inviteLink: {
         type: String,
@@ -36,8 +59,8 @@ const brandRoleBaseAccessInviteSchema = new Schema({
     timestamps: true
 });
 
-brandRoleBaseAccessInviteSchema.set('toObject', {virtuals: true})
-brandRoleBaseAccessInviteSchema.set('toJSON', {virtuals: true})
+brandRoleBaseAccessInviteSchema.set('toObject', {virtuals: true, getters: true})
+brandRoleBaseAccessInviteSchema.set('toJSON', {virtuals: true, getters: true})
 brandRoleBaseAccessInviteSchema.virtual('isExpired').get(function () {
     return this.expiresAt < Date.now()
 })

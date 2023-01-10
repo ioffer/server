@@ -6,6 +6,7 @@ const brandQuery = gql`
         brands(offset: Int, limit: Int):[Brand] @isAuth, # for dashboard users
         publishedBrands(offset: Int, limit: Int):[Brand], # for mobile app users
         brandById(id:ID!):Brand @isAuth, # for everyone
+        moderatorsByBrandId(id:ID!):[BrandRoleBaseAccessInvite] @isAuth2(requires: [OWNER, SUPER_ADMIN, ADMIN, MODIFIER, WATCHER]),
         searchPendingBrands:[Brand]  @isAuth2(requires: [SUPER_ADMIN]), # for super admins
         searchBlockedBrands: [Brand] @isAuth2(requires: [SUPER_ADMIN]) # for super admins
 #        searchBrand(query:Query):[Brand]

@@ -28,6 +28,8 @@ export const Status = {
     UPCOMING: 'UPCOMING',
     PUBLISHED: 'PUBLISHED',
     DRAFT: 'DRAFT',
+    ACCEPTED: 'ACCEPTED',
+    EXPIRED: 'EXPIRED',
 }
 export const Verified = {
     PENDING: 'PENDING',

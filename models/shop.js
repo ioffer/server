@@ -89,7 +89,7 @@ const shopSchema = new Schema({
         ref: 'users',
         type: Schema.Types.ObjectId
     }],
-    roleBasedAccessInvites: [{
+    roleBaseAccessInvites: [{
         ref: 'shop_role_base_access_invites',
         type: Schema.Types.ObjectId
     }],

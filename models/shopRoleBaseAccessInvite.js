@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-import {Roles} from '../constants/enums'
+import {Roles, Status} from '../constants/enums'
 
 const shopRoleBaseAccessInviteSchema = new Schema({
     user: {
@@ -19,6 +19,11 @@ const shopRoleBaseAccessInviteSchema = new Schema({
     role: {
         type: String,
         enum: Roles,
+    },
+    status: {
+        type:String,
+        enum:Status,
+        default:Status.PENDING
     },
     inviteLink: {
         type: String,

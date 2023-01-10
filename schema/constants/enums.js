@@ -13,6 +13,8 @@ const enumsTypeDefs = gql`
         UPCOMING
         PUBLISHED
         DRAFT
+        ACCEPTED
+        EXPIRED
     }
 
     enum Role {
@@ -52,6 +54,14 @@ const enumsTypeDefs = gql`
         message: String!
         success: Boolean
     },
+    
+    type Moderator {
+        userId: ID!,
+        userName: String,
+        userEmail: String,
+        status: Status
+        role: Role,
+    }
 
 
 `;
