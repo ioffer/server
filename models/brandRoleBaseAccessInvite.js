@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-import {Roles, Status, Verified} from '../constants/enums'
+import {Roles, Status} from '../constants/enums'
 
 function getStatus(status) {
     if (this.isExpired && status === Status.PENDING) {

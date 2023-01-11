@@ -7,6 +7,7 @@ const mediaResolver = require('./media/resolver.js');
 const categoryResolver = require('./category/resolver.js');
 const tagResolver = require('./tag/resolver.js');
 const brandRoleBaseAccessInvite = require('./brandRoleBaseAccessInvite/resolver.js');
+const shopRoleBaseAccessInvite = require('./shopRoleBaseAccessInvite/resolver.js');
 // const unBlockRequestResolver = require('./unBlockRequest/resolver.js')
 
 const resolvers = [
@@ -18,6 +19,7 @@ const resolvers = [
     categoryResolver,
     tagResolver,
     brandRoleBaseAccessInvite,
+    shopRoleBaseAccessInvite,
     // unBlockRequestResolver,
 ];
 

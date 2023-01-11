@@ -1,5 +1,4 @@
 const {gql} = require('apollo-server-express');
-const {Roles} = require("../../constants/enums");
 
 
 const brandRoleBaseAccessInviteTypeDefs = gql`

@@ -2,6 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 import {Roles, Status} from '../constants/enums'
 
+function getStatus(status) {
+    if (this.isExpired && status === Status.PENDING) {
+        return Status.EXPIRED;
+    } else {
+        return status;
+    }
+}
+function setStatus(status) {
+    if (this.isExpired && status === Status.PENDING) {
+        return Status.EXPIRED;
+    } else {
+        return status;
+    }
+}
+
 const shopRoleBaseAccessInviteSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -21,9 +36,11 @@ const shopRoleBaseAccessInviteSchema = new Schema({
         enum: Roles,
     },
     status: {
-        type:String,
-        enum:Status,
-        default:Status.PENDING
+        type: String,
+        enum: Status,
+        default: Status.PENDING,
+        get: getStatus,
+        set:setStatus
     },
     inviteLink: {
         type: String,
@@ -41,8 +58,8 @@ const shopRoleBaseAccessInviteSchema = new Schema({
 }, {
     timestamps: true
 });
-shopRoleBaseAccessInviteSchema.set('toObject', {virtuals: true})
-shopRoleBaseAccessInviteSchema.set('toJSON', {virtuals: true})
+shopRoleBaseAccessInviteSchema.set('toObject', {virtuals: true, getters: true})
+shopRoleBaseAccessInviteSchema.set('toJSON', {virtuals: true, getters: true})
 shopRoleBaseAccessInviteSchema.virtual('isExpired').get(function () {
     return this.expiresAt < Date.now()
 })

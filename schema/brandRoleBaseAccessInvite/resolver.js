@@ -10,9 +10,7 @@ const resolvers = {
             return await User.findById(parent.invited)
         },
         brand: async (parent) => {
-            let brand =  await Brand.findById(parent.brand)
-            console.log("😂brand:", brand)
-            return brand
+            return await Brand.findById(parent.brand)
         },
     },
     Query: {

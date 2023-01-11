@@ -128,7 +128,6 @@ const resolvers = {
                 return new ApolloError("Brand Not Found", '404')
             }
             let  brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.find({_id: {$in: brand.roleBaseAccessInvites}});
-            console.log("brandRoleBaseAccessInvite:", brandRoleBaseAccessInvite)
             return brandRoleBaseAccessInvite
         }
 
@@ -285,9 +284,7 @@ const resolvers = {
                     let invited = null;
                     if (invitedUser) {
                         invited = invitedUser.id;
-                        console.log('invited:', invited)
                         await getBrandUserRelation(invitedUser.id, brand)
-                        console.log('brand:', brand.user)
                     }
                     let brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.findOne({
                         invitedEmail: email,
@@ -303,7 +300,6 @@ const resolvers = {
                             return new ApolloError(`Already Invited as ${brandRoleBaseAccessInvite.role}`, 400)
                         }
                         brandRoleBaseAccessInvite.isDeleted = true;
-                        console.log("😂 brand.roleBasedAccessInvites:", brand)
                         brand.roleBaseAccessInvites = arrayRemove(brand.roleBaseAccessInvites, brandRoleBaseAccessInvite.id)
                         await brandRoleBaseAccessInvite.save()
                     }
