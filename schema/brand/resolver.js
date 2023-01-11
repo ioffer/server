@@ -14,7 +14,6 @@ import brand from "../../models/brand";
 import Subscription from "../../models/subscription";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
-import async from "async";
 
 
 const resolvers = {
