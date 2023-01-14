@@ -1,5 +1,5 @@
 import {User, Shop, Promotion, Tag, Brand, Category, Media} from "../../models";
-import _ from 'lodash'
+import lodash from 'lodash'
 
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
 const {
@@ -14,6 +14,7 @@ import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
+import promotion from "../../models/promotion";
 
 let fetchData = async () => {
     return await Promotion.find({}).notDeleted();
@@ -47,10 +48,53 @@ const resolvers = {
         },
     },
     Query: {
-        promotions: async () => {
-            return await fetchData()
+        promotions: async (_, {}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            user = await User.findById(user.id).select({"_id": 1, "id": 1,"shops": 1,"brands": 1,"roleBasedAccess": 1}).populate([{
+                path: 'roleBasedAccess',
+                populate: [{
+                    path: 'admin.brands',
+                    select: {'promotions':1,'_id':0}
+                }, {
+                    path: 'admin.shops',
+                    select: {'promotions':1,'_id':0}
+                }, {
+                    path: 'modifier.brands',
+                    select: {'promotions':1,'_id':0}
+                }, {
+                    path: 'modifier.shops',
+                    select: {'promotions':1,'_id':0}
+                }, {
+                    path: 'watcher.shops',
+                    select: {'promotions':1,'_id':0}
+                }, {
+                    path: 'watcher.brands',
+                    select: {'promotions':1,'_id':0}
+                }],
+                select: {'_id':0,'admin':1, 'modifier':1, 'watcher':1}
+            }
+            ,{
+                path: 'brands',
+                    select: {'promotions':1,'_id':0}
+            },{
+                path: 'shops',
+                select: {'promotions':1,'_id':0}
+            }
+            ]);
+            let res = getPropValues(user, "promotions");
+            let userPromotions = new Set();
+            res.forEach(promotionsArray=>{
+                promotionsArray.forEach(promotion=>{
+                    userPromotions.add(promotion.toString())
+                })
+            })
+            let promotions = await Promotion.find({_id: {$in: [...userPromotions]}}).notDeleted();
+            await getPromotionUserRelation(user.id, promotions)
+            return promotions
         },
-        promotionById: async (_, {id},{user}) => {
+        promotionById: async (_, {id}, {user}) => {
             let promotion = await Promotion.findById(id);
             await getPromotionUserRelation(user.id)
             return promotion;
@@ -141,12 +185,12 @@ const resolvers = {
                 if (newPromotion.shops) {
                     for (let i = 0; i < newPromotion.shops.length; i++) {
                         let shop = await Shop.findById(newPromotion.shops[i]);
-                        if(shop){
+                        if (shop) {
                             shops.push(shop)
                             if (shop.brand) {
                                 return new ApolloError('Invalid Shop ' + shop.name + '. Select non Branded Shops Only', 400)
                             }
-                        }else{
+                        } else {
                             return new ApolloError('Shop not found', 404);
                         }
 
@@ -158,8 +202,8 @@ const resolvers = {
             })
             await getPromotionUserRelation(user.id, promotion);
             console.log("promotion.user:", promotion)
-            if(!(promotion.user === Roles.ADMIN||promotion.user === Roles.OWNER||promotion.user === Roles.MODIFIER)) {
-                return new ApolloError(`Unauthorized, User Must Be OWNER, ADMIN or MODIFIER ${brand?"of this brand or all the branded shops":"of all these shops"}`, 400)
+            if (!(promotion.user === Roles.ADMIN || promotion.user === Roles.OWNER || promotion.user === Roles.MODIFIER)) {
+                return new ApolloError(`Unauthorized, User Must Be OWNER, ADMIN or MODIFIER ${brand ? "of this brand or all the branded shops" : "of all these shops"}`, 400)
             }
             if (brand) {
                 brand.promotions.push(promotion.id);
@@ -180,8 +224,8 @@ const resolvers = {
                 newPromotion['publisher'] = user._id;
                 newPromotion['publishingDateTime'] = dateTime();
             }
-            await Shop.updateMany({_id: {$in: promotion.shops}}, {$pull: {promotions:promotion.id}});
-            await Brand.updateMany({_id: promotion.brand}, {$pull: {promotions:promotion.id}});
+            await Shop.updateMany({_id: {$in: promotion.shops}}, {$pull: {promotions: promotion.id}});
+            await Brand.updateMany({_id: promotion.brand}, {$pull: {promotions: promotion.id}});
             let brand = null;
             let shops = [];
             let brandShops = [];
@@ -221,14 +265,14 @@ const resolvers = {
                 }
             }
             await Shop.updateMany({_id: {$in: newPromotion.shops}}, {$push: {promotions: promotion.id}});
-            return Promotion.findByIdAndUpdate(id, {...newPromotion},{new:true});
+            return Promotion.findByIdAndUpdate(id, {...newPromotion}, {new: true});
         },
         deletePromotion: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await Promotion.findByIdAndUpdate(id, {status:Status.DELETED})
+                await Promotion.findByIdAndUpdate(id, {status: Status.DELETED})
                 return true
             } catch (err) {
                 return new ApolloError(err, 500)
@@ -257,7 +301,7 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await Promotion.findByIdAndUpdate(id, {status:Status.ARCHIVED})
+                await Promotion.findByIdAndUpdate(id, {status: Status.ARCHIVED})
                 return true
             } catch (err) {
                 return new ApolloError(err, 500)
@@ -268,7 +312,7 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await Promotion.findByIdAndUpdate(id, {status:Status.DRAFT})
+                await Promotion.findByIdAndUpdate(id, {status: Status.DRAFT})
                 return true
             } catch (err) {
                 return new ApolloError(err, 500)
@@ -279,7 +323,7 @@ const resolvers = {
                 await Promotion.findByIdAndUpdate(id, {$inc: {clickCounts: 1}});
                 return true
             } catch (err) {
-                return new ApolloError( err, 500)
+                return new ApolloError(err, 500)
             }
         },
         viewPromotion: async (_, {id}) => {
@@ -313,5 +357,8 @@ async function getPromotionUserRelation(userId, promotions = null) {
         }
     }
 }
+const getPropValues = (o, prop) =>
+    (res => (JSON.stringify(o, (key, value) =>
+        (key === prop && res.push(value), value)), res))([]);
 
 module.exports = resolvers;
