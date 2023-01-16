@@ -6,7 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/userRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/userRelations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/promotion/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/type.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -270,7 +275,8 @@
       <workItem from="1673522366590" duration="1763000" />
       <workItem from="1673529943816" duration="387000" />
       <workItem from="1673609403338" duration="2717000" />
-      <workItem from="1673729033923" duration="9056000" />
+      <workItem from="1673729033923" duration="19009000" />
+      <workItem from="1673889212273" duration="4959000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

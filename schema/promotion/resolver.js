@@ -15,6 +15,7 @@ import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
 import {Roles, Status, Verified} from "../../constants/enums";
 import promotion from "../../models/promotion";
+import {getPromotionUserRelation, getPropValues} from '../../helpers/userRelations'
 
 let fetchData = async () => {
     return await Promotion.find({}).notDeleted();
@@ -336,29 +337,5 @@ const resolvers = {
         }
     },
 }
-
-async function getPromotionUserRelation(userId, promotions = null) {
-    console.log("userId: 👨🏻 ‍🎨", userId)
-    if (promotions) {
-        console.log("userId:", userId)
-        if (Array.isArray(promotions)) {
-            for (const promotion of promotions) {
-                const i = promotions.indexOf(promotion);
-                let relation = await promotion.getRelation(userId)
-                promotions[i]._doc.user = relation;
-                promotions[i].user = relation;
-            }
-        } else {
-            console.log("userId:", userId)
-            let relation = await promotions.getRelation(userId)
-            console.log("relation:", relation)
-            promotions._doc.user = relation;
-            promotions.user = relation;
-        }
-    }
-}
-const getPropValues = (o, prop) =>
-    (res => (JSON.stringify(o, (key, value) =>
-        (key === prop && res.push(value), value)), res))([]);
 
 module.exports = resolvers;

@@ -41,6 +41,8 @@ const promotionTypeDefs = gql`
         startDate: String,
         endDate: String,
         user:String,
+        createdAt:String,
+        updatedAt:String,
 
     }
     

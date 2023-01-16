@@ -14,7 +14,7 @@ import brand from "../../models/brand";
 import Subscription from "../../models/subscription";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
-
+import {getBrandUserRelation, arrayRemove, getShopUserRelation} from '../../helpers/userRelations'
 
 const resolvers = {
     Brand: {
@@ -36,8 +36,10 @@ const resolvers = {
         tags: async (parent) => {
             return await Tag.find({_id: {$in: parent.tags}});
         },
-        brandShops: async (parent) => {
-            return await Shop.find({_id: {$in: parent.brandShops}});
+        brandShops: async (parent,_, {user}) => {
+            let shops = await Shop.find({_id: {$in: parent.brandShops}});
+            await getShopUserRelation(user.id, shops);
+            return shops
         },
         admins: async (parent) => {
             return await User.find({_id: {$in: parent.admins}});
@@ -496,30 +498,6 @@ const resolvers = {
             }
         }
     },
-}
-
-function arrayRemove(arr, value) {
-
-    return arr.filter(function (ele) {
-        return ele != value;
-    });
-}
-
-async function getBrandUserRelation(userId, brands = null) {
-    if (brands) {
-        if (Array.isArray(brands)) {
-            for (const brand of brands) {
-                const i = brands.indexOf(brand);
-                let relation = await brand.getRelation(userId)
-                brands[i]._doc.user = relation;
-                brands[i].user = relation;
-            }
-        } else {
-            let relation = await brands.getRelation(userId)
-            brands._doc.user = relation;
-            brands.user = relation;
-        }
-    }
 }
 
 module.exports = resolvers;

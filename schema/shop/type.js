@@ -63,6 +63,8 @@ const shopTypeDefs = gql`
         verifiedBy: User,
         promotions: [Promotion],
         user:String,
+        createdAt:String,
+        updatedAt:String,
 #        offers: [Offer]
     }
     

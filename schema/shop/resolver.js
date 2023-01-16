@@ -9,6 +9,7 @@ import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
 import Subscription from "../../models/subscription";
 import BrandRoleBaseAccessInvite from "../../models/brandRoleBaseAccessInvite";
+import {getShopUserRelation, arrayRemove} from '../../helpers/userRelations'
 
 const {
     EmailRules,
@@ -498,29 +499,5 @@ const resolvers = {
     },
 }
 
-async function getShopUserRelation(userId, shops = null) {
-    if (shops) {
-        console.log("userId:", userId)
-        if (Array.isArray(shops)) {
-            for (const shop of shops) {
-                const i = shops.indexOf(shop);
-                let relation = await shop.getRelation(userId)
-                shops[i]._doc.user = relation;
-                shops[i].user = relation;
-            }
-        } else {
-            let relation = await shops.getRelation(userId)
-            shops._doc.user = relation;
-            shops.user = relation;
-        }
-    }
-}
-
-function arrayRemove(arr, value) {
-
-    return arr.filter(function (ele) {
-        return ele != value;
-    });
-}
 
 module.exports = resolvers;
