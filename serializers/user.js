@@ -38,6 +38,7 @@ const serializeUser = user => pick(user, [
     'avatar',
     'type',
     'kyc',
+    'twoFactorEnabled',
 ]);
 
 const serializeEmail = user => pick(user, [
