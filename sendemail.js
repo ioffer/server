@@ -42,10 +42,3 @@ async function sendMail() {
 sendMail()
     .then((result) => console.log('Email sent...', result))
     .catch((error) => console.log(error.message));
-
- //            user:'dappslab.com@gmail.com',
- //            clientId: '',
- //            clientSecret: '',
- //            refreshToken: '',
- //            accessToken: 'ya29.a0AX9GBdVz98kd_rcq6KTaWDhnhT5tFhnMiRA_mOWbYh_UH6pMzoiBQhMLn46OPRh7yFypX9SFzP9svv2e0_70J8jozJ3dxH6lS7FtuQ3I8nKSrHTtmpUrElf4ACDQWsIC9mrUFuOYsydPpnykelAs8S79jnrlaCgYKAfUSARASFQHUCsbCLsg0aqMOLohKP0NCFFzOdw0163'
- //
