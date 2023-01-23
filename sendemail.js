@@ -1,77 +1,58 @@
-import {GMAIL_USER,GMAIL_PASSWORD, GOOGLE_REFRESH_TOKEN, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URL,GOOGLE_CLIENT_ID} from "../config"
-import nodemailer from "nodemailer";
-import {google} from "googleapis"
+
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+//accesstoken = ya29.a0AX9GBdWilJuBtrplPbhDEXCnlK2sWQia3msZ7tnvUhHnvqnZyDFS5frnaW1BqMNx2JgnLSlqcOBjhvcF7xJ0zpuxVaigaSu6U-BM9K1QFpD2CqllmF8P-V8ppqmjrX5YiinBOaYR1WuXfkSd35U5mHed-F_5aCgYKAY4SARASFQHUCsbCpadc3RfumlFSp86sYZcx8A0163
+// These id's and secrets should come from .env file.
+const CLIENT_ID = '29505227254-tbac2dam9vscrkdv3c3feh0ugbjn08mr.apps.googleusercontent.com';
+const CLEINT_SECRET = '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';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = '1//04SJYEJJSFt6-CgYIARAAGAQSNwF-L9IrYXGs3EtcDKL2Yq4OKjmgPdeII8gZRe7LvDh7gISNqPxnbXKLK3KJRxmp-7LiREChLyM';
 
 const oAuth2Client = new google.auth.OAuth2(
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET,
-    GOOGLE_REDIRECT_URL
+    CLIENT_ID,
+    CLEINT_SECRET,
+    REDIRECT_URI
 );
-oAuth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
-// async.await is not allowed in global scope, must use a wrapper
-export async function sendEmail(email,link,html) {
-    // Generate test SMTP service account from ethereal.email
-    // Only needed if you don't have a real mail account for testing
-    // const testAccount = await nodemailer.createTestAccount();
-    console.log("here")
-    const accessToken = await oAuth2Client.getAccessToken();
-    console.log("here2")
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
+async function sendMail() {
+    try {
+        const accessToken = await oAuth2Client.getAccessToken();
 
-    // create reusable transporter object using the default SMTP transport
-    const transporter = nodemailer.createTransport({
-        service:'gmail',
-        // host: "smtp.ethereal.email",
-        // port: 587,
-        // secure: false, // true for 465, false for other ports
-        auth: {
-            type: 'OAuth2',
-            user: GMAIL_USER , // generated ethereal user
-            // pass: GMAIL_PASSWORD, // generated ethereal password
-            clientId: GOOGLE_CLIENT_ID,
-            clientSecret: GOOGLE_CLIENT_SECRET,
-            refreshToken: GOOGLE_REFRESH_TOKEN,
-            accessToken: accessToken,
-        },
-    });
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: 'dappslab.com@gmail.com',
+                clientId: CLIENT_ID,
+                clientSecret: CLEINT_SECRET,
+                refreshToken: REFRESH_TOKEN,
+                accessToken: accessToken,
+            },
+        });
 
-    const mailOptions = {
-        from: '"IOffer 👻" <DappsLab@example.com>',
-        to: email,
-        subject: "IOffer",
-        text: link,
-        html: html,
+        const mailOptions = {
+            from: 'dappslab.com@gmail.com',
+            to: 'qasimmehmood13936@gmail.com',
+            subject: 'Hello from gmail using API',
+            text: 'Hello from gmail email using API',
+            html: '<h1>Hello from gmail email using API</h1>',
+        };
+
+        const result = await transport.sendMail(mailOptions);
+        return result;
+    } catch (error) {
+        return error;
     }
-    // send mail with defined transport object
-
-
-
-    try{
-        const info = await transporter.sendMail(mailOptions);
-        return true;
-    }catch (err){
-        console.log("Sending mail Error:",err)
-        return false
-    }
-
-    // return new Promise(async (resolve, reject) => {
-    //     try {
-    //         const send = await new Promise((resolve, reject) => {
-    //             transporter.sendMail(mailOptions,(err,data)=>{
-    //                 if(err){
-    //                     console.log("error:",err);
-    //                     reject(err)
-    //                 }else{
-    //                     resolve(data);
-    //                 }
-    //             });
-    //         })
-    //         // resolve(send)
-    //         return true
-    //     }
-    //     catch (e) {
-    //         reject(e)
-    //         // return false
-    //     }
-    // })
 }
+
+sendMail()
+    .then((result) => console.log('Email sent...', result))
+    .catch((error) => console.log(error.message));
+
+ //            user:'dappslab.com@gmail.com',
+ //            clientId: '',
+ //            clientSecret: '',
+ //            refreshToken: '',
+ //            accessToken: 'ya29.a0AX9GBdVz98kd_rcq6KTaWDhnhT5tFhnMiRA_mOWbYh_UH6pMzoiBQhMLn46OPRh7yFypX9SFzP9svv2e0_70J8jozJ3dxH6lS7FtuQ3I8nKSrHTtmpUrElf4ACDQWsIC9mrUFuOYsydPpnykelAs8S79jnrlaCgYKAfUSARASFQHUCsbCLsg0aqMOLohKP0NCFFzOdw0163'
+ //
