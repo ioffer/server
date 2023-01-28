@@ -5,31 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
-      <change afterPath="$PROJECT_DIR$/helpers/handleNotification.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ioffer-366108-firebase-adminsdk-pyull-c24d28d114.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/notification.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/userNotification.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/notification/query.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/notification/resolver.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/notification/type.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/firebase-admin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/constants/enums.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth2.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/constants/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/constants/enums.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/typeDefs.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/typeDefs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/user/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/user/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serializers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serializers/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,7 +277,7 @@
       <workItem from="1674456235638" duration="1145000" />
       <workItem from="1674457727649" duration="21191000" />
       <workItem from="1674586895638" duration="12520000" />
-      <workItem from="1674817056146" duration="30010000" />
+      <workItem from="1674817056146" duration="32078000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

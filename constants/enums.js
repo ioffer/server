@@ -26,6 +26,14 @@ export const Models = {
     BrandRoleBaseAccessInvite: 'BrandRoleBaseAccessInvite',
     ShopRoleBaseAccessInvite: 'ShopRoleBaseAccessInvite',
 }
+export const ModelsCollections = {
+    User: 'users',
+    Promotion: 'promotions',
+    Brand: 'brands',
+    Shop: 'shops',
+    BrandRoleBaseAccessInvite: 'brand_role_base_access_invites',
+    ShopRoleBaseAccessInvite: 'shop_role_base_access_invites',
+}
 export const Status = {
     PENDING: 'PENDING',
     NOT_SUBMITTED: 'NOT_SUBMITTED',

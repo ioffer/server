@@ -1,3 +1,4 @@
+import {ModelsCollections} from "../../constants/enums";
 
 const mongoose = require('mongoose');
 import {User, Notification, UserNotification} from "../../models";
@@ -8,9 +9,13 @@ import {createNotification} from "../../helpers/handleNotification";
 const resolvers = {
     Notification: {
         entityData: async (parent) => {
-            let entityData = await mongoose.model(parent.entityType).findById(parent.entity)
+            let entityData = await mongoose.model(ModelsCollections[parent.entityType]).findById(parent.entity)
             console.log("entityData:", entityData)
+            entityData.__typename = parent.entityType
             return entityData
+        },
+        sender: async (parent) => {
+            return await User.findById(parent.sender);
         },
     },
     UserNotification: {
@@ -19,6 +24,11 @@ const resolvers = {
         },
         user: async (parent) => {
             return await User.findById(parent.user);
+        },
+    },
+    Entity: {
+        __resolveType(obj) {
+            return obj.__typename;
         },
     },
     Query: {
@@ -32,7 +42,9 @@ const resolvers = {
             if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            return await UserNotification.find({user:user.id}).notDeleted();
+            let userNotifications = await UserNotification.find({user:user.id}).notDeleted();
+            console.log("userNotifications:", userNotifications)
+            return userNotifications;
         },
 
     },
@@ -58,7 +70,8 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await UserNotification.findOneAndUpdate({_id: id}, {isSeen:true}, {new: true});
+                await UserNotification.findOneAndUpdate({_id: id}, {isSeen:true}, {new: true});
+                return true
             } catch (err) {
                 return new ApolloError(err, 500);
             }
@@ -68,7 +81,8 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                return await UserNotification.findOneAndUpdate({_id: id}, {isDeleted:true}, {new: true});
+                await UserNotification.findOneAndUpdate({_id: id}, {isDeleted:true}, {new: true});
+                return true
             } catch (err) {
                 return new ApolloError(err, 500);
             }
