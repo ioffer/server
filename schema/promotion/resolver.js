@@ -1,21 +1,10 @@
 import {User, Shop, Promotion, Tag, Brand, Category, Media} from "../../models";
-import lodash from 'lodash'
-
-const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
-const {
-    UserRegisterationRules,
-    UserAuthenticationRules,
-    EmailRules,
-    PasswordRules,
-    UserRules
-} = require('../../validations');
-import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
+import {ApolloError, AuthenticationError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
-import {sendEmail} from "../../utils/sendEmail";
-import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
-import {Roles, Status, Verified} from "../../constants/enums";
-import promotion from "../../models/promotion";
+import {Models, Roles, Status, Verified} from "../../constants/enums";
 import {getPromotionUserRelation, getPropValues} from '../../helpers/userRelations'
+import {createNotification, getAllUsersWithNotificationToken} from "../../helpers/handleNotification";
+import notification from "../../models/notification";
 
 let fetchData = async () => {
     return await Promotion.find({}).notDeleted();
@@ -214,6 +203,20 @@ const resolvers = {
                 }
             }
             await Shop.updateMany({_id: {$in: newPromotion.shops}}, {$push: {promotions: promotion.id}});
+            if(newPromotion.status === Status.PUBLISHED){
+                let notificationsUsers = await getAllUsersWithNotificationToken();
+                let notification = {
+                    description: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
+                    entity: promotion.id,
+                    entityType: Models.Promotion,
+                    link: `http://localhost:3000/promotion/details/${promotion.id}`,
+                    messageBody: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
+                    messageTitle: `${brand?brand.name:shops[0].name}`,
+                    title: `${brand?brand.name:shops[0].name}`,
+                    sender:user.id,
+                }
+                await createNotification(notification,notificationsUsers);
+            }
             return await promotion.save()
         },
         editPromotion: async (_, {id, newPromotion}, {user}) => {
@@ -266,6 +269,21 @@ const resolvers = {
                 }
             }
             await Shop.updateMany({_id: {$in: newPromotion.shops}}, {$push: {promotions: promotion.id}});
+            if(newPromotion.status === Status.PUBLISHED){
+                let notificationsUsers = await getAllUsersWithNotificationToken();
+                let notification = {
+                    description: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
+                    entity: promotion.id,
+                    entityType: Models.Promotion,
+                    link: `http://localhost:3000/promotion/details/${promotion.id}`,
+                    messageBody: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
+                    messageTitle: `${brand?brand.name:shops[0].name}`,
+                    title: `${brand?brand.name:shops[0].name}`,
+                    sender:user.id,
+                }
+                console.log("notification 📩:", notification)
+                await createNotification(notification,notificationsUsers);
+            }
             return Promotion.findByIdAndUpdate(id, {...newPromotion}, {new: true});
         },
         deletePromotion: async (_, {id}, {user}) => {

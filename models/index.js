@@ -21,6 +21,8 @@ export {default as Category} from './category';
 export {default as Link} from './link';
 export {default as Media} from './media';
 export {default as Tag} from './tag';
+export {default as Notification} from './notification';
+export {default as UserNotification} from './userNotification';
 
 //
 // let Models = {}

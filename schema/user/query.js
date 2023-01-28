@@ -16,6 +16,7 @@ const userQuery = gql`
     extend type Mutation {
         verifyKyc(id:ID!):Boolean @isAuth,
         cancelKyc(id:ID!):Boolean @isAuth,
+        updateNotificationToken(token:String):Boolean @isAuth,
         registerUser(newUser: UserRegisterInput!): AuthUser!,
         editUser(newUser: UserInput!): User @isAuth,
         confirmEmail(token: String!): Boolean!,

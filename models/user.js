@@ -38,6 +38,14 @@ const userSchema = new Schema({
         type: String,
         default: ""
     },
+    notificationToken: {
+        type: String,
+        default: null,
+    },
+    haveNotificationToken: {
+        type: Boolean,
+        default: false,
+    },
     type: {
         type: String,
         enum:Roles,

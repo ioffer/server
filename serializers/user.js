@@ -14,6 +14,13 @@ const issueAuthToken = async (jwtPayload) => {
     return `Bearer ${token}`;
 };
 
+const issue2FAAuthToken = async (jwtPayload) => {
+    let token = await sign(jwtPayload, SECRET, {
+        expiresIn: 1800
+    });
+    return `Bearer ${token}`;
+};
+
 const issueConfirmEmailToken = async (jwtPayload) => {
     let token = await sign(jwtPayload, SECRET, {
         expiresIn: 3600 * 24
@@ -47,4 +54,4 @@ const serializeEmail = user => pick(user, [
 ]);
 
 
-module.exports = {issueAuthToken, serializeUser, issueConfirmEmailToken, serializeEmail, issueShopInviteToken};
+module.exports = {issueAuthToken, serializeUser, issueConfirmEmailToken, serializeEmail, issueShopInviteToken, issue2FAAuthToken};

@@ -3,7 +3,7 @@ import {find} from "lodash"
 
 const {SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
-const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
+const {serializeUser, issueAuthToken, serializeEmail, issue2FAAuthToken} = require('../../serializers')
 const {
     UserRegisterationRules,
     UserAuthenticationRules,
@@ -37,16 +37,16 @@ const resolvers = {
             return brands
         },
         favorites: async (parent) => {
-            return await Favorite.findById( parent.favorites)
+            return await Favorite.findById(parent.favorites)
         },
         pins: async (parent) => {
-            return await Pin.findById( parent.pins)
+            return await Pin.findById(parent.pins)
         },
         subscriptions: async (parent) => {
-            return await UserSubscription.findById( parent.subscriptions)
+            return await UserSubscription.findById(parent.subscriptions)
         },
         roleBasedAccess: async (parent) => {
-            return await RoleBaseAccess.findById( parent.roleBasedAccess)
+            return await RoleBaseAccess.findById(parent.roleBasedAccess)
         }
     },
     Query: {
@@ -56,13 +56,11 @@ const resolvers = {
         version: () => {
             return "0.0.1";
         },
-        me: async (_, {}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
+        me: async (_, {}, {user, isAuth}) => {
+            console.log("isAuth:", isAuth)
             try {
                 let res = await User.findById(user.id)
-                console.log("User",res);
+                console.log("User", res);
                 return res;
             } catch (err) {
                 throw new ApolloError(err)
@@ -104,7 +102,19 @@ const resolvers = {
 
             user = await serializeUser(user);
             // Issue Token
-            let token = await issueAuthToken(user);
+            let token = null;
+            if (user.twoFactorEnabled) {
+                token = issue2FAAuthToken({
+                    id: user.id,
+                    twoFactorSecret: user.twoFactorSecret,
+                    authStatus: 'NO_AUTH'
+                })
+            } else {
+                token = await issueAuthToken({
+                    ...user,
+                    authStatus: 'AUTH'
+                });
+            }
             return {
                 user,
                 token,
@@ -165,6 +175,17 @@ const resolvers = {
                     }
                     return new ApolloError("Super Admin Cannot be Blocked", 403)
                 }
+            } catch (err) {
+                return new ApolloError(err, 500)
+            }
+        },
+        updateNotificationToken: async (_, {token}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                await User.findByIdAndUpdate(user.id, {notificationToken: token, haveNotificationToken:true});
+                return true;
             } catch (err) {
                 return new ApolloError(err, 500)
             }
@@ -516,7 +537,7 @@ const resolvers = {
                 user.subscriptions = userSubscription.id;
                 user.pins = pin.id;
                 user.roleBasedAccess = roleBaseAccess.id;
-                console.log('User:',user)
+                console.log('User:', user)
                 // let result = await user.save();
                 let result = user
 
@@ -529,7 +550,7 @@ const resolvers = {
                 let emailHtml = await emailConfirmationBody(result.fullName, emailLink);
                 try {
                     await sendEmail(result.email, emailLink, emailHtml);
-                }catch (e) {
+                } catch (e) {
                     console.error(e)
                 }
 

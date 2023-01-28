@@ -16,7 +16,14 @@ const enumsTypeDefs = gql`
         ACCEPTED
         EXPIRED
     }
-
+    enum Model {
+        User
+        Promotion
+        Brand
+        Shop
+        BrandRoleBaseAccessInvite
+        ShopRoleBaseAccessInvite
+    }
     enum Role {
         SUPER_ADMIN
         ADMIN
@@ -50,6 +57,8 @@ const enumsTypeDefs = gql`
         VIDEO_THUMBNAIL
     }
 
+    union Entity = User |Promotion |Brand |Shop |BrandRoleBaseAccessInvite |ShopRoleBaseAccessInvite
+    
     type MessageResponse {
         message: String!
         success: Boolean

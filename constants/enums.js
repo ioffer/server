@@ -18,6 +18,14 @@ export const Roles = {
     OWNER: 'OWNER',
     USER: 'USER',
 }
+export const Models = {
+    User: 'User',
+    Promotion: 'Promotion',
+    Brand: 'Brand',
+    Shop: 'Shop',
+    BrandRoleBaseAccessInvite: 'BrandRoleBaseAccessInvite',
+    ShopRoleBaseAccessInvite: 'ShopRoleBaseAccessInvite',
+}
 export const Status = {
     PENDING: 'PENDING',
     NOT_SUBMITTED: 'NOT_SUBMITTED',

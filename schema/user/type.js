@@ -28,6 +28,7 @@ const userTypeDefs = gql`
         status(status:Status):String,
         resetPasswordToken: String,
         emailConfirmToken: String,
+        notificationToken: String,
         twoFactorEnabled:Boolean!,
         twoFactorSecret:String!,
         twoFactorCode: String,
