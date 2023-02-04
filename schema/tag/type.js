@@ -6,8 +6,9 @@ const tagTypeDefs = gql`
     type Tag {
         id: ID,
         title: String,
-        shops: [Shop],
-        brands: [Brand],
+        shops:[Shop],
+        brands:[Brand],
+        promotions:[Promotion],
         createdAt: String,
         updatedAt: String,
     }

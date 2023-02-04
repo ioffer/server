@@ -45,6 +45,7 @@
     "process": "^0.11.10",
     "qrcode": "^1.5.0",
     "speakeasy": "^2.0.0",
+    "uuid": "^9.0.0",
     "yup": "^0.32.11"
   },
   "resolutions": {

@@ -4,6 +4,13 @@ import {error} from "logrocket";
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+function getSlug(slug) {
+    return slug;
+}
+function setSlug(slug) {
+    return slug
+}
+
 const shopSchema = new Schema({
     name: String,
     category: [{
@@ -27,6 +34,12 @@ const shopSchema = new Schema({
         ref: 'tags'
     }],
     website: String,
+    slug: {
+        type: String,
+        default: "",
+        get: getSlug,
+        set: setSlug
+    },
     email: String,
     phoneNumber: String,
     mobileNumber: String,
@@ -124,13 +137,15 @@ shopSchema.methods.getRelation = function (userId) {
     }
 }
 
-// shopSchema.virtual('user').get(function (){
-//     console.log('virtual user')
-//     return null
-// })
 
 shopSchema.query.byName = function (name) {
     return this.where({name: new RegExp(name, 'i')})
+}
+shopSchema.query.search = function (filter={}) {
+    return this.where(filter)
+}
+shopSchema.query.paginate = function (options) {
+    return this.where(options.where).limit(options.limit).skip(options.offset).sort(options.sort)
 }
 shopSchema.query.byEmail = function (email) {
     return this.where({email: new RegExp(email, 'i')})

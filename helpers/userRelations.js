@@ -1,4 +1,3 @@
-
 export const arrayRemove = async (arr, value) => {
     return arr.filter(function (ele) {
         return ele != value;
@@ -21,7 +20,7 @@ export const getBrandUserRelation = async (userId, brands = null) => {
         }
     }
 }
-export const getShopUserRelation= async (userId, shops = null) =>{
+export const getShopUserRelation = async (userId, shops = null) => {
     if (shops) {
         console.log("userId:", userId)
         if (Array.isArray(shops)) {
@@ -39,7 +38,7 @@ export const getShopUserRelation= async (userId, shops = null) =>{
     }
 }
 
-export const getPromotionUserRelation= async (userId, promotions = null) => {
+export const getPromotionUserRelation = async (userId, promotions = null) => {
     console.log("userId: 👨🏻 ‍🎨", userId)
     if (promotions) {
         console.log("userId:", userId)
@@ -57,6 +56,50 @@ export const getPromotionUserRelation= async (userId, promotions = null) => {
             promotions._doc.user = relation;
             promotions.user = relation;
         }
+    }
+}
+
+export const getOptionsArguments = (options) => {
+    let where = {}, sort = {}, page = 1, limit = 20;
+    if (options) {
+        where = options.where
+        sort = options.sort
+        console.log("options:", options)
+        if (options.paginationOptions) {
+            page = options.paginationOptions.page
+            limit = options.paginationOptions.limit
+        }
+    }
+
+    if (page === null || page === undefined) {
+        page = 1
+    }
+    if (limit === null || limit === undefined) {
+        limit = 20
+    }
+    if (where === null || where === undefined) {
+        where = {}
+    } else {
+        try {
+            where = JSON.parse(where)
+        }catch (e) {
+            where = {}
+        }
+    }
+    if (sort === null || sort === undefined) {
+        sort = {}
+    } else {
+        try {
+            sort = JSON.parse(sort)
+        }catch (e) {
+            sort = {}
+        }
+    }
+    return {
+        page,
+        limit,
+        sort,
+        where
     }
 }
 

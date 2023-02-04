@@ -30,7 +30,8 @@ const resolvers = {
         shops: async (parent) => {
             return await Shop.find({"owner": parent.id})
         },
-        brands: async (parent) => {
+        brands: async (parent,args) => {
+            console.log("Args:",args)
             console.log("Brands:", parent.brands)
             let brands = await Brand.find({"owner": parent.id})
             console.log("Brands:", brands)
@@ -57,7 +58,9 @@ const resolvers = {
             return "0.0.1";
         },
         me: async (_, {}, {user, isAuth}) => {
-            console.log("isAuth:", isAuth)
+            if(!isAuth){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 let res = await User.findById(user.id)
                 console.log("User", res);

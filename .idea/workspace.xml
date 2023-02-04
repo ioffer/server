@@ -5,7 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change afterPath="$PROJECT_DIR$/helpers/modelsHelpers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/constants/enums.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/handleNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/handleNotification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/userRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/userRelations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/brand.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/brand.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/category.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/category.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/tag.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/tag.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/userNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/userNotification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/brand/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/category/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/category/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/constants/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/constants/enums.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/tag/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/tag/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/user/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/paginator.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/paginator.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,26 +120,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Project.color": "590449",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "16.13.2",
-    "javascript.nodejs.core.library.typings.version": "16.11.58",
-    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer/ioffer-server/schema",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
-    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/222.3345.108/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Project.color&quot;: &quot;590449&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.13.2&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.18.11&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer/ioffer-server/schema&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/222.3345.108/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/schema" />
@@ -274,7 +301,13 @@
       <workItem from="1674456235638" duration="1145000" />
       <workItem from="1674457727649" duration="21191000" />
       <workItem from="1674586895638" duration="12520000" />
-      <workItem from="1674817056146" duration="37245000" />
+      <workItem from="1674817056146" duration="85450000" />
+      <workItem from="1675252008634" duration="98000" />
+      <workItem from="1675252122912" duration="680000" />
+      <workItem from="1675252829314" duration="87000" />
+      <workItem from="1675252928295" duration="66000" />
+      <workItem from="1675253003436" duration="59247000" />
+      <workItem from="1675508690274" duration="10527000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

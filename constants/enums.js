@@ -1,3 +1,5 @@
+import UserNotification from "../models/userNotification";
+
 export const LinkTypes = {
     SOCIAL: 'SOCIAL',
 }
@@ -25,14 +27,18 @@ export const Models = {
     Shop: 'Shop',
     BrandRoleBaseAccessInvite: 'BrandRoleBaseAccessInvite',
     ShopRoleBaseAccessInvite: 'ShopRoleBaseAccessInvite',
+    UserNotification:'UserNotification'
 }
 export const ModelsCollections = {
     User: 'users',
     Promotion: 'promotions',
     Brand: 'brands',
     Shop: 'shops',
+    Tag: 'tags',
+    Category: 'categories',
     BrandRoleBaseAccessInvite: 'brand_role_base_access_invites',
     ShopRoleBaseAccessInvite: 'shop_role_base_access_invites',
+    UserNotification:'user_notifications'
 }
 export const Status = {
     PENDING: 'PENDING',

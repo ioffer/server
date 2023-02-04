@@ -31,6 +31,11 @@ const notificationTypeDefs = gql`
         isDeleted:Boolean!,
     }
     
+    type UserNotifications{
+        userNotifications: [UserNotification],
+        pagination:Pagination,
+    }
+    
 `;
 
 

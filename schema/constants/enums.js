@@ -64,6 +64,33 @@ const enumsTypeDefs = gql`
         success: Boolean
     },
 
+    input PaginationOptions {
+        page: Int,
+        limit: Int,
+    },
+
+    input Options {
+        paginationOptions: PaginationOptions,
+        where: String,
+        sort: String,
+    },
+    
+    type Pagination {
+        currentPage: Int,
+        previousPage:Int,
+        nextPage:Int,
+        firstPage:Int,
+        lastPage: Int,
+        limit: Int,
+        offset:Int,
+        totalPages:Int,
+        totalRecords:Int,
+        fromRecord:Int,
+        toRecord:Int,
+    }
+    
+    
+
 `;
 
 module.exports = enumsTypeDefs;

@@ -6,7 +6,7 @@ import {
     emailBrandInviteUrl,
     emailInviteBody
 } from "../../utils/emailConfirmationUrl";
-import {Roles, Verified, Status} from "../../constants/enums";
+import {Roles, Verified, Status, ModelsCollections, Models} from "../../constants/enums";
 import BrandRoleBaseAccessInvite from "../../models/brandRoleBaseAccessInvite";
 import {EmailRules} from "../../validations";
 import RoleBaseAccess from "../../models/roleBaseAccess";
@@ -14,7 +14,13 @@ import brand from "../../models/brand";
 import Subscription from "../../models/subscription";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
-import {getBrandUserRelation, arrayRemove, getShopUserRelation} from '../../helpers/userRelations'
+import {getBrandUserRelation, arrayRemove, getShopUserRelation, getOptionsArguments} from '../../helpers/userRelations'
+import {getPaginations} from "../../utils/paginator";
+import {modelArrayManager} from "../../helpers/modelsHelpers";
+import {
+    createNotification, getAllModeratorsWithNotificationToken,
+    getAllUsersWithNotificationToken
+} from "../../helpers/handleNotification";
 
 const resolvers = {
     Brand: {
@@ -36,7 +42,7 @@ const resolvers = {
         tags: async (parent) => {
             return await Tag.find({_id: {$in: parent.tags}});
         },
-        brandShops: async (parent,_, {user}) => {
+        brandShops: async (parent, _, {user}) => {
             let shops = await Shop.find({_id: {$in: parent.brandShops}});
             await getShopUserRelation(user.id, shops);
             return shops
@@ -65,8 +71,15 @@ const resolvers = {
 
     },
     Query: {
-        brands: async (_, {offset}, {user}) => {
-            if (!user) {
+        brands: async (_, {options}, {user, isAuth}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             user = await User.findById(user.id).populate('roleBasedAccess');
@@ -81,24 +94,53 @@ const resolvers = {
                 userBrands[index] = brand.toString();
             })
             userBrands = new Set([...userBrands])
-            let brands = await Brand.find({_id: {$in: [...userBrands]}});
+            where = {
+                ...where,
+                _id: {$in: [...userBrands]}
+            }
+            let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let brands = await Brand.find({_id: {$in: [...userBrands]}}).paginate(options);
             await getBrandUserRelation(user.id, brands)
-            return brands;
+            return {brands, pagination};
         },
-        allBrands: async (_, {}, {user}) => {
-            if (!user) {
+        allBrands: async (_, {options}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             } else {
                 if (user.role !== Roles.SUPER_ADMIN) {
                     return new ApolloError("User Must Be Super Admin", '400')
                 }
-                return await Brand.find({});
+                options = getOptionsArguments(options)
+                let {
+                    page,
+                    limit,
+                    sort,
+                    where
+                } = options;
+                let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
+                options["offset"] = pagination.offset;
+                let brands = await Brand.find({}).paginate(options);
+                return {brands, pagination}
             }
         },
-        publishedBrands: async () => {
-            return await Brand.find({}).published();
+        publishedBrands: async (_, {options}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                status: Status.PUBLISHED
+            }
+            let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            return await Brand.find({}).paginate(options).published();
         },
-        brandById: async (_, {id}, {user}) => {
+        brandById: async (_, {id}, {user, isAuth}) => {
             let brand = await Brand.findById(id);
             if (user) {
                 await getBrandUserRelation(user.id, brand)
@@ -106,70 +148,130 @@ const resolvers = {
             if (brand.status === Status.PUBLISHED || brand.user || user.role === Roles.SUPER_ADMIN) {
                 return brand;
             }
-            if (!user) {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided for unpublished brand")
             } else {
                 return new ApolloError("Brand Not Found", '404')
             }
 
         },
-        searchPendingBrands: async (_, {}, {user}) => {
-            let brands = await Brand.find({}).pending();
+        searchPendingBrands: async (_, {options}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.role !== Roles.SUPER_ADMIN) {
+                return new ApolloError("User Must Be Super Admin", '400')
+            }
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                verified:Verified.PENDING
+            }
+            let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let brands = await Brand.find({}).paginate(options).pending();
             await getBrandUserRelation(user.id, brands);
-            return brands;
+            return {brands, pagination};
         },
-        searchBlockedBrands: async (_, {}, {user}) => {
-            let brands = await Brand.find({}).blocked();
+        searchBlockedBrands: async (_, {options}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.role !== Roles.SUPER_ADMIN) {
+                return new ApolloError("User Must Be Super Admin", '400')
+            }
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                isBlocked: true
+            }
+            let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let brands = await Brand.find({}).paginate(options).blocked();
             await getBrandUserRelation(user.id, brands);
-            return brands;
+            return {brands, pagination};
         },
         moderatorsByBrandId: async (_, {id}, {user}) => {
             let brand = await Brand.findById(id);
-            if (!brand){
+            if (!brand) {
                 return new ApolloError("Brand Not Found", '404')
             }
-            let  brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.find({_id: {$in: brand.roleBaseAccessInvites}});
+            let brandRoleBaseAccessInvite = await BrandRoleBaseAccessInvite.find({_id: {$in: brand.roleBaseAccessInvites}});
             return brandRoleBaseAccessInvite
         }
 
     },
     Mutation: {
-        createBrand: async (_, {newBrand}, {user}) => {
-            if (!user) {
+        createBrand: async (_, {newBrand}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            console.log("user: " + user)
             try {
-                let tags = [];
-                if (newBrand.tags) {
-                    tags = [...new Set(newBrand.tags)];
-                }
+                let slug = newBrand.name
+
                 let brand = Brand({
                     ...newBrand,
-                    tags,
                     owner: user.id,
                     publishingDateTime: dateTime()
                 })
-                console.log("brand", brand);
-                if (tags) {
-                    for (let i = 0; i < tags.length; i++) {
-                        if (tags[i] !== "") {
-                            let tag = await Tag.findById(tags[i]);
-                            if (!tag.brands.includes(brand.id)) {
-                                tag.brands.push(brand.id);
-                                let tagData = await tag.save();
-                                console.log("tagData", tagData);
-                            }
-                        }
+                if (newBrand.tags) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Tag, "brands", [], newBrand.tags, brand.id);
+                    if (!status) {
+                        return new ApolloError("Error in Tag Manager", '500');
                     }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    brand.tags = newArray;
                 }
+                if (newBrand.category) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "brands", [], newBrand.category, brand.id);
+                    if (!status) {
+                        return new ApolloError("Error in Catergory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    brand.category = newArray
+                }
+                if (newBrand.subCategory) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "brands", [], newBrand.subCategory, brand.id);
+                    if (!status) {
+                        return new ApolloError("Error in Subcategory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    brand.subCategory = newArray
+                }
+                brand.slug = slug;
                 let result = await brand.save();
-                console.log("result", result);
-                console.log("user3", user);
                 let userRes = await User.findById(user._id);
-                console.log('response:', userRes)
                 userRes.brands.push(result.id);
-                console.log('response2:', userRes)
                 await userRes.save();
                 return result;
             } catch (err) {
@@ -177,24 +279,8 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        editBrand: async (_, {id, newBrand}, {user}) => {
-            if (!user) {
-                return new AuthenticationError("Authentication Must Be Provided")
-            }
-            try {
-                if (newBrand.tags) {
-                    let tagsSet = new Set(newBrand.tags);
-                    tagsSet.delete('')
-                    newBrand.tags = [...tagsSet];
-                }
-                console.log("newBrand", newBrand)
-                return await Brand.findOneAndUpdate({_id: id}, newBrand, {new: true});
-            } catch (err) {
-                return new ApolloError(err, 500);
-            }
-        },
-        deleteBrand: async (_, {id}, {user}) => {
-            if (!user) {
+        deleteBrand: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
@@ -204,37 +290,163 @@ const resolvers = {
                 return new ApolloError(err, 500);
             }
         },
-        archiveBrand: async (_, {id}, {user}) => {
-            if (!user) {
+        editBrand: async (_, {id, newBrand}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await Brand.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
+                let brand = await Brand.findById(id);
+                let slug = brand.name;
+                let preTags = brand.tags
+                let preCategories = brand.category
+                let preSubCategories = brand.subCategory
+                if (newBrand.tags) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Tag, "brands", preTags, newBrand.tags, brand.id);
+                    if (!status) {
+                        return new ApolloError("Error in Tag Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    newBrand.tags = newArray;
+                }
+                if (newBrand.category) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "brands", preCategories, newBrand.category, brand.id);
+                    if (!status) {
+                        return new ApolloError("Error in Catergory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    newBrand.category = newArray
+                }
+                if (newBrand.subCategory) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "brands", preSubCategories, newBrand.subCategory, brand.id);
+                    if (!status) {
+                        return new ApolloError("Error in Subcategory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    newBrand.subCategory = newArray
+                }
+                try {
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    let notification = {
+                        description: `${user.fullName} edited a Brand ${brand.name}`,
+                        entity: brand.id,
+                        entityType: Models.Brand,
+                        link: `http://localhost:3000/brand/details/${brand.id}`,
+                        messageBody: `${user.fullName} edited a Brand ${brand.name}`,
+                        messageTitle: `${user.fullName}`,
+                        title: `${user.fullName}`,
+                        sender:user.id,
+                    }
+                    console.log("notification 📩:", notification)
+                    await createNotification(notification,notificationsUsers);
+                }catch (e) {
+                    console.log(e)
+                }
+                newBrand.slug = slug;
+                return await Brand.findOneAndUpdate({_id: id}, newBrand, {new: true});
+            } catch (err) {
+                return new ApolloError(err, 500);
+            }
+        },
+        archiveBrand: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                let brand = await Brand.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
+                try {
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    let notification = {
+                        description: `${user.fullName} archived a Brand ${brand.name}`,
+                        entity: brand.id,
+                        entityType: Models.Brand,
+                        link: `http://localhost:3000/brand/details/${brand.id}`,
+                        messageBody: `${user.fullName} archived a Brand ${brand.name}`,
+                        messageTitle: `${user.fullName}`,
+                        title: `${user.fullName}`,
+                        sender:user.id,
+                    }
+                    console.log("notification 📩:", notification)
+                    await createNotification(notification,notificationsUsers);
+                }catch (e) {
+
+                }
                 return true
             } catch (err) {
                 return new ApolloError(err, 500);
             }
         },
-        unArchiveBrand: async (_, {id}, {user}) => {
-            if (!user) {
+        unArchiveBrand: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await Brand.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
+                let brand = await Brand.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
+                try {
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    let notification = {
+                        description: `${user.fullName} unarchived a Brand ${brand.name}`,
+                        entity: brand.id,
+                        entityType: Models.Brand,
+                        link: `http://localhost:3000/brand/details/${brand.id}`,
+                        messageBody: `${user.fullName} unarchived a Brand ${brand.name}`,
+                        messageTitle: `${user.fullName}`,
+                        title: `${user.fullName}`,
+                        sender:user.id,
+                    }
+                    console.log("notification 📩:", notification)
+                    await createNotification(notification,notificationsUsers);
+                }catch (e) {
+
+                }
                 return true
             } catch (err) {
                 return new ApolloError(err, 500);
             }
         },
-        verifyBrand: async (_, {id}, {user}) => {
-            if (!user) {
+        verifyBrand: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === Roles.SUPER_ADMIN) {
                 try {
-                    let response = await Brand.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
-                    if (!response) {
+                    let brand = await Brand.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
+                    if (!brand) {
                         return new ApolloError("Brand not found", '404');
+                    }
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notification = {
+                            description: `${user.fullName} verified your Brand ${brand.name}`,
+                            entity: brand.id,
+                            entityType: Models.Brand,
+                            link: `http://localhost:3000/brand/details/${brand.id}`,
+                            messageBody: `${user.fullName} verified your Brand ${brand.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+
                     }
                     return true
                 } catch (err) {
@@ -244,15 +456,33 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        blockBrand: async (_, {id}, {user}) => {
-            if (!user) {
+        blockBrand: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
                 if (user.type === Roles.SUPER_ADMIN) {
-                    let response = await Brand.findByIdAndUpdate(id, {isBlocked: true});
-                    if (!response) {
+                    let brand = await Brand.findByIdAndUpdate(id, {isBlocked: true});
+                    if (!brand) {
                         return new ApolloError("Brand Not Found", '404')
+                    }
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notification = {
+                            description: `${user.fullName} blocked your Brand ${brand.name}`,
+                            entity: brand.id,
+                            entityType: Models.Brand,
+                            link: `http://localhost:3000/brand/details/${brand.id}`,
+                            messageBody: `${user.fullName} blocked your Brand ${brand.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+
+                    }catch (e) {
+
                     }
                     return true;
                 }
@@ -260,15 +490,32 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        unblockBrand: async (_, {id}, {user}) => {
-            if (!user) {
+        unblockBrand: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
                 if (user.type === Roles.SUPER_ADMIN) {
-                    let response = await Brand.findByIdAndUpdate(id, {isBlocked: false});
-                    if (!response) {
+                    let brand = await Brand.findByIdAndUpdate(id, {isBlocked: false});
+                    if (!brand) {
                         return new ApolloError("Brand Not Found", '404')
+                    }
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notification = {
+                            description: `${user.fullName} unblocked your Brand ${brand.name}`,
+                            entity: brand.id,
+                            entityType: Models.Brand,
+                            link: `http://localhost:3000/brand/details/${brand.id}`,
+                            messageBody: `${user.fullName} unblocked your Brand ${brand.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+
                     }
                     return true;
                 }
@@ -325,8 +572,29 @@ const resolvers = {
                         await brandRoleBaseAccessInvite.save();
                         brand.roleBaseAccessInvites.push(brandRoleBaseAccessInvite.id)
                         brand.save();
+                        //TODO change redirect link for notification
+                        if(invited){
+                            try {
+                                let notificationsUsers = [];
+                                notificationsUsers.push(invitedUser)
+                                let notification = {
+                                    description: `${user.fullName} invited you to Brand ${brand.name}`,
+                                    entity: brandRoleBaseAccessInvite.id,
+                                    entityType: Models.BrandRoleBaseAccessInvite,
+                                    link: `http://localhost:3000/brand/details/${brand.id}`,
+                                    messageBody: `${user.fullName} invited you to Brand ${brand.name}`,
+                                    messageTitle: `${user.fullName}`,
+                                    title: `${user.fullName}`,
+                                    sender:user.id,
+                                }
+                                console.log("notification 📩:", notification)
+                                await createNotification(notification,notificationsUsers);
+                            }catch (e) {
+
+                            }
+                        }
                         return true
-                    }catch (e) {
+                    } catch (e) {
                         console.log("Saving error:", e)
                         return new ApolloError('Saving error', 404)
                     }
@@ -338,8 +606,8 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        acceptBrandInvite: async (_, {token}, {user}) => {
-            if (!user) {
+        acceptBrandInvite: async (_, {token}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             user = await User.findById(user.id);
@@ -400,6 +668,23 @@ const resolvers = {
                     await brand.save();
                     await brandRoleBaseAccessInvite.save();
                     await roleBasedAccess.save();
+                    try{
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notification = {
+                            description: `${user.fullName} joined Brand ${brand.name} as ${brandRoleBaseAccessInvite.role}`,
+                            entity: brand.id,
+                            entityType: Models.Brand,
+                            link: `http://localhost:3000/brand/details/${brand.id}`,
+                            messageBody: `${user.fullName} joined Brand ${brand.name} as ${brandRoleBaseAccessInvite.role}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e){
+                        console.log(e)
+                    }
                     return true
                 } else {
                     return new AuthenticationError("Unauthorised User's token.", '401');
@@ -423,7 +708,7 @@ const resolvers = {
                         invitedEmail: email,
                         brand: brand.id,
                         isDeleted: false
-                    }, {isDeleted: true, status:Status.DELETED})
+                    }, {isDeleted: true, status: Status.DELETED})
                     brandRoleBaseAccessInvites.forEach((brandRoleBaseAccessInvite) => {
                         brand.roleBaseAccessInvites = arrayRemove(brand.roleBaseAccessInvites, brandRoleBaseAccessInvite.id)
                     })
@@ -441,6 +726,25 @@ const resolvers = {
                         } else if (role === Roles.WATCHER) {
                             await Brand.findOneAndUpdate({_id: id}, {$pullAll: {watchers: [invitedUser.id]}}, {new: true});
                             await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"watcher.brands": [brand.id]}})
+                        }
+
+                        try{
+                            let notificationsUsers = [];
+                            notificationsUsers.push(invitedUser)
+                            let notification = {
+                                description: `${user.fullName} removed you from Brand ${brand.name}`,
+                                entity: brand.id,
+                                entityType: Models.Brand,
+                                link: `http://localhost:3000/brand/details/${brand.id}`,
+                                messageBody: `${user.fullName} removed you Brand ${brand.name}`,
+                                messageTitle: `${user.fullName}`,
+                                title: `${user.fullName}`,
+                                sender:user.id,
+                            }
+                            console.log("notification 📩:", notification)
+                            await createNotification(notification,notificationsUsers);
+                        }catch (e){
+                            console.log(e)
                         }
                     }
                     return true

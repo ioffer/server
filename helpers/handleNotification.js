@@ -1,5 +1,6 @@
 import {Notification, UserNotification, User} from "../models";
 import {sendPushNotification} from "../utils/firebase-admin";
+import mongoose from "mongoose";
 
 export const createNotification = async (data, receivers = [], isPushNotification = true) => {
     try {
@@ -37,4 +38,14 @@ export const createNotification = async (data, receivers = [], isPushNotificatio
 }
 export const getAllUsersWithNotificationToken = async () => {
     return await User.find({hasNotificationToken: true}).select('notificationToken');
+}
+export const getAllModeratorsWithNotificationToken = async (Model, modelId) => {
+    let modelData = await mongoose.model(Model).findById(modelId);
+    let moderators = [
+        modelData.owner,
+        ...modelData.admins,
+        ...modelData.modifiers,
+        ...modelData.watchers,
+    ]
+    return await User.find({_id: {$in: moderators},hasNotificationToken: true}).select('notificationToken');
 }

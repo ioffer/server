@@ -26,6 +26,7 @@ const brandTypeDefs = gql`
     type Brand {
         id: ID!,
         name: String,
+        slug: String,
         email: String,
         category:[Category],
         subCategory:[Category],
@@ -60,8 +61,12 @@ const brandTypeDefs = gql`
         createdAt: String,
         updatedAt: String,
         user:String,
-
-        #        offers: [Offer]
+        #offers: [Offer]
+    }
+    
+    type Brands {
+        pagination:Pagination,
+        brands:[Brand]
     }
     
     type BrandClick {

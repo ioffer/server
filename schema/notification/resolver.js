@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 import {User, Notification, UserNotification} from "../../models";
 import {ApolloError, AuthenticationError} from 'apollo-server-express';
 import {createNotification} from "../../helpers/handleNotification";
+import {getOptionsArguments} from "../../helpers/userRelations";
+import {getPaginations} from "../../utils/paginator";
 
 
 const resolvers = {
@@ -38,13 +40,27 @@ const resolvers = {
             }
             return await UserNotification.findById(id);
         },
-        listUserNotifications: async (_, {id}, {user, isAuth}) => {
+        listUserNotifications: async (_, {options}, {user, isAuth}) => {
             if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            let userNotifications = await UserNotification.find({user:user.id}).notDeleted();
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                isDeleted: false,
+                user:user.id
+            }
+            let pagination = await getPaginations(ModelsCollections.UserNotification, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let userNotifications = await UserNotification.find({user:user.id}).paginate(options).notDeleted();
             console.log("userNotifications:", userNotifications)
-            return userNotifications;
+            return {userNotifications, pagination};
         },
 
     },

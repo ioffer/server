@@ -14,6 +14,10 @@ const tagSchema = new Schema({
         ref: 'brands',
         type: Schema.Types.ObjectId,
     }],
+    promotions: [{
+        ref: 'promotions',
+        type: Schema.Types.ObjectId,
+    }],
 },{
     timestamps: true
 })

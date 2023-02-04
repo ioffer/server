@@ -39,7 +39,7 @@ const userTypeDefs = gql`
         updatedAt: String,
         kyc: Kyc,
         shops:[Shop],
-        brands:[Brand],
+        brands(paginationOptions:PaginationOptions):[Brand],
         favorites:Favorite,
         pins:Pin,
         subscriptions:UserSubscription,

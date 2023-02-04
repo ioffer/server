@@ -3,7 +3,7 @@
 const notificationQuery = gql`
     extend type Query {
         userNotificationById(id:ID!):UserNotification @isAuth,
-        listUserNotifications:[UserNotification] @isAuth,
+        listUserNotifications(options:Options):UserNotifications @isAuth,
     },
     
     extend type Mutation {

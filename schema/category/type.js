@@ -9,6 +9,9 @@ const categoryTypeDefs = gql`
         level:Float,
         subCategories: [Category],
         parentCategory: Category,
+        shops:[Shop],
+        brands:[Brand],
+        promotions:[Promotion],
         createdAt: String,
         updatedAt: String,
     }

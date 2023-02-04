@@ -14,7 +14,19 @@ const categorySchema = new Schema({
     parentCategory: {
         ref: 'categories',
         type: Schema.Types.ObjectId,
-    }
+    },
+    shops: [{
+        ref: 'shops',
+        type: Schema.Types.ObjectId,
+    }],
+    brands: [{
+        ref: 'brands',
+        type: Schema.Types.ObjectId,
+    }],
+    promotions: [{
+        ref: 'promotions',
+        type: Schema.Types.ObjectId,
+    }],
 },{
     timestamps: true
 })

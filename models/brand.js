@@ -2,6 +2,13 @@ import {Status, Verified} from '../constants/enums'
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+function getSlug(slug) {
+         return slug;
+}
+function setSlug(slug) {
+    return slug
+}
+
 const brandSchema = new Schema({
     name: String,
     email: String,
@@ -27,6 +34,12 @@ const brandSchema = new Schema({
     mobileNumber: String,
     publishingDateTime:String,
     facebook: String,
+    slug: {
+        type: String,
+        default: "",
+        get: getSlug,
+        set: setSlug
+    },
     tiktok: String,
     twitter: String,
     instagram: String,
@@ -119,6 +132,12 @@ brandSchema.methods.getRelation = function (userId) {
 
 brandSchema.query.byName = function (name) {
     return this.where({name: new RegExp(name, 'i')})
+}
+brandSchema.query.search = function (filter={}) {
+    return this.where(filter)
+}
+brandSchema.query.paginate = function (options) {
+    return this.where(options.where).limit(options.limit).skip(options.offset).sort(options.sort)
 }
 brandSchema.query.byEmail = function (email) {
     return this.where({email: new RegExp(email, 'i')})

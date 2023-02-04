@@ -21,7 +21,7 @@ import {authDirectiveTypeDefs, authDirectiveTransformer} from './schema/directiv
 
 
 
-// import { v4 } from "uuid";
+import { v4 } from "uuid";
 import AppModels, {User} from './models';
 
 let app = express();
@@ -107,24 +107,27 @@ const server = new ApolloServer({
         };
     },
     formatError:(err)=> {
-        // if (err.message.startsWith("Authentication Must Be Provided")) {
-        //     return new Error('Authentication Must Be Provided');
-        // }else if (err.message.startsWith("Database Error")) {
-        //     return new Error('Database Error');
-        // }else if (err.extensions.exception.name === 'ValidationError') {
-        //     console.log("validation Error",err.extensions.exception.errors)
-        //     return new Error(err.extensions.exception.errors);
-        // }else if (err.originalError instanceof ApolloError) {
-        //     return err;
-        // } else{
-        //     const errId = v4();
-        //     console.log("errId: ", errId);
+        console.log("err:", JSON.stringify(err))
+        console.log("Error name:", err.extensions.code)
+        if (err.extensions.code === "UNAUTHENTICATED") {
+            return new Error('Authentication Must Be Provided');
+        }else if (err.message.startsWith("Database Error")) {
+            return new Error('Database Error');
+        }else if (err.extensions.exception.name === 'ValidationError') {
+            return new Error(err.extensions.exception.errors);
+        }else if (err.extensions.code === 'GRAPHQL_VALIDATION_FAILED') {
+            return new Error(err.message);
+        }else if (err.originalError instanceof ApolloError) {
+            return err;
+        } else{
+            const errId = v4();
+            console.log("errId: ", errId);
             console.error('error:', err);
             console.error('errorArray:', err.extensions.exception.stacktrace);
             // return new Error(err);
-        //     return new Error('Internal Server Error: '+errId);
-            return err
-        // }
+            return new Error('Internal Server Error: '+errId);
+            // return err
+        }
     },
 });
 

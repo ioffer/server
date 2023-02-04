@@ -30,6 +30,7 @@ const shopTypeDefs = gql`
         id: ID!,
         name: String,
         email: String,
+        slug: String,
         category:[Category],
         subCategory:[Category],
         logo: Media,
@@ -65,9 +66,23 @@ const shopTypeDefs = gql`
         user:String,
         createdAt:String,
         updatedAt:String,
-#        offers: [Offer]
+        #offers: [Offer]
     }
-    
+
+    type Shops {
+        pagination:Pagination,
+        shops:[Shop]
+    }
+
+    type ShopClick {
+        shop: Shop,
+        user:User,
+    }
+
+    type ShopView {
+        shop: Shop,
+        user:User,
+    }
 `;
 
 

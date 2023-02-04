@@ -1,13 +1,13 @@
   const {gql} = require('apollo-server-express');
 const userQuery = gql`
     extend type Query {
-        allShops:[Shop] @isAuth2(requires: [SUPER_ADMIN]), # for super admins
-        shops:[Shop] @isAuth, # for dashboard users
-        publishedShops:[Shop], # for mobile app users
+        allShops(options:Options):Shops @isAuth2(requires: [SUPER_ADMIN]), # for super admins
+        shops(options:Options):Shops @isAuth, # for dashboard users
+        publishedShops(options:Options):Shops, # for mobile app users
         shopById(id:ID!):Shop @isAuth, # for everyone
         moderatorsByShopId(id:ID!):[ShopRoleBaseAccessInvite] @isAuth2(requires: [OWNER, SUPER_ADMIN, ADMIN, MODIFIER, WATCHER]),
-        searchPendingShops:[Shop] @isAuth2(requires: [SUPER_ADMIN]), # for super users
-        searchBlockedShops: [Shop] @isAuth2(requires: [SUPER_ADMIN]) # for super users
+        searchPendingShops(options:Options):Shops @isAuth2(requires: [SUPER_ADMIN]), # for super users
+        searchBlockedShops(options:Options):Shops @isAuth2(requires: [SUPER_ADMIN]) # for super users
 #        searchShops(query:Query):[Shop]
     },
     

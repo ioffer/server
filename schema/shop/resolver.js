@@ -3,13 +3,16 @@ import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-ex
 import dateTime from '../../helpers/DateTimefunctions'
 import {sendEmail} from "../../utils/sendEmail";
 import {emailInviteBody, emailShopInviteUrl} from "../../utils/emailConfirmationUrl";
-import {Roles, Status, Verified} from "../../constants/enums";
+import {Models, ModelsCollections, Roles, Status, Verified} from "../../constants/enums";
 import ShopRoleBaseAccessInvite from "../../models/shopRoleBaseAccessInvite";
 import {verify} from "jsonwebtoken";
 import {SECRET} from "../../config";
 import Subscription from "../../models/subscription";
 import BrandRoleBaseAccessInvite from "../../models/brandRoleBaseAccessInvite";
-import {getShopUserRelation, arrayRemove} from '../../helpers/userRelations'
+import {getShopUserRelation, arrayRemove, getOptionsArguments, getBrandUserRelation} from '../../helpers/userRelations'
+import {getPaginations} from "../../utils/paginator";
+import {modelArrayManager} from "../../helpers/modelsHelpers";
+import {createNotification, getAllModeratorsWithNotificationToken} from "../../helpers/handleNotification";
 
 const {
     EmailRules,
@@ -63,8 +66,15 @@ const resolvers = {
 
     },
     Query: {
-        shops: async (_, {}, {user}) => {
-            if (!user) {
+        shops: async (_, {options}, {user, isAuth}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             user = await User.findById(user.id).populate('roleBasedAccess');
@@ -79,21 +89,50 @@ const resolvers = {
                 userShops[index] = shop.toString();
             })
             userShops = new Set([...userShops])
-            let shops = await Shop.find({_id: {$in: [...userShops]}});
+            where = {
+                ...where,
+                _id: {$in: [...userShops]}
+            }
+            let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let shops = await Shop.find({_id: {$in: [...userShops]}}).paginate(options);
             await getShopUserRelation(user.id, shops)
-            return shops;
+            return {shops, pagination};
         },
-        publishedShops: async (_, {}, {}) => {
-            return await Shop.find({}).published()
+        publishedShops: async (_, {options}, {}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                status: Status.PUBLISHED
+            }
+            let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            return await Shop.find({}).paginate(options).published()
         },
-        allShops: async (_, {}, {user}) => {
-            if (!user) {
+        allShops: async (_, {options}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             } else {
                 if (user.role !== Roles.SUPER_ADMIN) {
                     return new ApolloError("User Must Be Super Admin", '400')
                 }
-                return await Shop.find({});
+                options = getOptionsArguments(options)
+                let {
+                    page,
+                    limit,
+                    sort,
+                    where
+                } = options;
+                let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
+                options["offset"] = pagination.offset;
+                let shops =  await Shop.find({}).paginate(options);
+                return {shops, pagination}
             }
         },
         shopById: async (_, {id}, {user}) => {
@@ -110,11 +149,53 @@ const resolvers = {
                 return new ApolloError("Shop Not Found", '404')
             }
         },
-        searchPendingShops: async (_, {}, {user}) => {
-            return await Shop.find({}).pending();
+        searchPendingShops: async (_, {options}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.role !== Roles.SUPER_ADMIN) {
+                return new ApolloError("User Must Be Super Admin", '400')
+            }
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                verified:Verified.PENDING
+            }
+            let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let shops = await Shop.find({}).paginate(options).pending();
+            await getShopUserRelation(user.id, shops);
+            return {shops, pagination};
         },
-        searchBlockedShops: async (_, {}, {user}) => {
-            return await Shop.find({}).blocked();
+        searchBlockedShops: async (_, {options}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.role !== Roles.SUPER_ADMIN) {
+                return new ApolloError("User Must Be Super Admin", '400')
+            }
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                isBlocked: true
+            }
+            let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let shops = await Shop.find({}).paginate(options).blocked();
+            await getShopUserRelation(user.id, shops);
+            return {shops, pagination};
         },
         moderatorsByShopId: async (_, {id}, {user}) => {
             let shop = await Shop.findById(id);
@@ -130,15 +211,12 @@ const resolvers = {
 
     },
     Mutation: {
-        registerShop: async (_, {newShop}, {user}) => {
-            if (!user) {
+        registerShop: async (_, {newShop}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let tags = [];
-                if (newShop.tags) {
-                    tags = [...new Set(newShop.tags)];
-                }
+                let slug = newShop.name;
                 let owner = user.id;
                 let shop = Shop({
                     ...newShop,
@@ -150,28 +228,55 @@ const resolvers = {
                     console.log(user.id," === ",brand.owner.toString()," || is admin=>",brand.admins.includes(user.id))
                     if (user.id === brand.owner.toString() || brand.admins.includes(user.id)) {
                         owner = brand.owner;
-                        //TODO not including brand modifiers in branded shops
-                        // shop.admins = brand.admins;
-                        // shop.modifiers = brand.modifiers;
-                        // shop.watchers = brand.watchers;
                     } else {
                         return new AuthenticationError("Authentication Failed. User must be brand owner or admin.")
                     }
                     await Brand.findByIdAndUpdate(newShop.brand, {$push: {brandShops: shop.id}});
                 }
                 console.log('shop', shop)
-                if (tags) {
-                    for (let i = 0; i < tags.length; i++) {
-                        if (tags[i] !== "") {
-                            let tag = await Tag.findById(tags[i]);
-                            if (!tag.shops.includes(shop.id)) {
-                                tag.shops.push(shop.id);
-                                let tagData = await tag.save();
-                                console.log("tagData", tagData);
-                            }
-                        }
+                if (newShop.tags) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Tag, "shops", [], newShop.tags, shop.id);
+                    if (!status) {
+                        return new ApolloError("Error in Tag Manager", '500');
                     }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    shop.tags = newArray;
                 }
+                if (newShop.category) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "shops", [], newShop.category, shop.id);
+                    if (!status) {
+                        return new ApolloError("Error in Catergory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    shop.category = newArray
+                }
+                if (newShop.subCategory) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "shops", [], newShop.subCategory, shop.id);
+                    if (!status) {
+                        return new ApolloError("Error in Subcategory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    shop.subCategory = newArray
+                }
+                shop.slug = slug
                 let result = await shop.save();
                 console.log("result", result);
                 console.log("user3", user);
@@ -185,12 +290,74 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        editShop: async (_, {id, newShop}, {user}) => {
+        editShop: async (_, {id, newShop}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
+                let shop = new Shop.findById(id);
+                let slug = newShop.name;
+                let preTags = shop.tags
+                let preCategories = shop.category
+                let preSubCategories = shop.subCategory
                 if (newShop.tags) {
-                    let tagsSet = new Set(newShop.tags);
-                    tagsSet.delete('')
-                    newShop.tags = [...tagsSet];
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Tag, "shops", preTags, newShop.tags, shop.id);
+                    if (!status) {
+                        return new ApolloError("Error in Tag Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    newShop.tags = newArray;
+                }
+                if (newShop.category) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "shops", preCategories, newShop.category, shop.id);
+                    if (!status) {
+                        return new ApolloError("Error in Catergory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    newShop.category = newArray
+                }
+                if (newShop.subCategory) {
+                    let {
+                        status,
+                        newArray,
+                        newArrayData
+                    } = await modelArrayManager(ModelsCollections.Category, "shops", preSubCategories, newShop.subCategory, shop.id);
+                    if (!status) {
+                        return new ApolloError("Error in Subcategory Manager", '500');
+                    }
+                    newArrayData.forEach((arrayitem)=>{
+                        slug = slug.concat(" ",arrayitem.title)
+                    })
+                    newShop.subCategory = newArray
+                }
+                try {
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                    let notification = {
+                        description: `${user.fullName} edited a Shop ${shop.name}`,
+                        entity: shop.id,
+                        entityType: Models.Shop,
+                        link: `http://localhost:3000/shop/details/${shop.id}`,
+                        messageBody: `${user.fullName} edited a Shop ${shop.name}`,
+                        messageTitle: `${user.fullName}`,
+                        title: `${user.fullName}`,
+                        sender:user.id,
+                    }
+                    console.log("notification 📩:", notification)
+                    await createNotification(notification,notificationsUsers);
+                }catch (e) {
+                    console.log(e)
                 }
                 console.log("newShop", newShop)
                 return await Shop.findOneAndUpdate({_id: id}, newShop, {new: true});
@@ -198,7 +365,10 @@ const resolvers = {
                 return new ApolloError(err, 500);
             }
         },
-        deleteShop: async (_, {id}, {user}) => {
+        deleteShop: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 await Shop.findOneAndUpdate({_id: id}, {status: Status.DELETED}, {new: true});
                 return true
@@ -206,35 +376,97 @@ const resolvers = {
                 return new ApolloError(err, 500);
             }
         },
-        archiveShop: async (_, {id}, {user}) => {
-            try {
-                await Shop.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
-                return true
-            } catch (err) {
-                return new ApolloError(err, 500);
+        archiveShop: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
             }
-        },
-        unArchiveShop: async (_, {id}, {user}) => {
             try {
-                await Shop.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
-                return true
-            } catch (err) {
-                return new ApolloError(err, 500);
-            }
-        },
-        verifyShop: async (_, {id}, {user}) => {
-            try {
-                let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
-                if (!response) {
-                    return new ApolloError("Shop not found", '404');
+                let shop = await Shop.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
+                try {
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                    let notification = {
+                        description: `${user.fullName} archived a Shop ${shop.name}`,
+                        entity: shop.id,
+                        entityType: Models.Shop,
+                        link: `http://localhost:3000/shop/details/${shop.id}`,
+                        messageBody: `${user.fullName} archived a Shop ${shop.name}`,
+                        messageTitle: `${user.fullName}`,
+                        title: `${user.fullName}`,
+                        sender:user.id,
+                    }
+                    console.log("notification 📩:", notification)
+                    await createNotification(notification,notificationsUsers);
+                }catch (e) {
+                    console.log(e)
                 }
                 return true
+            } catch (err) {
+                return new ApolloError(err, 500);
+            }
+        },
+        unArchiveShop: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                let shop = await Shop.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
+                try {
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                    let notification = {
+                        description: `${user.fullName} unarchived a Shop ${shop.name}`,
+                        entity: shop.id,
+                        entityType: Models.Shop,
+                        link: `http://localhost:3000/shop/details/${shop.id}`,
+                        messageBody: `${user.fullName} unarchived a Shop ${shop.name}`,
+                        messageTitle: `${user.fullName}`,
+                        title: `${user.fullName}`,
+                        sender:user.id,
+                    }
+                    console.log("notification 📩:", notification)
+                    await createNotification(notification,notificationsUsers);
+                }catch (e) {
+                    console.log(e)
+                }
+                return true
+            } catch (err) {
+                return new ApolloError(err, 500);
+            }
+        },
+        verifyShop: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                if (user.type === Roles.SUPER_ADMIN) {
+                    let response = await Shop.findByIdAndUpdate(id, {$set: {"verified": Verified.VERIFIED}});
+                    if (!response) {
+                        return new ApolloError("Shop not found", '404');
+                    }
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notification = {
+                            description: `${user.fullName} verified your Shop ${shop.name}`,
+                            entity: shop.id,
+                            entityType: Models.Shop,
+                            link: `http://localhost:3000/shop/details/${shop.id}`,
+                            messageBody: `${user.fullName} verified Shop ${shop.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+                        console.log(e)
+                    }
+                    return true
+                }
             } catch (err) {
                 return new ApolloError(err, 500)
             }
         },
-        blockShop: async (_, {id}, {user}) => {
-            if (!user) {
+        blockShop: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
@@ -243,14 +475,31 @@ const resolvers = {
                     if (!response) {
                         return new ApolloError("Shop Not Found", '404')
                     }
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notification = {
+                            description: `${user.fullName} blocked your Shop ${shop.name}`,
+                            entity: shop.id,
+                            entityType: Models.Shop,
+                            link: `http://localhost:3000/shop/details/${shop.id}`,
+                            messageBody: `${user.fullName} blocked your Shop ${shop.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+                        console.log(e)
+                    }
                     return true;
                 }
             } catch (err) {
                 return new ApolloError(err, 500)
             }
         },
-        unblockShop: async (_, {id}, {user}) => {
-            if (!user) {
+        unblockShop: async (_, {id}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
@@ -258,6 +507,23 @@ const resolvers = {
                     let response = await Shop.findByIdAndUpdate(id, {isBlocked: false});
                     if (!response) {
                         return new ApolloError("Shop Not Found", '404')
+                    }
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notification = {
+                            description: `${user.fullName} unblocked your Shop ${shop.name}`,
+                            entity: shop.id,
+                            entityType: Models.Shop,
+                            link: `http://localhost:3000/shop/details/${shop.id}`,
+                            messageBody: `${user.fullName} unblocked your Shop ${shop.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+                        console.log(e)
                     }
                     return true;
                 }
@@ -316,6 +582,26 @@ const resolvers = {
                     await shopRoleBaseAccessInvite.save();
                     shop.roleBaseAccessInvites.push(shopRoleBaseAccessInvite.id)
                     shop.save();
+                    if(invited){
+                        try {
+                            let notificationsUsers = [];
+                            notificationsUsers.push(invitedUser)
+                            let notification = {
+                                description: `${user.fullName} invited you to Shop ${shop.name}`,
+                                entity: shopRoleBaseAccessInvite.id,
+                                entityType: Models.ShopRoleBaseAccessInvite,
+                                link: `http://localhost:3000/shop/details/${shop.id}`,
+                                messageBody: `${user.fullName} invited you to Shop ${shop.name}`,
+                                messageTitle: `${user.fullName}`,
+                                title: `${user.fullName}`,
+                                sender:user.id,
+                            }
+                            console.log("notification 📩:", notification)
+                            await createNotification(notification,notificationsUsers);
+                        }catch (e) {
+                            console.log(e)
+                        }
+                    }
                     return true
                 } else {
                     return new ApolloError('Shop not found', 404)
@@ -324,8 +610,8 @@ const resolvers = {
                 return new ApolloError(err, 500)
             }
         },
-        acceptShopInvite: async (_, {token}, {user}) => {
-            if (!user) {
+        acceptShopInvite: async (_, {token}, {user, isAuth}) => {
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             user = await User.findById(user.id);
@@ -386,6 +672,23 @@ const resolvers = {
                     await shop.save();
                     await shopRoleBaseAccessInvite.save();
                     await roleBasedAccess.save();
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notification = {
+                            description: `${user.fullName} joined Shop ${shop.name}`,
+                            entity: shop.id,
+                            entityType: Models.Shop,
+                            link: `http://localhost:3000/shop/details/${shop.id}`,
+                            messageBody: `${user.fullName} joined Shop ${shop.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+                        console.log(e)
+                    }
                     return true
                 } else {
                     return new AuthenticationError("Unauthorised User's token.", '401');
@@ -428,6 +731,24 @@ const resolvers = {
                             await Shop.findOneAndUpdate({_id: id}, {$pullAll: {watchers: [invitedUser.id]}}, {new: true});
                             await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"watcher.shops": [shop.id]}})
                         }
+                    }
+                    try {
+                        let notificationsUsers = [];
+                        notificationsUsers.push(invitedUser)
+                        let notification = {
+                            description: `${user.fullName} removed you from Shop ${shop.name}`,
+                            entity: shop.id,
+                            entityType: Models.Shop,
+                            link: `http://localhost:3000/shop/details/${shop.id}`,
+                            messageBody: `${user.fullName} removed you from Shop ${shop.name}`,
+                            messageTitle: `${user.fullName}`,
+                            title: `${user.fullName}`,
+                            sender:user.id,
+                        }
+                        console.log("notification 📩:", notification)
+                        await createNotification(notification,notificationsUsers);
+                    }catch (e) {
+                        console.log(e)
                     }
                     return true
                 }
