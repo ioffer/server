@@ -73,6 +73,7 @@ const enumsTypeDefs = gql`
         paginationOptions: PaginationOptions,
         where: String,
         sort: String,
+        published: Boolean,
     },
     
     type Pagination {

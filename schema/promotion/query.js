@@ -2,11 +2,12 @@
 
 const userQuery = gql`
     extend type Query {
-        promotions:[Promotion],
+        promotions(options:Options):Promotions,
+        publishedPromotions(options:Options):Promotions,
         promotionById(id:ID!):Promotion,
-        searchPendingPromotions:[Promotion] @isAuth2(requires: [SUPER_ADMIN]),
-        searchArchivedPromotions(shopId:ID!):[Promotion] @isAuth2(requires: [SUPER_ADMIN, OWNER]),
-        searchUpcomingPromotions(shopId:ID!):[Promotion] @isAuth2(requires: [SUPER_ADMIN]),
+        searchPendingPromotions(options:Options):Promotions @isAuth2(requires: [SUPER_ADMIN]),
+        searchArchivedPromotions(shopId:ID!,options:Options):Promotions @isAuth2(requires: [SUPER_ADMIN, OWNER]),
+        searchUpcomingPromotions(shopId:ID!, options:Options):Promotions @isAuth2(requires: [SUPER_ADMIN]),
 #        searchPromotions(query:Query):[Promotion]
     },
     

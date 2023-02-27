@@ -5,6 +5,57 @@ import Shop from "./shop";
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+function getStatus(status) {
+    let endDate = null, startDate = null;
+    if(this.endDate) {
+         endDate = new Date(this.endDate)
+    }
+    if(this.startDate) {
+        startDate = new Date(this.startDate)
+    }
+    let date = new Date()
+    console.log('date🔥:',date, this.endDate, endDate)
+    if (endDate && endDate <= date && status===Status.PUBLISHED) {
+        return Status.EXPIRED
+    } else {
+        if (this.isUpcoming && (status === Status.UPCOMING || status === Status.PUBLISHED)) {
+            if (startDate <= date && endDate >= date) {
+                return Status.PUBLISHED
+            } else if (endDate <= date) {
+                return Status.EXPIRED
+            } else {
+                return Status.UPCOMING
+            }
+        }
+        return status;
+    }
+}
+
+function setStatus(status) {
+    let endDate = null, startDate = null;
+    if(this.endDate) {
+        endDate = new Date(this.endDate)
+    }
+    if(this.startDate) {
+        startDate = new Date(this.startDate)
+    }
+    let date = new Date()
+    if (endDate && endDate <= date && status===Status.PUBLISHED) {
+        return Status.EXPIRED
+    } else {
+        if (this.isUpcoming && (status === Status.UPCOMING || status === Status.PUBLISHED)) {
+            if (startDate <= date && endDate >= date) {
+                return Status.PUBLISHED
+            } else if (endDate <= date) {
+                return Status.EXPIRED
+            } else {
+                return Status.UPCOMING
+            }
+        }
+        return status;
+    }
+}
+
 const promotionSchema = new Schema({
     name: String,
     media: [{
@@ -42,7 +93,9 @@ const promotionSchema = new Schema({
     status: {
         type: String,
         enum: Status,
-        default: Status.DRAFT
+        default: Status.DRAFT,
+        get: getStatus,
+        set: setStatus
     },
     publisher: {
         ref: 'users',
@@ -67,9 +120,15 @@ const promotionSchema = new Schema({
 });
 
 
-
 promotionSchema.query.notDeleted = function () {
     return this.where({status: {$ne: Status.DELETED}})
+}
+
+promotionSchema.query.paginate = function (options) {
+    return this.where(options.where).limit(options.limit).skip(options.offset).sort(options.sort)
+}
+promotionSchema.query.published = function () {
+    return this.where({status: Status.PUBLISHED})
 }
 
 promotionSchema.methods.getRelation = async function (userId) {
@@ -134,6 +193,8 @@ promotionSchema.methods.getShopsRelation = async function (userId) {
         }
     }
 }
+
+
 promotionSchema.set('toObject', {virtuals: true})
 promotionSchema.set('toJSON', {virtuals: true})
 

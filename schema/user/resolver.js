@@ -73,6 +73,7 @@ const resolvers = {
             return await User.findById(args.id);
         },
         loginUser: async (_, {userName, password}) => {
+            console.log('variables:', userName, password)
             // Validate Incoming User Credentials
             await PasswordRules.validate({password}, {abortEarly: false});
             // Find the user from the database

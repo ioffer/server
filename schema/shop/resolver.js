@@ -21,8 +21,14 @@ const {
 
 const resolvers = {
     Shop: {
-        promotions: async (parent) => {
-            return await Promotion.find({_id: {$in: parent.promotions}});
+        promotions: async (parent, _, args) => {
+            const {variables} = args.req.body;
+            const {published} = variables.options;
+            if (published) {
+                return await Promotion.find({_id: {$in: parent.promotions}}).published();
+            } else {
+                return await Promotion.find({_id: {$in: parent.promotions}});
+            }
         },
         brand: async (parent) => {
             return await Brand.findById(parent.brand)
@@ -113,7 +119,9 @@ const resolvers = {
             }
             let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
             options["offset"] = pagination.offset;
-            return await Shop.find({}).paginate(options).published()
+            let shops = await Shop.find({}).paginate(options).published()
+            console.log('shops:', shops)
+            return {shops, pagination}
         },
         allShops: async (_, {options}, {user, isAuth}) => {
             if (!isAuth) {
@@ -131,7 +139,7 @@ const resolvers = {
                 } = options;
                 let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
                 options["offset"] = pagination.offset;
-                let shops =  await Shop.find({}).paginate(options);
+                let shops = await Shop.find({}).paginate(options);
                 return {shops, pagination}
             }
         },
@@ -165,7 +173,7 @@ const resolvers = {
             } = options;
             where = {
                 ...where,
-                verified:Verified.PENDING
+                verified: Verified.PENDING
             }
             let pagination = await getPaginations(ModelsCollections.Shop, page, limit, where, sort)
             options["offset"] = pagination.offset;
@@ -199,10 +207,10 @@ const resolvers = {
         },
         moderatorsByShopId: async (_, {id}, {user}) => {
             let shop = await Shop.findById(id);
-            if (!shop){
+            if (!shop) {
                 return new ApolloError("Shop Not Found", '404')
             }
-            let  shopRoleBaseAccessInvite = await ShopRoleBaseAccessInvite.find({_id: {$in: shop.roleBaseAccessInvites}});
+            let shopRoleBaseAccessInvite = await ShopRoleBaseAccessInvite.find({_id: {$in: shop.roleBaseAccessInvites}});
             return shopRoleBaseAccessInvite
         }
         // searchShops: async (_, {query}, {Shop}) => {
@@ -225,7 +233,7 @@ const resolvers = {
                 })
                 if (newShop["brand"] !== undefined) {
                     let brand = await Brand.findById(newShop.brand);
-                    console.log(user.id," === ",brand.owner.toString()," || is admin=>",brand.admins.includes(user.id))
+                    console.log(user.id, " === ", brand.owner.toString(), " || is admin=>", brand.admins.includes(user.id))
                     if (user.id === brand.owner.toString() || brand.admins.includes(user.id)) {
                         owner = brand.owner;
                     } else {
@@ -243,8 +251,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Tag Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     shop.tags = newArray;
                 }
@@ -257,8 +265,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Catergory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     shop.category = newArray
                 }
@@ -271,8 +279,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Subcategory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     shop.subCategory = newArray
                 }
@@ -309,8 +317,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Tag Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     newShop.tags = newArray;
                 }
@@ -323,8 +331,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Catergory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     newShop.category = newArray
                 }
@@ -337,13 +345,13 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Subcategory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     newShop.subCategory = newArray
                 }
                 try {
-                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                     let notification = {
                         description: `${user.fullName} edited a Shop ${shop.name}`,
                         entity: shop.id,
@@ -352,11 +360,11 @@ const resolvers = {
                         messageBody: `${user.fullName} edited a Shop ${shop.name}`,
                         messageTitle: `${user.fullName}`,
                         title: `${user.fullName}`,
-                        sender:user.id,
+                        sender: user.id,
                     }
                     console.log("notification 📩:", notification)
-                    await createNotification(notification,notificationsUsers);
-                }catch (e) {
+                    await createNotification(notification, notificationsUsers);
+                } catch (e) {
                     console.log(e)
                 }
                 console.log("newShop", newShop)
@@ -383,7 +391,7 @@ const resolvers = {
             try {
                 let shop = await Shop.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
                 try {
-                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                     let notification = {
                         description: `${user.fullName} archived a Shop ${shop.name}`,
                         entity: shop.id,
@@ -392,11 +400,11 @@ const resolvers = {
                         messageBody: `${user.fullName} archived a Shop ${shop.name}`,
                         messageTitle: `${user.fullName}`,
                         title: `${user.fullName}`,
-                        sender:user.id,
+                        sender: user.id,
                     }
                     console.log("notification 📩:", notification)
-                    await createNotification(notification,notificationsUsers);
-                }catch (e) {
+                    await createNotification(notification, notificationsUsers);
+                } catch (e) {
                     console.log(e)
                 }
                 return true
@@ -411,7 +419,7 @@ const resolvers = {
             try {
                 let shop = await Shop.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
                 try {
-                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                     let notification = {
                         description: `${user.fullName} unarchived a Shop ${shop.name}`,
                         entity: shop.id,
@@ -420,11 +428,11 @@ const resolvers = {
                         messageBody: `${user.fullName} unarchived a Shop ${shop.name}`,
                         messageTitle: `${user.fullName}`,
                         title: `${user.fullName}`,
-                        sender:user.id,
+                        sender: user.id,
                     }
                     console.log("notification 📩:", notification)
-                    await createNotification(notification,notificationsUsers);
-                }catch (e) {
+                    await createNotification(notification, notificationsUsers);
+                } catch (e) {
                     console.log(e)
                 }
                 return true
@@ -443,7 +451,7 @@ const resolvers = {
                         return new ApolloError("Shop not found", '404');
                     }
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                         let notification = {
                             description: `${user.fullName} verified your Shop ${shop.name}`,
                             entity: shop.id,
@@ -452,11 +460,11 @@ const resolvers = {
                             messageBody: `${user.fullName} verified Shop ${shop.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
                         console.log(e)
                     }
                     return true
@@ -476,7 +484,7 @@ const resolvers = {
                         return new ApolloError("Shop Not Found", '404')
                     }
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                         let notification = {
                             description: `${user.fullName} blocked your Shop ${shop.name}`,
                             entity: shop.id,
@@ -485,11 +493,11 @@ const resolvers = {
                             messageBody: `${user.fullName} blocked your Shop ${shop.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
                         console.log(e)
                     }
                     return true;
@@ -509,7 +517,7 @@ const resolvers = {
                         return new ApolloError("Shop Not Found", '404')
                     }
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                         let notification = {
                             description: `${user.fullName} unblocked your Shop ${shop.name}`,
                             entity: shop.id,
@@ -518,11 +526,11 @@ const resolvers = {
                             messageBody: `${user.fullName} unblocked your Shop ${shop.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
                         console.log(e)
                     }
                     return true;
@@ -582,7 +590,7 @@ const resolvers = {
                     await shopRoleBaseAccessInvite.save();
                     shop.roleBaseAccessInvites.push(shopRoleBaseAccessInvite.id)
                     shop.save();
-                    if(invited){
+                    if (invited) {
                         try {
                             let notificationsUsers = [];
                             notificationsUsers.push(invitedUser)
@@ -594,11 +602,11 @@ const resolvers = {
                                 messageBody: `${user.fullName} invited you to Shop ${shop.name}`,
                                 messageTitle: `${user.fullName}`,
                                 title: `${user.fullName}`,
-                                sender:user.id,
+                                sender: user.id,
                             }
                             console.log("notification 📩:", notification)
-                            await createNotification(notification,notificationsUsers);
-                        }catch (e) {
+                            await createNotification(notification, notificationsUsers);
+                        } catch (e) {
                             console.log(e)
                         }
                     }
@@ -673,7 +681,7 @@ const resolvers = {
                     await shopRoleBaseAccessInvite.save();
                     await roleBasedAccess.save();
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop,shop.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Shop, shop.id);
                         let notification = {
                             description: `${user.fullName} joined Shop ${shop.name}`,
                             entity: shop.id,
@@ -682,11 +690,11 @@ const resolvers = {
                             messageBody: `${user.fullName} joined Shop ${shop.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
                         console.log(e)
                     }
                     return true
@@ -712,7 +720,7 @@ const resolvers = {
                         invitedEmail: email,
                         shop: shop.id,
                         isDeleted: false
-                    }, {isDeleted: true, status:Status.DELETED})
+                    }, {isDeleted: true, status: Status.DELETED})
                     shopRoleBaseAccessInvites.forEach((shopRoleBaseAccessInvite) => {
                         shop.roleBaseAccessInvites = arrayRemove(shop.roleBaseAccessInvites, shopRoleBaseAccessInvite.id)
                     })
@@ -743,11 +751,11 @@ const resolvers = {
                             messageBody: `${user.fullName} removed you from Shop ${shop.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
                         console.log(e)
                     }
                     return true

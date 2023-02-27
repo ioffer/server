@@ -43,9 +43,12 @@ const promotionTypeDefs = gql`
         user:String,
         createdAt:String,
         updatedAt:String,
-
     }
-    
+
+    type Promotions {
+        pagination:Pagination,
+        promotions:[Promotion]
+    }
 `;
 
 

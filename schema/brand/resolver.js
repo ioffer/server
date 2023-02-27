@@ -30,8 +30,14 @@ const resolvers = {
         coverImage: async (parent) => {
             return await Media.findById(parent.coverImage);
         },
-        promotions: async (parent) => {
-            return await Promotion.find({"brand": parent.id})
+        promotions: async (parent, _, args) => {
+            const {variables} = args.req.body;
+            const {published} = variables.options;
+            if (published) {
+                return await Promotion.find({"brand": parent.id}).published()
+            } else {
+                return await Promotion.find({"brand": parent.id})
+            }
         },
         category: async (parent) => {
             return await Category.find({_id: {$in: parent.category}});
@@ -42,9 +48,20 @@ const resolvers = {
         tags: async (parent) => {
             return await Tag.find({_id: {$in: parent.tags}});
         },
-        brandShops: async (parent, _, {user}) => {
-            let shops = await Shop.find({_id: {$in: parent.brandShops}});
-            await getShopUserRelation(user.id, shops);
+        brandShops: async (parent, _, args) => {
+            const {user} = args;
+            console.log('user:', user)
+            const {variables} = args.req.body;
+            const {published} = variables.options;
+            let shops = []
+            if (published) {
+                shops = await Shop.find({_id: {$in: parent.brandShops}}).published();
+            } else {
+                shops = await Shop.find({_id: {$in: parent.brandShops}});
+            }
+            if (user) {
+                await getShopUserRelation(user.id, shops);
+            }
             return shops
         },
         admins: async (parent) => {
@@ -138,7 +155,8 @@ const resolvers = {
             }
             let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
             options["offset"] = pagination.offset;
-            return await Brand.find({}).paginate(options).published();
+            let brands = await Brand.find({}).paginate(options).published();
+            return {brands, pagination}
         },
         brandById: async (_, {id}, {user, isAuth}) => {
             let brand = await Brand.findById(id);
@@ -171,7 +189,7 @@ const resolvers = {
             } = options;
             where = {
                 ...where,
-                verified:Verified.PENDING
+                verified: Verified.PENDING
             }
             let pagination = await getPaginations(ModelsCollections.Brand, page, limit, where, sort)
             options["offset"] = pagination.offset;
@@ -235,8 +253,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Tag Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     brand.tags = newArray;
                 }
@@ -249,8 +267,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Catergory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     brand.category = newArray
                 }
@@ -263,8 +281,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Subcategory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     brand.subCategory = newArray
                 }
@@ -309,8 +327,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Tag Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     newBrand.tags = newArray;
                 }
@@ -323,8 +341,8 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Catergory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     newBrand.category = newArray
                 }
@@ -337,13 +355,13 @@ const resolvers = {
                     if (!status) {
                         return new ApolloError("Error in Subcategory Manager", '500');
                     }
-                    newArrayData.forEach((arrayitem)=>{
-                        slug = slug.concat(" ",arrayitem.title)
+                    newArrayData.forEach((arrayitem) => {
+                        slug = slug.concat(" ", arrayitem.title)
                     })
                     newBrand.subCategory = newArray
                 }
                 try {
-                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                     let notification = {
                         description: `${user.fullName} edited a Brand ${brand.name}`,
                         entity: brand.id,
@@ -352,11 +370,11 @@ const resolvers = {
                         messageBody: `${user.fullName} edited a Brand ${brand.name}`,
                         messageTitle: `${user.fullName}`,
                         title: `${user.fullName}`,
-                        sender:user.id,
+                        sender: user.id,
                     }
                     console.log("notification 📩:", notification)
-                    await createNotification(notification,notificationsUsers);
-                }catch (e) {
+                    await createNotification(notification, notificationsUsers);
+                } catch (e) {
                     console.log(e)
                 }
                 newBrand.slug = slug;
@@ -372,7 +390,7 @@ const resolvers = {
             try {
                 let brand = await Brand.findOneAndUpdate({_id: id}, {status: Status.ARCHIVED}, {new: true});
                 try {
-                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                     let notification = {
                         description: `${user.fullName} archived a Brand ${brand.name}`,
                         entity: brand.id,
@@ -381,11 +399,11 @@ const resolvers = {
                         messageBody: `${user.fullName} archived a Brand ${brand.name}`,
                         messageTitle: `${user.fullName}`,
                         title: `${user.fullName}`,
-                        sender:user.id,
+                        sender: user.id,
                     }
                     console.log("notification 📩:", notification)
-                    await createNotification(notification,notificationsUsers);
-                }catch (e) {
+                    await createNotification(notification, notificationsUsers);
+                } catch (e) {
 
                 }
                 return true
@@ -400,7 +418,7 @@ const resolvers = {
             try {
                 let brand = await Brand.findOneAndUpdate({_id: id}, {status: Status.DRAFT}, {new: true});
                 try {
-                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                     let notification = {
                         description: `${user.fullName} unarchived a Brand ${brand.name}`,
                         entity: brand.id,
@@ -409,11 +427,11 @@ const resolvers = {
                         messageBody: `${user.fullName} unarchived a Brand ${brand.name}`,
                         messageTitle: `${user.fullName}`,
                         title: `${user.fullName}`,
-                        sender:user.id,
+                        sender: user.id,
                     }
                     console.log("notification 📩:", notification)
-                    await createNotification(notification,notificationsUsers);
-                }catch (e) {
+                    await createNotification(notification, notificationsUsers);
+                } catch (e) {
 
                 }
                 return true
@@ -432,7 +450,7 @@ const resolvers = {
                         return new ApolloError("Brand not found", '404');
                     }
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                         let notification = {
                             description: `${user.fullName} verified your Brand ${brand.name}`,
                             entity: brand.id,
@@ -441,11 +459,11 @@ const resolvers = {
                             messageBody: `${user.fullName} verified your Brand ${brand.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
 
                     }
                     return true
@@ -467,7 +485,7 @@ const resolvers = {
                         return new ApolloError("Brand Not Found", '404')
                     }
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                         let notification = {
                             description: `${user.fullName} blocked your Brand ${brand.name}`,
                             entity: brand.id,
@@ -476,12 +494,12 @@ const resolvers = {
                             messageBody: `${user.fullName} blocked your Brand ${brand.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
+                        await createNotification(notification, notificationsUsers);
 
-                    }catch (e) {
+                    } catch (e) {
 
                     }
                     return true;
@@ -501,7 +519,7 @@ const resolvers = {
                         return new ApolloError("Brand Not Found", '404')
                     }
                     try {
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                         let notification = {
                             description: `${user.fullName} unblocked your Brand ${brand.name}`,
                             entity: brand.id,
@@ -510,11 +528,11 @@ const resolvers = {
                             messageBody: `${user.fullName} unblocked your Brand ${brand.name}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e) {
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
 
                     }
                     return true;
@@ -573,7 +591,7 @@ const resolvers = {
                         brand.roleBaseAccessInvites.push(brandRoleBaseAccessInvite.id)
                         brand.save();
                         //TODO change redirect link for notification
-                        if(invited){
+                        if (invited) {
                             try {
                                 let notificationsUsers = [];
                                 notificationsUsers.push(invitedUser)
@@ -585,11 +603,11 @@ const resolvers = {
                                     messageBody: `${user.fullName} invited you to Brand ${brand.name}`,
                                     messageTitle: `${user.fullName}`,
                                     title: `${user.fullName}`,
-                                    sender:user.id,
+                                    sender: user.id,
                                 }
                                 console.log("notification 📩:", notification)
-                                await createNotification(notification,notificationsUsers);
-                            }catch (e) {
+                                await createNotification(notification, notificationsUsers);
+                            } catch (e) {
 
                             }
                         }
@@ -668,8 +686,8 @@ const resolvers = {
                     await brand.save();
                     await brandRoleBaseAccessInvite.save();
                     await roleBasedAccess.save();
-                    try{
-                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand,brand.id);
+                    try {
+                        let notificationsUsers = await getAllModeratorsWithNotificationToken(ModelsCollections.Brand, brand.id);
                         let notification = {
                             description: `${user.fullName} joined Brand ${brand.name} as ${brandRoleBaseAccessInvite.role}`,
                             entity: brand.id,
@@ -678,11 +696,11 @@ const resolvers = {
                             messageBody: `${user.fullName} joined Brand ${brand.name} as ${brandRoleBaseAccessInvite.role}`,
                             messageTitle: `${user.fullName}`,
                             title: `${user.fullName}`,
-                            sender:user.id,
+                            sender: user.id,
                         }
                         console.log("notification 📩:", notification)
-                        await createNotification(notification,notificationsUsers);
-                    }catch (e){
+                        await createNotification(notification, notificationsUsers);
+                    } catch (e) {
                         console.log(e)
                     }
                     return true
@@ -728,7 +746,7 @@ const resolvers = {
                             await RoleBaseAccess.findOneAndUpdate({user: invitedUser.id}, {$pullAll: {"watcher.brands": [brand.id]}})
                         }
 
-                        try{
+                        try {
                             let notificationsUsers = [];
                             notificationsUsers.push(invitedUser)
                             let notification = {
@@ -739,11 +757,11 @@ const resolvers = {
                                 messageBody: `${user.fullName} removed you Brand ${brand.name}`,
                                 messageTitle: `${user.fullName}`,
                                 title: `${user.fullName}`,
-                                sender:user.id,
+                                sender: user.id,
                             }
                             console.log("notification 📩:", notification)
-                            await createNotification(notification,notificationsUsers);
-                        }catch (e){
+                            await createNotification(notification, notificationsUsers);
+                        } catch (e) {
                             console.log(e)
                         }
                     }

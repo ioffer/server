@@ -60,10 +60,11 @@ export const getPromotionUserRelation = async (userId, promotions = null) => {
 }
 
 export const getOptionsArguments = (options) => {
-    let where = {}, sort = {}, page = 1, limit = 20;
+    let where = {}, sort = {}, page = 1, limit = 20, published = false;
     if (options) {
         where = options.where
         sort = options.sort
+        published = options.published
         console.log("options:", options)
         if (options.paginationOptions) {
             page = options.paginationOptions.page
@@ -95,11 +96,15 @@ export const getOptionsArguments = (options) => {
             sort = {}
         }
     }
+    if (published === null || published === undefined) {
+        published = false
+    }
     return {
         page,
         limit,
         sort,
-        where
+        where,
+        published
     }
 }
 

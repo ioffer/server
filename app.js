@@ -12,17 +12,23 @@ import mongoose from 'mongoose'
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
 import AuthMiddleware from './middleware/auth.js';
+import QueryOptionsMiddleware from './middleware/queryOptions.js';
 import {graphqlUploadExpress} from 'graphql-upload';
 import {join} from "path";
-let cors=require('cors');
-import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled, ApolloServerPluginInlineTrace } from 'apollo-server-core';
-import { makeExecutableSchema } from '@graphql-tools/schema'
+
+let cors = require('cors');
+import {
+    ApolloServerPluginLandingPageGraphQLPlayground,
+    ApolloServerPluginLandingPageDisabled,
+    ApolloServerPluginInlineTrace
+} from 'apollo-server-core';
+import {makeExecutableSchema} from '@graphql-tools/schema'
 import {authDirectiveTypeDefs, authDirectiveTransformer} from './schema/directives/isAuth2.directive'
 
 
-
-import { v4 } from "uuid";
+import {v4} from "uuid";
 import AppModels, {User} from './models';
+import {GraphQLError} from "graphql/error";
 
 let app = express();
 
@@ -50,7 +56,10 @@ app.use(sassMiddleware({
     sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(AuthMiddleware)
+app.use(QueryOptionsMiddleware)
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -71,7 +80,7 @@ const server = new ApolloServer({
         },
         tabs: [
             {
-                endpoint:"/graphql",
+                endpoint: "/graphql",
             },
         ],
     },
@@ -99,6 +108,8 @@ const server = new ApolloServer({
             user,
             isAuth,
         } = req;
+        let {variables} = req.body;
+        console.log("variables:🚀", variables)
         return {
             req,
             user,
@@ -106,38 +117,69 @@ const server = new ApolloServer({
             ...AppModels,
         };
     },
-    formatError:(err)=> {
+    formatError: (err) => {
         console.log("err:", JSON.stringify(err))
         console.log("Error name:", err.extensions.code)
         if (err.extensions.code === "UNAUTHENTICATED") {
-            return new Error('Authentication Must Be Provided');
-        }else if (err.message.startsWith("Database Error")) {
-            return new Error('Database Error');
-        }else if (err.extensions.exception.name === 'ValidationError') {
-            return new Error(err.extensions.exception.errors);
-        }else if (err.extensions.code === 'GRAPHQL_VALIDATION_FAILED') {
-            return new Error(err.message);
-        }else if (err.originalError instanceof ApolloError) {
+            console.log("❌ => UNAUTHENTICATED")
+            return {
+                message: 'Authentication Must Be Provided',
+                code: 401
+            };
+        } else if (err.message.startsWith("Database Error")) {
+            console.log("❌ => DataBase Error")
+            return {
+                message: 'Database Error',
+                code: 500
+            };
+        } else if (err.extensions.exception.name === 'ValidationError') {
+            console.log("❌ => ValidationError", JSON.stringify(err))
+            console.log('err.extensions.exception.errors:', err.extensions.exception.errors)
+            if(err.extensions.exception.errors.length <= 1) {
+                return {
+                    message: err.extensions.exception.errors[0],
+                    code: 500,
+                }
+            }else{
+                return {
+                    message: "Multiple errors occurred",
+                    errors: err.extensions.exception.errors.map((err) => ({
+                        message: err,
+                        code: 500,
+                    })),
+                };
+            }
+        } else if (err.extensions.code === 'GRAPHQL_VALIDATION_FAILED') {
+            console.log("❌ => GRAPHQL_VALIDATION_FAILED")
+            return {
+                message: err.message,
+                code: 400
+            };
+        } else if (err.originalError instanceof ApolloError) {
+            console.log("❌ => Apollo error")
             return err;
-        } else{
+        } else {
+            console.log("❌ => Server Error")
             const errId = v4();
             console.log("errId: ", errId);
             console.error('error:', err);
             console.error('errorArray:', err.extensions.exception.stacktrace);
-            // return new Error(err);
-            return new Error('Internal Server Error: '+errId);
+            return {
+                message: 'Internal Server Error: ' + errId,
+                code:500
+            };
             // return err
         }
     },
 });
 
-(async ()=>{
+(async () => {
     await server.start();
     server.applyMiddleware({app});
     mongoose.connection.once('open', () => {
         console.log(' 🍃 connected to mongoDB mLab1');
-        app.listen( port, () => {
-            console.log('🚀 now listening for requests on port',  port);
+        app.listen(port, () => {
+            console.log('🚀 now listening for requests on port', port);
             LogRocket.init('2oiqcd/ioffer');
         });
     })
@@ -159,5 +201,5 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-
+``
 module.exports = app;

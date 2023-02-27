@@ -1,10 +1,11 @@
 import {User, Shop, Promotion, Tag, Brand, Category, Media} from "../../models";
 import {ApolloError, AuthenticationError} from 'apollo-server-express';
 import dateTime from '../../helpers/DateTimefunctions'
-import {Models, Roles, Status, Verified} from "../../constants/enums";
-import {getPromotionUserRelation, getPropValues} from '../../helpers/userRelations'
+import {Models, ModelsCollections, Roles, Status, Verified} from "../../constants/enums";
+import {getOptionsArguments, getPromotionUserRelation, getPropValues} from '../../helpers/userRelations'
 import {createNotification, getAllUsersWithNotificationToken} from "../../helpers/handleNotification";
 import notification from "../../models/notification";
+import {getPaginations} from "../../utils/paginator";
 
 let fetchData = async () => {
     return await Promotion.find({}).notDeleted();
@@ -12,8 +13,15 @@ let fetchData = async () => {
 
 const resolvers = {
     Promotion: {
-        shops: async (parent) => {
-            return await Shop.find({_id: {$in: parent.shops}});
+        shops: async (parent, _, args) => {
+            const {variables} = args.req.body;
+            const {published} = variables.options;
+            if (published) {
+                return await Shop.find({_id: {$in: parent.shops}}).published();
+            } else {
+                return await Shop.find({_id: {$in: parent.shops}});
+            }
+
         },
         publisher: async (parent) => {
             return await User.findById(parent.publisher)
@@ -38,87 +46,163 @@ const resolvers = {
         },
     },
     Query: {
-        promotions: async (_, {}, {user}) => {
-            if (!user) {
+        promotions: async (_, {options}, {user, isAuth}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where,
+                published
+            } = options;
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            user = await User.findById(user.id).select({"_id": 1, "id": 1,"shops": 1,"brands": 1,"roleBasedAccess": 1}).populate([{
+            user = await User.findById(user.id).select({
+                "_id": 1,
+                "id": 1,
+                "shops": 1,
+                "brands": 1,
+                "roleBasedAccess": 1
+            }).populate([{
                 path: 'roleBasedAccess',
                 populate: [{
                     path: 'admin.brands',
-                    select: {'promotions':1,'_id':0}
+                    select: {'promotions': 1, '_id': 0}
                 }, {
                     path: 'admin.shops',
-                    select: {'promotions':1,'_id':0}
+                    select: {'promotions': 1, '_id': 0}
                 }, {
                     path: 'modifier.brands',
-                    select: {'promotions':1,'_id':0}
+                    select: {'promotions': 1, '_id': 0}
                 }, {
                     path: 'modifier.shops',
-                    select: {'promotions':1,'_id':0}
+                    select: {'promotions': 1, '_id': 0}
                 }, {
                     path: 'watcher.shops',
-                    select: {'promotions':1,'_id':0}
+                    select: {'promotions': 1, '_id': 0}
                 }, {
                     path: 'watcher.brands',
-                    select: {'promotions':1,'_id':0}
+                    select: {'promotions': 1, '_id': 0}
                 }],
-                select: {'_id':0,'admin':1, 'modifier':1, 'watcher':1}
+                select: {'_id': 0, 'admin': 1, 'modifier': 1, 'watcher': 1}
             }
-            ,{
-                path: 'brands',
-                    select: {'promotions':1,'_id':0}
-            },{
-                path: 'shops',
-                select: {'promotions':1,'_id':0}
-            }
+                , {
+                    path: 'brands',
+                    select: {'promotions': 1, '_id': 0}
+                }, {
+                    path: 'shops',
+                    select: {'promotions': 1, '_id': 0}
+                }
             ]);
             let res = getPropValues(user, "promotions");
             let userPromotions = new Set();
-            res.forEach(promotionsArray=>{
-                promotionsArray.forEach(promotion=>{
+            res.forEach(promotionsArray => {
+                promotionsArray.forEach(promotion => {
                     userPromotions.add(promotion.toString())
                 })
             })
-            let promotions = await Promotion.find({_id: {$in: [...userPromotions]}}).notDeleted();
+            where = {
+                ...where,
+                _id: {$in: [...userPromotions]},
+                status: {$ne: Status.DELETED}
+            }
+            let pagination = await getPaginations(ModelsCollections.Promotion, page, limit, where, sort)
+            let promotions = await Promotion.find({_id: {$in: [...userPromotions]}}).notDeleted().paginate(options);
+            options["offset"] = pagination.offset;
             await getPromotionUserRelation(user.id, promotions)
-            return promotions
+            // console.log("total promotions:", promotions.length)
+            // console.log("promotions:",promotions)
+            // console.log("pagination:",pagination)
+            return {pagination, promotions}
         },
         promotionById: async (_, {id}, {user}) => {
             let promotion = await Promotion.findById(id);
             await getPromotionUserRelation(user.id)
             return promotion;
         },
-        searchPendingPromotions: async (_, {}, {user}) => {
-            if (!user) {
+        searchPendingPromotions: async (_, {options}, {user, isAuth}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === Roles.SUPER_ADMIN) {
-                return await Promotion.find({'verified': Verified.PENDING});
+                where = {
+                    ...where,
+                    'verified': Verified.PENDING
+                }
+                let pagination = await getPaginations(ModelsCollections.Promotion, page, limit, where, sort)
+                options["offset"] = pagination.offset;
+                let promotions = await Promotion.find({'verified': Verified.PENDING}).paginate();
+                return {pagination, promotions}
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchUpcomingPromotions: async (_, {shopId}, {user}) => {
-            if (!user) {
+        publishedPromotions: async (_, {options}, {}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            where = {
+                ...where,
+                status: Status.PUBLISHED,
+            }
+            let pagination = await getPaginations(ModelsCollections.Promotion, page, limit, where, sort)
+            options["offset"] = pagination.offset;
+            let promotions = await Promotion.find({}).paginate(options).published();
+            return {pagination, promotions}
+        },
+        searchUpcomingPromotions: async (_, {shopId, options}, {user, isAuth}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
+            if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
                 let shop = await Shop.findById(shopId);
                 if (shop) {
                     if (shop.owner.toString() === user.id.toString()) {
-                        return await Promotion.find({shop: shopId, isUpcoming: true});
+                        where = {
+                            ...where,
+                            shop: shopId, isUpcoming: true
+                        }
+                        let pagination = await getPaginations(ModelsCollections.Promotion, page, limit, where, sort)
+                        options["offset"] = pagination.offset;
+                        let promotions = await Promotion.find({shop: shopId, isUpcoming: true}).paginate(options);
+                        return {pagination, promotions}
                     } else {
                         return new AuthenticationError("Unauthorised User", '401');
                     }
                 } else {
-                    return new AuthenticationError("Shop not found", '404');
+                    return new ApolloError("Shop not found", '404');
                 }
             } catch (err) {
                 return new ApolloError(err, 500)
             }
         },
-        searchArchivedPromotions: async (_, {shopId}, {user}) => {
+        searchArchivedPromotions: async (_, {shopId, options}, {user}) => {
+            options = getOptionsArguments(options)
+            let {
+                page,
+                limit,
+                sort,
+                where
+            } = options;
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -126,12 +210,19 @@ const resolvers = {
                 let shop = await Shop.findById(shopId);
                 if (shop) {
                     if (shop.owner.toString() === user.id.toString()) {
-                        return await Promotion.find({shop: shopId, status: Status.ARCHIVED});
+                        where = {
+                            ...where,
+                            shop: shopId, status: Status.ARCHIVED
+                        }
+                        let pagination = await getPaginations(ModelsCollections.Promotion, page, limit, where, sort)
+                        options["offset"] = pagination.offset;
+                        let promotions = await Promotion.find({shop: shopId, status: Status.ARCHIVED});
+                        return {pagination, promotions}
                     } else {
                         return new new AuthenticationError("Unauthorised User", 401);
                     }
                 } else {
-                    return new new AuthenticationError("Shop not found", 404);
+                    return new new ApolloError("Shop not found", 404);
                 }
             } catch (err) {
                 return new ApolloError(err, 500)
@@ -203,19 +294,19 @@ const resolvers = {
                 }
             }
             await Shop.updateMany({_id: {$in: newPromotion.shops}}, {$push: {promotions: promotion.id}});
-            if(newPromotion.status === Status.PUBLISHED){
+            if (newPromotion.status === Status.PUBLISHED) {
                 let notificationsUsers = await getAllUsersWithNotificationToken();
                 let notification = {
-                    description: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
+                    description: `${brand ? brand.name : shops[0].name} created a new Promotion ${promotion.name}`,
                     entity: promotion.id,
                     entityType: Models.Promotion,
                     link: `http://localhost:3000/promotion/details/${promotion.id}`,
-                    messageBody: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
-                    messageTitle: `${brand?brand.name:shops[0].name}`,
-                    title: `${brand?brand.name:shops[0].name}`,
-                    sender:user.id,
+                    messageBody: `${brand ? brand.name : shops[0].name} created a new Promotion ${promotion.name}`,
+                    messageTitle: `${brand ? brand.name : shops[0].name}`,
+                    title: `${brand ? brand.name : shops[0].name}`,
+                    sender: user.id,
                 }
-                await createNotification(notification,notificationsUsers);
+                await createNotification(notification, notificationsUsers);
             }
             return await promotion.save()
         },
@@ -269,20 +360,20 @@ const resolvers = {
                 }
             }
             await Shop.updateMany({_id: {$in: newPromotion.shops}}, {$push: {promotions: promotion.id}});
-            if(newPromotion.status === Status.PUBLISHED){
+            if (newPromotion.status === Status.PUBLISHED) {
                 let notificationsUsers = await getAllUsersWithNotificationToken();
                 let notification = {
-                    description: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
+                    description: `${brand ? brand.name : shops[0].name} created a new Promotion ${promotion.name}`,
                     entity: promotion.id,
                     entityType: Models.Promotion,
                     link: `http://localhost:3000/promotion/details/${promotion.id}`,
-                    messageBody: `${brand?brand.name:shops[0].name} created a new Promotion ${promotion.name}`,
-                    messageTitle: `${brand?brand.name:shops[0].name}`,
-                    title: `${brand?brand.name:shops[0].name}`,
-                    sender:user.id,
+                    messageBody: `${brand ? brand.name : shops[0].name} created a new Promotion ${promotion.name}`,
+                    messageTitle: `${brand ? brand.name : shops[0].name}`,
+                    title: `${brand ? brand.name : shops[0].name}`,
+                    sender: user.id,
                 }
                 console.log("notification 📩:", notification)
-                await createNotification(notification,notificationsUsers);
+                await createNotification(notification, notificationsUsers);
             }
             return Promotion.findByIdAndUpdate(id, {...newPromotion}, {new: true});
         },

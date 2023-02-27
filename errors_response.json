@@ -1,0 +1,55 @@
+[
+  {
+    "errors": [
+      {
+        "message": "Multiple errors occurred",
+        "errors": [
+          {
+            "message": "UserName is required.",
+            "code": 500
+          },
+          {
+            "message": "UserName should have atleast 5 characters.",
+            "code": 500
+          },
+          {
+            "message": "Should be alphanumeric.",
+            "code": 500
+          },
+          {
+            "message": "Password is required.",
+            "code": 500
+          },
+          {
+            "message": "Password should have atleast 5 characters.",
+            "code": 500
+          },
+          {
+            "message": "FullName is required.",
+            "code": 500
+          },
+          {
+            "message": "FullName should have atleast 3 characters.",
+            "code": 500
+          },
+          {
+            "message": "Email is required.",
+            "code": 500
+          }
+        ]
+      }
+    ],
+    "data": null
+  },
+  {
+    "errors": [
+      {
+        "message": "Authentication Must Be Provided",
+        "code": 401
+      }
+    ],
+    "data": {
+      "registerShop": null
+    }
+  }
+]
