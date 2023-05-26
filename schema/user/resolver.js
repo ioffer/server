@@ -1,5 +1,4 @@
 import {User, Shop, Brand, Favorite, Pin, RoleBaseAccess, UserSubscription} from "../../models";
-import {find} from "lodash"
 
 const {SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
@@ -504,6 +503,7 @@ const resolvers = {
 
                 // Validate Incoming New User Arguments
                 // Check if the Username is taken
+                console.log("User:", User)
                 let user = await User.findOne({
                     userName
                 });

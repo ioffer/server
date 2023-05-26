@@ -5,20 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
-      <change afterPath="$PROJECT_DIR$/errors_response.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpers/calculateGeoDistance.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/middleware/queryOptions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/userRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/userRelations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/promotion.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/promotion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/brand/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/brand/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/constants/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/constants/enums.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/query.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/resolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/promotion/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/promotion/type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/notification/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/notification/type.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/shop/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/shop/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/shop/type.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema/user/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/user/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,14 +107,15 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.13.2&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.18.12&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.15.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.15.0&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer/ioffer-server/middleware&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/rakoon/Documents/Projects/ioffer/ioffer-server/node_modules/prettier&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/223.8617.44/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -296,7 +292,22 @@
       <workItem from="1676676307291" duration="18777000" />
       <workItem from="1676913955949" duration="26438000" />
       <workItem from="1677045139879" duration="5879000" />
-      <workItem from="1677500534245" duration="2366000" />
+      <workItem from="1677500534245" duration="12867000" />
+      <workItem from="1678200646640" duration="23000" />
+      <workItem from="1678203964965" duration="3084000" />
+      <workItem from="1678233635389" duration="90000" />
+      <workItem from="1678269536601" duration="3054000" />
+      <workItem from="1678291376583" duration="1967000" />
+      <workItem from="1678783854436" duration="4272000" />
+      <workItem from="1679989835156" duration="1635000" />
+      <workItem from="1680775974000" duration="11000" />
+      <workItem from="1680775992867" duration="2439000" />
+      <workItem from="1680778885333" duration="840000" />
+      <workItem from="1681820084082" duration="1301000" />
+      <workItem from="1682525239333" duration="661000" />
+      <workItem from="1682584340322" duration="10345000" />
+      <workItem from="1684669217899" duration="152000" />
+      <workItem from="1685116478333" duration="884000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>

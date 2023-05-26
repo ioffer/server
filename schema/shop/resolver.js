@@ -303,7 +303,7 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let shop = new Shop.findById(id);
+                let shop = await Shop.findById(id);
                 let slug = newShop.name;
                 let preTags = shop.tags
                 let preCategories = shop.category

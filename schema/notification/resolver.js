@@ -92,12 +92,13 @@ const resolvers = {
                 return new ApolloError(err, 500);
             }
         },
-        deleteNotification: async (_, {id}, {user}) => {
+        deleteNotification: async (_, {id}, {user, isAuth}) => {
             if (!isAuth) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await UserNotification.findOneAndUpdate({_id: id}, {isDeleted:true}, {new: true});
+                let notification = await UserNotification.findOneAndUpdate({_id: id}, {isDeleted:true}, {new: true});
+                console.log('notification❌:', notification)
                 return true
             } catch (err) {
                 return new ApolloError(err, 500);

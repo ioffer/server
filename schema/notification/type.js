@@ -25,6 +25,7 @@ const notificationTypeDefs = gql`
     }
     
     type UserNotification {
+        id:ID!,
         notification: Notification!,
         user: User!,
         isSeen:Boolean!,

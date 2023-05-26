@@ -45,6 +45,7 @@ const shopSchema = new Schema({
     mobileNumber: String,
     location: String,
     address: String,
+    city: String,
     publishingDateTime: String,
     facebook: String,
     tiktok: String,
