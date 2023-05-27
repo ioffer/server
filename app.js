@@ -1,6 +1,5 @@
-import LogRocket from 'logrocket';
 import express from 'express';
-import path from 'path';
+import path, {join} from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import sassMiddleware from 'node-sass-middleware';
@@ -12,21 +11,15 @@ import usersRouter from './routes/users';
 import AuthMiddleware from './middleware/auth.js';
 import QueryOptionsMiddleware from './middleware/queryOptions.js';
 import {graphqlUploadExpress} from 'graphql-upload';
-import {join} from 'path';
 import connectDB from './utils/connectDB';
 import cors from 'cors';
 import {expressErrorHandler, formatError} from './helpers/handleErrors'
-import {
-  ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginLandingPageDisabled,
-  ApolloServerPluginInlineTrace,
-} from 'apollo-server-core';
+import {ApolloServerPluginInlineTrace, ApolloServerPluginLandingPageGraphQLPlayground} from 'apollo-server-core';
 import {makeExecutableSchema} from '@graphql-tools/schema';
-import {
-  authDirectiveTypeDefs,
-  authDirectiveTransformer,
-} from './schema/directives/isAuth2.directive';
+import {authDirectiveTransformer, authDirectiveTypeDefs,} from './schema/directives/isAuth2.directive';
 import AppModels from './models';
+import LogRocket from 'logrocket';
+LogRocket.init('2oiqcd/ioffer');
 
 const app = express();
 
@@ -43,6 +36,7 @@ app.use(graphqlUploadExpress());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(expressErrorHandler);
 app.use(
   sassMiddleware({
     src: path.join(__dirname, 'public'),
@@ -52,7 +46,6 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(AuthMiddleware);
 app.use(QueryOptionsMiddleware);
 
@@ -107,13 +100,7 @@ const server = new ApolloServer({
   formatError
 });
 
-
-// // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
 // error handler
-app.use(expressErrorHandler);
 
 (async () => {
   await server.start();
@@ -121,7 +108,6 @@ app.use(expressErrorHandler);
   connectDB()
   app.listen(port, () => {
     console.log('🚀 now listening for requests on port', port);
-    LogRocket.init('2oiqcd/ioffer');
   });
 })();
 
