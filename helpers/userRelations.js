@@ -22,7 +22,6 @@ export const getBrandUserRelation = async (userId, brands = null) => {
 }
 export const getShopUserRelation = async (userId, shops = null) => {
     if (shops) {
-        console.log("userId:", userId)
         if (Array.isArray(shops)) {
             for (const shop of shops) {
                 const i = shops.indexOf(shop);
@@ -39,9 +38,7 @@ export const getShopUserRelation = async (userId, shops = null) => {
 }
 
 export const getPromotionUserRelation = async (userId, promotions = null) => {
-    console.log("userId: 👨🏻 ‍🎨", userId)
     if (promotions) {
-        console.log("userId:", userId)
         if (Array.isArray(promotions)) {
             for (const promotion of promotions) {
                 const i = promotions.indexOf(promotion);
@@ -50,9 +47,7 @@ export const getPromotionUserRelation = async (userId, promotions = null) => {
                 promotions[i].user = relation;
             }
         } else {
-            console.log("userId:", userId)
             let relation = await promotions.getRelation(userId)
-            console.log("relation:", relation)
             promotions._doc.user = relation;
             promotions.user = relation;
         }
@@ -65,7 +60,6 @@ export const getOptionsArguments = (options) => {
         where = options.where
         sort = options.sort
         published = options.published
-        console.log("options:", options)
         if (options.paginationOptions) {
             page = options.paginationOptions.page
             limit = options.paginationOptions.limit

@@ -1,5 +1,3 @@
-import UserNotification from "../models/userNotification";
-
 export const LinkTypes = {
     SOCIAL: 'SOCIAL',
 }

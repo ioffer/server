@@ -1,15 +1,13 @@
 const {gql} = require('apollo-server-express');
 
 // todo add auth
-const imageQuery = gql `
-    
+const imageQuery = gql`
     extend type Query {
-        uploads: [File]
-    }
-     
-    extend type Mutation {
-        imageUploader(file: Float!): String! @isAuth
+        uploads: [String]
     }
 
-`
-module.exports=imageQuery;
+    extend type Mutation {
+        imageUploader(file: Upload!): String! @isAuth
+    }
+`;
+module.exports = imageQuery;

@@ -11,6 +11,7 @@ const resolvers = {
 
         imageUploader: async (_, {file},{user}) => {
             try {
+                console.log('imageUploader received file value:', file);
                 const {
                     filename,
                     createReadStream

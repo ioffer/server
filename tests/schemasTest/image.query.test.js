@@ -1,0 +1,61 @@
+const path = require('path');
+const fs = require('fs');
+const { connect, cleanup, disconnect } = require('../modelsTest/helpers');
+const imageResolver = require('../../schema/image/resolver.js');
+
+beforeAll(async () => {
+  await connect();
+});
+
+afterAll(async () => {
+  await disconnect();
+});
+
+afterEach(async () => {
+  await cleanup();
+});
+
+function createUpload(filePath) {
+  return Promise.resolve({
+    filename: path.basename(filePath),
+    mimetype: 'image/png',
+    encoding: '7bit',
+    createReadStream: () => fs.createReadStream(filePath),
+  });
+}
+
+describe('Image uploader resolver', () => {
+  test('imageUploader uploads a file and returns relative path', async () => {
+    const sourcePath = path.join(__dirname, '../../uploads/user.png');
+    expect(fs.existsSync(sourcePath)).toBe(true);
+
+    const returned = await imageResolver.Mutation.imageUploader(
+      null,
+      { file: createUpload(sourcePath) },
+      { isAuth: true, user: { id: '000000000000000000000000' } }
+    );
+
+    expect(typeof returned).toBe('string');
+    expect(returned).toMatch(/\.png$/);
+
+    const relative = returned.startsWith('/') ? returned.slice(1) : returned;
+    const savedPath = path.join(__dirname, '../../uploads', relative);
+
+
+    // Wait for the async stream pipe to finish writing
+    const appeared = await new Promise((resolve) => {
+      const start = Date.now();
+      const check = () => {
+        if (fs.existsSync(savedPath)) return resolve(true);
+        if (Date.now() - start > 3000) return resolve(false);
+        setTimeout(check, 50);
+      };
+      check();
+    });
+
+    expect(appeared).toBe(true);
+
+    // Cleanup created file
+    try { fs.unlinkSync(savedPath); } catch (e) {}
+  });
+});

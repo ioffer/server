@@ -1,15 +1,15 @@
 const { mergeTypeDefs } = require('@graphql-tools/merge');
 
 const userQuery = require('./user/query.js')
-const userTypeDefs =require('./user/type')
+const userTypeDefs = require('./user/type')
 const shopQuery = require('./shop/query.js')
-const shopTypeDefs =require('./shop/type')
+const shopTypeDefs = require('./shop/type')
 const promotionQuery = require('./promotion/query.js')
-const promotionTypeDefs =require('./promotion/type')
+const promotionTypeDefs = require('./promotion/type')
 
-const baseTypeDefs =require('./baseDefs.js')
-// const unBlockRequestTypeDefs = require('./unBlockRequest/type.js')
-// const unBlockRequestQuery = require('./unBlockRequest/query.js')
+const baseTypeDefs = require('./baseDefs.js')
+const unBlockRequestTypeDefs = require('./unBlockRequest/type.js')
+const unBlockRequestQuery = require('./unBlockRequest/query.js')
 const enumsTypeDefs = require('./constants/enums.js')
 const userSubscriptionTypeDefs = require('./userSubscription/type.js')
 
@@ -28,36 +28,38 @@ const tagQuery = require('./tag/query')
 const tagTypeDefs = require('./tag/type')
 const notificationTypeDefs = require('./notification/type')
 const notificationQuery = require('./notification/query')
-import {authDirectiveTypeDefs} from'./directives/isAuth2.directive'
+const imageQuery = require('./image/query')
+import { authDirectiveTypeDefs } from './directives/isAuth2.directive'
 
 const typeDefs = [
-    baseTypeDefs,
-    enumsTypeDefs,
-    userTypeDefs,
-    userQuery,
-    shopQuery,
-    shopTypeDefs,
-    promotionQuery,
-    promotionTypeDefs,
-    mediaTypeDefs,
-    mediaQuery,
-    // unBlockRequestTypeDefs,
-    // unBlockRequestQuery,
-    userSubscriptionTypeDefs,
-    shopRoleBaseAccessInviteTypeDefs,
-    roleBasedAccessTypeDefs,
-    pinTypeDefs,
-    favoriteTypeDefs,
-    brandRoleBaseAccessInviteTypeDefs,
-    brandTypeDefs,
-    brandQuery,
-    categoryTypeDefs,
-    categoryQuery,
-    tagTypeDefs,
-    tagQuery,
-    authDirectiveTypeDefs,
-    notificationTypeDefs,
-    notificationQuery,
+  baseTypeDefs,
+  enumsTypeDefs,
+  userTypeDefs,
+  userQuery,
+  shopQuery,
+  shopTypeDefs,
+  promotionQuery,
+  promotionTypeDefs,
+  mediaTypeDefs,
+  mediaQuery,
+  imageQuery,
+  unBlockRequestTypeDefs,
+  unBlockRequestQuery,
+  userSubscriptionTypeDefs,
+  shopRoleBaseAccessInviteTypeDefs,
+  roleBasedAccessTypeDefs,
+  pinTypeDefs,
+  favoriteTypeDefs,
+  brandRoleBaseAccessInviteTypeDefs,
+  brandTypeDefs,
+  brandQuery,
+  categoryTypeDefs,
+  categoryQuery,
+  tagTypeDefs,
+  tagQuery,
+  authDirectiveTypeDefs,
+  notificationTypeDefs,
+  notificationQuery,
 ];
 
 module.exports = mergeTypeDefs(typeDefs);

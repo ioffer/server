@@ -5,15 +5,65 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d20baa2-de25-4022-81f9-86c3065dc4d7" name="Default Changelist" comment="added promotion queries, working on resolvers">
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/READMEold.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/deployment.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/graphql.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/middleware.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/models.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/routes.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/services.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/setup.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/brandClick.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/brandRoleBaseAccessInvite.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/brandView.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/favorite.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/link.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/media.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/offer.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/pin.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/promotion.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/roleBaseAccess.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/shopRoleBaseAccessInvite.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/shopView.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/subscription.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/modelsTest/unBlockRequest.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babel.config.json" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/constants/enums.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/userRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/userRelations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/image/query.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/image/query.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/image/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/image/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/typeDefs.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/typeDefs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/unBlockRequest/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/unBlockRequest/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sendemail.js" beforeDir="false" afterPath="$PROJECT_DIR$/sendemail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serializers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/modelsTests/user.test.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/qasimkhokhar/Documents/Projects/personal/ioffer/server" value="1pDUn19IXJc1FxmdKoJeLcmo6ge" />
+    </persistenceIdMap>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="209" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -28,6 +78,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;qasimraheem&quot;
+  }
+}</component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
       <filtered-out-file-type name="LOCAL_BRANCH" />
@@ -66,6 +122,12 @@
       </RecentBranches>
     </option>
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:ioffer/server.git&quot;,
+    &quot;accountId&quot;: &quot;c1962d80-f3f7-4fab-a52b-e57bac92bd36&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/constants/enums.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/middleware/file.js" root0="FORCE_HIGHLIGHTING" />
@@ -80,9 +142,21 @@
     <setting file="file://$PROJECT_DIR$/schema/media/resolver.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/schema/media/type.js" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="JiraServerManager">
+    <selected>-1</selected>
+    <servers />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="1pDUn19IXJc1FxmdKoJeLcmo6ge" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -94,78 +168,125 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
+    "Jest.Brand schema queries and mutations.executor": "Run",
+    "Jest.Category schema queries.executor": "Run",
+    "Jest.Image uploader resolver.executor": "Run",
+    "Jest.Media schema queries (schema/media/query.js).executor": "Run",
+    "Jest.Media schema queries and uploads (schema/media/query.js).executor": "Run",
+    "Jest.Notification schema queries and mutations.executor": "Run",
+    "Jest.Promotion schema queries and mutations (schema/promotion/query.js).executor": "Run",
+    "Jest.Shop schema queries and mutations.executor": "Run",
+    "Jest.UnBlockRequest schema queries and mutations.executor": "Run",
+    "Jest.User Model.should create a new user.executor": "Run",
+    "Jest.User Mutations (schema/user/query.js).executor": "Run",
+    "Jest.User Queries (schema/user/query.js).executor": "Run",
+    "Jest.User schema queries and mutations.executor": "Run",
+    "Jest.should return true.executor": "Run",
     "Project.color": "590449",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "18.15.0",
-    "javascript.nodejs.core.library.typings.version": "18.15.0",
-    "last_opened_file_path": "/Users/rakoon/Documents/Projects/ioffer/ioffer-server/middleware",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "reformating-development",
+    "javascript.nodejs.core.library.configured.version": "24.11.1",
+    "javascript.nodejs.core.library.typings.version": "24.11.2",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/qasimkhokhar/Documents/Projects/personal/ioffer/server",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs.jest.jest_package": "/Users/rakoon/Documents/Projects/ioffer/server/node_modules/jest",
+    "nodejs.jest.jest_package": "/Users/qasimkhokhar/Documents/Projects/personal/ioffer/server/node_modules/jest",
     "nodejs_package_manager_path": "yarn",
+    "npm.test.executor": "Run",
     "prettierjs.PrettierConfiguration.Package": "/Users/rakoon/Documents/Projects/ioffer/ioffer-server/node_modules/prettier",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/Users/rakoon/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/231.8109.174/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
+    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/qasimkhokhar/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecapSpentCounter">
+    <option name="endsOfQuotaMs" value="1772967630980" />
+    <option name="spentUsd" value="0.037129197" />
+  </component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="0" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/middleware" />
       <recent name="$PROJECT_DIR$/schema" />
       <recent name="$PROJECT_DIR$/models" />
       <recent name="$PROJECT_DIR$/utils" />
-      <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tests" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.User Model">
-    <configuration name="User Model" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="npm.test">
+    <configuration name="Notification schema queries and mutations" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/tests/modelsTests/user.test.js" />
+      <test-file value="$PROJECT_DIR$/tests/schemasTest/notification.query.test.js" />
       <test-names>
-        <test-name value="User Model" />
+        <test-name value="Notification schema queries and mutations" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="should return true" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="Promotion schema queries and mutations (schema/promotion/query.js)" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/tests/index.test.js" />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/tests/schemasTest/promotion.query.test.js" />
       <test-names>
-        <test-name value="should return true" />
+        <test-name value="Promotion schema queries and mutations (schema/promotion/query.js)" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="nodemon" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="nodemon" />
-      </scripts>
+    <configuration name="Shop schema queries and mutations" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
       <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/tests/schemasTest/shop.query.test.js" />
+      <test-names>
+        <test-name value="Shop schema queries and mutations" />
+      </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="UnBlockRequest schema queries and mutations" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/tests/schemasTest/unblockRequest.query.test.js" />
+      <test-names>
+        <test-name value="UnBlockRequest schema queries and mutations" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="start" />
+        <script value="test" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -173,12 +294,20 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.User Model" />
-        <item itemvalue="Jest.should return true" />
-        <item itemvalue="npm.start" />
-        <item itemvalue="npm.nodemon" />
+        <item itemvalue="npm.test" />
+        <item itemvalue="Jest.UnBlockRequest schema queries and mutations" />
+        <item itemvalue="Jest.Shop schema queries and mutations" />
+        <item itemvalue="Jest.Promotion schema queries and mutations (schema/promotion/query.js)" />
+        <item itemvalue="Jest.Notification schema queries and mutations" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-WS-261.23567.141" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -328,6 +457,14 @@
       <workItem from="1684669217899" duration="152000" />
       <workItem from="1685116478333" duration="884000" />
       <workItem from="1685221133996" duration="4680000" />
+      <workItem from="1755991357642" duration="309000" />
+      <workItem from="1755992072941" duration="48415000" />
+      <workItem from="1756735114106" duration="19927000" />
+      <workItem from="1757279384396" duration="4356000" />
+      <workItem from="1757511460576" duration="12877000" />
+      <workItem from="1759856494683" duration="1251000" />
+      <workItem from="1770889462454" duration="4547000" />
+      <workItem from="1778348798109" duration="200000" />
     </task>
     <task id="LOCAL-00001" summary="added promotion queries, working on resolvers">
       <created>1619551603689</created>
@@ -367,5 +504,13 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added promotion queries, working on resolvers" />
     <option name="LAST_COMMIT_MESSAGE" value="added promotion queries, working on resolvers" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

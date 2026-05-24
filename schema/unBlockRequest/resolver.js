@@ -18,7 +18,9 @@ const resolvers = {
         unBlockRequests:async(_)=>{
             return await fetchData();
         },
-        //TODO UnBlockById
+        unBlockRequestById: async (_, {id}) => {
+            return await UnBlockRequest.findById(id);
+        },
     },
     Mutation: {
         unBlockUser: async (_, {id}, {UnBlockRequest, user}) => {

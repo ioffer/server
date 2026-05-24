@@ -9,20 +9,22 @@ const tagResolver = require('./tag/resolver.js');
 const brandRoleBaseAccessInviteResolver = require('./brandRoleBaseAccessInvite/resolver.js');
 const shopRoleBaseAccessInviteResolver = require('./shopRoleBaseAccessInvite/resolver.js');
 const notificationResolver = require('./notification/resolver.js');
-// const unBlockRequestResolver = require('./unBlockRequest/resolver.js')
+const imageResolver = require('./image/resolver.js');
+const unBlockRequestResolver = require('./unBlockRequest/resolver.js')
 
 const resolvers = [
-    userResolver,
-    shopResolver,
-    brandResolver,
-    promotionResolver,
-    mediaResolver,
-    categoryResolver,
-    tagResolver,
-    brandRoleBaseAccessInviteResolver,
-    shopRoleBaseAccessInviteResolver,
-    notificationResolver,
-    // unBlockRequestResolver,
+  userResolver,
+  shopResolver,
+  brandResolver,
+  promotionResolver,
+  mediaResolver,
+  categoryResolver,
+  tagResolver,
+  brandRoleBaseAccessInviteResolver,
+  shopRoleBaseAccessInviteResolver,
+  notificationResolver,
+  imageResolver,
+  unBlockRequestResolver,
 ];
 
 module.exports = mergeResolvers(resolvers);
